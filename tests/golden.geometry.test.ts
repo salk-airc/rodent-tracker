@@ -17,8 +17,7 @@
  * does not need either.
  */
 
-import { existsSync } from 'node:fs';
-import { SAMPLE_CLIPS } from '../src/paradigms/barnes/samples';
+import { haveSampleClips, SAMPLE_CLIPS, SAMPLE_DIR } from '../src/paradigms/barnes/samples';
 import { spawnSync } from 'node:child_process';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { FfmpegFrameSource } from '../src/video/ffmpeg';
@@ -29,10 +28,11 @@ import { sampleBilinear } from '../src/image/imageOps';
 import type { Gray } from '../src/image/imageOps';
 import type { TimingReport } from '../src/paradigms/barnes/types';
 
-const dir = 'data/barnes-maze';
+// Run `pnpm samples` to download the clips; without them these tests skip.
+const dir = SAMPLE_DIR;
 
 const haveFfmpeg = spawnSync('ffmpeg', ['-version'], { stdio: 'ignore' }).status === 0;
-const haveClips = SAMPLE_CLIPS.every((c) => existsSync(`${dir}/${c}.mp4`));
+const haveClips = haveSampleClips(dir);
 const run = haveFfmpeg && haveClips;
 
 interface Analyzed {

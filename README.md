@@ -135,10 +135,15 @@ handing `.ts` files to Node.
 
 ```bash
 pnpm install
-pnpm test        # unit tests
+pnpm test        # unit tests; the sample-clip tests skip until you run `pnpm samples`
 pnpm typecheck
+pnpm samples     # download the 3 sample clips into data/barnes-maze/
 pnpm regress     # re-run the 3 sample clips and compare the scoring with outputs/barnes/
 pnpm benchmark   # compare detectors on the sample clips (docs/BENCHMARK.md)
 ```
 
-The sample clips in `data/barnes-maze/` come from the Salk AIRC RSE take-home exercise.
+The sample clips are the ones published with the Salk AIRC
+[RSE take-home](https://github.com/salk-airc/rse-takehome-2026). They aren't kept in this repo:
+`pnpm samples` downloads them from a pinned commit and checks their SHA-256 (see
+[`data/barnes-maze/README.md`](data/barnes-maze/README.md)). `pnpm regress` and
+`pnpm benchmark` download them too if they're missing.

@@ -15,10 +15,10 @@
   },
   "files": [
     "src",
-    "tests/helpers",
-    "data"
+    "tests/helpers"
   ],
   "scripts": {
+    "samples": "tsx tools/samples.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "regress": "tsx tools/regress.ts --check",

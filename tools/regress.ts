@@ -15,21 +15,18 @@ import { join } from 'node:path';
 import { FfmpegFrameSource } from '../src/video/ffmpeg';
 import { analyzeVideo, reanalyze } from '../src/paradigms/barnes/pipeline';
 import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
-import { SAMPLE_CLIPS } from '../src/paradigms/barnes/samples';
+import { ensureSampleClips, SAMPLE_CLIPS, SAMPLE_DIR } from '../src/paradigms/barnes/samples';
 import type { MazeGeometry } from '../src/paradigms/barnes/types';
 
-const DATA_DIR = 'data/barnes-maze';
+const DATA_DIR = SAMPLE_DIR;
 const OUT_DIR = 'outputs/barnes';
 const check = process.argv.includes('--check');
 const failures: string[] = [];
 mkdirSync(OUT_DIR, { recursive: true });
+await ensureSampleClips(DATA_DIR, (line) => console.error(line));
 
 for (const clip of SAMPLE_CLIPS) {
   const path = join(DATA_DIR, `${clip}.mp4`);
-  if (!existsSync(path)) {
-    console.error(`missing ${path}; see data/barnes-maze/README.md`);
-    process.exit(1);
-  }
   process.stderr.write(`analyzing ${clip}... `);
   const started = Date.now();
   const src = new FfmpegFrameSource(path);

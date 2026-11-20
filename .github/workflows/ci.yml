@@ -41,5 +41,6 @@ jobs:
           cache: pnpm
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: pnpm install --frozen-lockfile
+      - run: pnpm samples
       - run: pnpm test
       - run: pnpm regress
