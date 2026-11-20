@@ -24,6 +24,8 @@ export interface DetectionContext {
    * the two ends of the body. Null when the animal has been still.
    */
   readonly heading: Point | null;
+  /** Half-width of the local search box; defaults to `SEARCH_HALF_WIDTH`. */
+  readonly searchHalfWidthPx?: number;
 }
 
 export interface FrameMasks {
@@ -101,7 +103,7 @@ export function buildPlatformMask(geometry: MazeGeometry, width: number, height:
 }
 
 /** Half-width of the local search box, in px. Generous: a mouse covers ~5 px per frame. */
-const SEARCH_HALF_WIDTH = 70;
+export const SEARCH_HALF_WIDTH = 70;
 
 export function detectAnimal(mask: Uint8Array, ctx: DetectionContext, width: number, height: number): AnimalDetection | null {
   const { previous } = ctx;
@@ -134,12 +136,13 @@ function searchWindow(
   near: Point | null,
   reacquired: boolean,
 ): { chosen: Component; candidateCount: number; reacquired: boolean } | null {
+  const half = ctx.searchHalfWidthPx ?? SEARCH_HALF_WIDTH;
   const window = near
     ? {
-        x0: Math.floor(near.x - SEARCH_HALF_WIDTH),
-        y0: Math.floor(near.y - SEARCH_HALF_WIDTH),
-        x1: Math.ceil(near.x + SEARCH_HALF_WIDTH),
-        y1: Math.ceil(near.y + SEARCH_HALF_WIDTH),
+        x0: Math.floor(near.x - half),
+        y0: Math.floor(near.y - half),
+        x1: Math.ceil(near.x + half),
+        y1: Math.ceil(near.y + half),
       }
     : undefined;
 
