@@ -17,7 +17,8 @@
  * does not need either.
  */
 
-import { haveSampleClips, SAMPLE_CLIPS, SAMPLE_DIR } from '../src/paradigms/barnes/samples';
+import { SAMPLE_CLIPS, SAMPLE_DIR } from '../src/paradigms/barnes/samples';
+import { haveSampleClips } from '../src/paradigms/barnes/sampleFiles';
 import { spawnSync } from 'node:child_process';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { FfmpegFrameSource } from '../src/video/ffmpeg';

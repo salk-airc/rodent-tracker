@@ -15,7 +15,8 @@ import { join } from 'node:path';
 import { FfmpegFrameSource } from '../src/video/ffmpeg';
 import { analyzeVideo, reanalyze } from '../src/paradigms/barnes/pipeline';
 import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
-import { ensureSampleClips, SAMPLE_CLIPS, SAMPLE_DIR } from '../src/paradigms/barnes/samples';
+import { SAMPLE_CLIPS, SAMPLE_DIR } from '../src/paradigms/barnes/samples';
+import { ensureSampleClips } from '../src/paradigms/barnes/sampleFiles';
 import type { MazeGeometry } from '../src/paradigms/barnes/types';
 
 const DATA_DIR = SAMPLE_DIR;
