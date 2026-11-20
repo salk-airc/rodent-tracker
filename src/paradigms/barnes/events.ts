@@ -9,7 +9,7 @@ import type {
   Timebase,
 } from './types';
 import { holeByIndex, holeNumber, pxPerCm } from './types';
-import { frameAtTime, frameEndTime, frameSpan, frameTime } from './time';
+import { frameAtTime, frameEndTime, frameSpan, frameTime } from '../../time';
 
 export interface DetectEventsInput {
   readonly frames: ReadonlyArray<TrackFrame>;

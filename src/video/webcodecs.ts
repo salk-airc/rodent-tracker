@@ -2,7 +2,7 @@
 
 import type { FrameSource, Timebase, TimingReport } from '../types';
 import { describeTiming } from '../time';
-import { sha256Bytes } from '../project/identity';
+import { sha256Bytes } from '../identity';
 
 /** Minimal shape of what mp4box.js gives us, so this file typechecks alone. */
 interface Mp4boxSample {

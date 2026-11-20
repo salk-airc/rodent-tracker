@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { cohensKappa, compareRaters, type RaterScoring, type RaterTrial } from '../src/raters';
-import { DEFAULT_PARAMS } from '../src/params';
-import { videoMeasurementBasis } from '../src/measurementBasis';
-import type { HoleEvent } from '../src/types';
+import { cohensKappa, compareRaters, type RaterScoring, type RaterTrial } from '../src/paradigms/barnes/raters';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
+import { videoMeasurementBasis } from '../src/paradigms/barnes/measurementBasis';
+import type { HoleEvent } from '../src/paradigms/barnes/types';
 import { makeGeometry } from './helpers/synthetic';
 
 const MEASUREMENT_BASIS = videoMeasurementBasis(DEFAULT_PARAMS, makeGeometry(7));

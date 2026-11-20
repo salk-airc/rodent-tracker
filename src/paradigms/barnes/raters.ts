@@ -2,8 +2,8 @@
 
 import { holeNumber, type AnalysisParams, type HoleEvent, type MazeGeometry, type MeasurementBasis, type SearchStrategy, type TrackingSource } from './types';
 import { mazeLayoutFingerprint, measurementFingerprint, settingsFingerprint } from './io/tables';
-import { isVideoHash } from './project/identity';
-import { mean, round } from './stats';
+import { isVideoHash } from '../../identity';
+import { mean, round } from '../../stats';
 
 export interface RaterScoring {
   /** How this scoring is labeled in the report, e.g. a person's name. */

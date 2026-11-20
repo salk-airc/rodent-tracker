@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_PARAMS } from '../src/params';
-import { detectTrialStart } from '../src/tracking/trialStart';
-import type { TrackObservation, Timebase } from '../src/types';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
+import { detectTrialStart } from '../src/paradigms/barnes/tracking/trialStart';
+import type { TrackObservation, Timebase } from '../src/paradigms/barnes/types';
 import { BODY_AREA_PX } from './helpers/synthetic';
 
 

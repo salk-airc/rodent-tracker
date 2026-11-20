@@ -2,9 +2,9 @@
  * Finding the platform: a bright disk on a dark surround.
  */
 
-import { otsuThreshold, connectedComponents, largestComponent, type Gray } from './imageOps';
+import { otsuThreshold, connectedComponents, largestComponent, type Gray } from '../../../image/imageOps';
 import type { Point } from '../types';
-import { median } from '../stats';
+import { median } from '../../../stats';
 
 export interface PlatformFit {
   readonly center: Point;

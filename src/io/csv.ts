@@ -7,7 +7,7 @@
  * mangle any non-ASCII character in an animal ID or a note.
  */
 
-import { validateTableShape, type Table } from './tables';
+import { validateTableShape, type Table } from './table';
 
 export interface CsvOptions {
   /** Prepend a byte-order mark so Excel reads UTF-8 correctly. Default true. */

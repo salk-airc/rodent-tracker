@@ -4,7 +4,7 @@
  */
 
 import { zipSync, strToU8 } from 'fflate';
-import { validateTableShape, type Table } from './tables';
+import { validateTableShape, type Table } from './table';
 
 /** Excel's own limits. Exceeding them produces a file Excel refuses to open. */
 const MAX_ROWS = 1_048_576;

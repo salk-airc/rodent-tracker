@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { exportDeepLabCutCsv, importPoseTrack, parseCsv, reviewedPoseObservations, sniffPoseFormat } from '../src/io/pose';
-import { registerObservationsToMaze } from '../src/tracking/resolve';
-import type { TrackObservation } from '../src/types';
+import { exportDeepLabCutCsv, importPoseTrack, parseCsv, reviewedPoseObservations, sniffPoseFormat } from '../src/paradigms/barnes/io/pose';
+import { registerObservationsToMaze } from '../src/paradigms/barnes/tracking/resolve';
+import type { TrackObservation } from '../src/paradigms/barnes/types';
 import { makeGeometry } from './helpers/synthetic';
 
 const DLC = [

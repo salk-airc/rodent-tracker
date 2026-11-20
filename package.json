@@ -4,6 +4,7 @@
   "description": "Browser-first engine for tracking a rodent in overhead behavior video: arenas, zones, events and measures, with review and provenance.",
   "license": "MIT",
   "type": "module",
+  "packageManager": "pnpm@11.21.0",
   "engines": {
     "node": ">=22"
   },

@@ -1,10 +1,10 @@
 /** Detect the animal and estimate separate body and nose positions. */
 
-import { chamferDistance, connectedComponents, type Component, type Gray } from '../geometry/imageOps';
-import type { MazeGeometry, Point, TrackingParams } from '../types';
+import { chamferDistance, connectedComponents, type Component, type Gray } from '../image/imageOps';
+import type { Point, TrackingParams } from '../types';
 
-export type { AnimalDetection } from '../detect/types';
-import type { AnimalDetection } from '../detect/types';
+export type { AnimalDetection } from './types';
+import type { AnimalDetection } from './types';
 
 export interface DetectionContext {
   readonly background: Gray;
@@ -24,6 +24,8 @@ export interface DetectionContext {
    * the two ends of the body. Null when the animal has been still.
    */
   readonly heading: Point | null;
+  /** Half-width of the local search box; defaults to `SEARCH_HALF_WIDTH`. */
+  readonly searchHalfWidthPx?: number;
 }
 
 export interface FrameMasks {
@@ -86,22 +88,8 @@ export function buildDarkCutoff(background: Gray, platformMask: Uint8Array, dark
   return { limit, width, x0, x1, y0, y1 };
 }
 
-/** Pixels within the platform, with a small margin so a rim-hugging animal is not clipped. */
-export function buildPlatformMask(geometry: MazeGeometry, width: number, height: number, margin = 1.02): Uint8Array {
-  const mask = new Uint8Array(width * height);
-  const r2 = (geometry.platformRadiusPx * margin) ** 2;
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const dx = x - geometry.center.x;
-      const dy = y - geometry.center.y;
-      if (dx * dx + dy * dy <= r2) mask[y * width + x] = 1;
-    }
-  }
-  return mask;
-}
-
 /** Half-width of the local search box, in px. Generous: a mouse covers ~5 px per frame. */
-const SEARCH_HALF_WIDTH = 70;
+export const SEARCH_HALF_WIDTH = 70;
 
 export function detectAnimal(mask: Uint8Array, ctx: DetectionContext, width: number, height: number): AnimalDetection | null {
   const { previous } = ctx;
@@ -134,12 +122,13 @@ function searchWindow(
   near: Point | null,
   reacquired: boolean,
 ): { chosen: Component; candidateCount: number; reacquired: boolean } | null {
+  const half = ctx.searchHalfWidthPx ?? SEARCH_HALF_WIDTH;
   const window = near
     ? {
-        x0: Math.floor(near.x - SEARCH_HALF_WIDTH),
-        y0: Math.floor(near.y - SEARCH_HALF_WIDTH),
-        x1: Math.ceil(near.x + SEARCH_HALF_WIDTH),
-        y1: Math.ceil(near.y + SEARCH_HALF_WIDTH),
+        x0: Math.floor(near.x - half),
+        y0: Math.floor(near.y - half),
+        x1: Math.ceil(near.x + half),
+        y1: Math.ceil(near.y + half),
       }
     : undefined;
 

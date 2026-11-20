@@ -6,7 +6,7 @@ import {
   otsuThreshold,
   sampleBilinear,
   type Gray,
-} from '../src/geometry/imageOps';
+} from '../src/image/imageOps';
 
 function gray(width: number, height: number, fill: (x: number, y: number) => number): Gray {
   const data = new Uint8Array(width * height);

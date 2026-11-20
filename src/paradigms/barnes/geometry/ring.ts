@@ -1,8 +1,8 @@
 /** Detect an evenly spaced hole ring from its circular intensity profile. */
 
-import { sampleBilinear, type Gray } from './imageOps';
+import { sampleBilinear, type Gray } from '../../../image/imageOps';
 import type { Point } from '../types';
-import { median } from '../stats';
+import { median } from '../../../stats';
 
 /** Hole counts worth testing. Real mazes are usually 12, 18, 20 or 40. */
 export const CANDIDATE_HOLE_COUNTS = [12, 16, 18, 20, 24, 40] as const;

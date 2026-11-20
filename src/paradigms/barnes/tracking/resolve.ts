@@ -12,8 +12,8 @@ import type {
   TrialStart,
 } from '../types';
 import { hasMeasuredPosition, holeByIndex, holeNumber, nearestHole, type Timebase } from '../types';
-import { frameSpan } from '../time';
-import { median } from '../stats';
+import { frameSpan } from '../../../time';
+import { median } from '../../../stats';
 
 export interface ResolveInput {
   readonly observations: ReadonlyArray<TrackObservation>;

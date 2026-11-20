@@ -1,5 +1,5 @@
 import { TOOL_VERSION } from '../project/schema';
-import { frameTime } from '../time';
+import { frameTime } from '../../../time';
 import { holeNumber } from '../types';
 import { parameterFingerprint, settingsFingerprint, type ExportInput } from './tables';
 import { formatReviewValue, reviewMeasures } from './review';

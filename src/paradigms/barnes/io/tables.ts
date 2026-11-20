@@ -28,29 +28,11 @@ import type { GapReport } from '../tracking/resolve';
 import type { VideoMeta } from '../project/schema';
 import { TOOL_VERSION } from '../project/schema';
 import type { ProtocolPreset } from '../project/protocol';
-import { frameEndTime, frameTime } from '../time';
-import { round as roundTo } from '../stats';
+import { frameEndTime, frameTime } from '../../../time';
+import { round as roundTo } from '../../../stats';
 
-export interface Table {
-  readonly name: string;
-  readonly columns: ReadonlyArray<string>;
-  readonly rows: ReadonlyArray<ReadonlyArray<string | number | boolean | null>>;
-  /** One line explaining what a row means, written into the XLSX information sheet. */
-  readonly description: string;
-}
-
-/** Fail before writing a CSV/XLSX whose values would sit under the wrong headers. */
-export function validateTableShape(table: Table): void {
-  if (table.columns.length === 0) throw new Error(`${table.name} has no columns.`);
-  for (let index = 0; index < table.rows.length; index++) {
-    const cells = table.rows[index]!.length;
-    if (cells !== table.columns.length) {
-      throw new Error(
-        `${table.name} row ${index + 1} has ${cells} cells for ${table.columns.length} columns.`,
-      );
-    }
-  }
-}
+export { validateTableShape, type Table } from '../../../io/table';
+import type { Table } from '../../../io/table';
 
 export interface ExportInput {
   readonly sourceSha256?: string | null;

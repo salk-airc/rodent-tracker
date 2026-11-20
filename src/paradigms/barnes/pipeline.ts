@@ -10,11 +10,13 @@ import type {
   TrialMeasures,
   TrialStart,
 } from './types';
-import type { Gray } from './geometry/imageOps';
-import { buildBackground } from './geometry/background';
+import type { Gray } from '../../image/imageOps';
+import { buildBackground } from '../../image/background';
 import { applyTemplate, detectGeometry, type RigTemplate } from './geometry/detect';
 import { trackVideo } from './tracking/track';
-import type { DetectorFactory } from './detect/types';
+import type { DetectorFactory } from '../../detect/types';
+import { sizeScaleFor } from '../../detect/scale';
+import { pxPerCm } from './types';
 import { detectTrialStart } from './tracking/trialStart';
 import {
   resolveTrack,
@@ -33,6 +35,13 @@ export interface AnalyzeOptions {
   readonly geometry?: MazeGeometry;
   /** Which detector finds the animal in each frame. Defaults to `dark-blob-v1`. */
   readonly detector?: DetectorFactory;
+  /**
+   * Rescale detector pixel sizes by the platform's measured px/cm. Off by
+   * default for the Barnes maze, whose sizes were tuned on these very clips
+   * and whose regression outputs depend on them; turn it on for a rig whose
+   * camera images the animal at a different size.
+   */
+  readonly scaleSizesToCalibration?: boolean;
   readonly onProgress?: (stage: AnalysisStage, done: number, total: number) => void;
 }
 
@@ -108,6 +117,7 @@ export async function analyzeVideo(
     opts.params.tracking,
     (d, t) => opts.onProgress?.('tracking', d, t),
     opts.detector,
+    opts.scaleSizesToCalibration ? sizeScaleFor(pxPerCm(geometry)) : undefined,
   );
   notes.push(...tracked.warnings);
 

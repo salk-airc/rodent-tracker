@@ -6,11 +6,11 @@
  */
 
 import type { FrameSource, MazeGeometry, TrackObservation, TrackingParams } from '../types';
-import { frameTime, nearestHole } from '../types';
-import type { Gray } from '../geometry/imageOps';
-import { buildPlatformMask } from './detectAnimal';
-import { darkBlobDetector } from '../detect/darkBlob';
-import type { DetectorFactory, FrameDetection } from '../detect/types';
+import { nearestHole } from '../types';
+import type { Gray } from '../../../image/imageOps';
+import { buildPlatformMask } from '../geometry/mask';
+import type { DetectorFactory } from '../../../detect/types';
+import { detectFrames } from '../../../tracking/detectFrames';
 
 export interface TrackResult {
   readonly observations: ReadonlyArray<TrackObservation>;
@@ -23,26 +23,23 @@ export interface TrackResult {
   readonly warnings: ReadonlyArray<string>;
 }
 
+/** Detect the animal on the platform, then add the Barnes fields (nearest hole, radial position). */
 export async function trackVideo(
   source: FrameSource,
   background: Gray,
   geometry: MazeGeometry,
   params: TrackingParams,
   onProgress?: (done: number, total: number) => void,
-  detectorFactory: DetectorFactory = darkBlobDetector,
+  detectorFactory?: DetectorFactory,
+  sizeScale?: number,
 ): Promise<TrackResult> {
-  const { width, height } = source;
-  const arenaMask = buildPlatformMask(geometry, width, height);
-  const detector = detectorFactory({ width, height, background, arenaMask, params });
-  const detections: FrameDetection[] = [];
-  await source.scan(
-    { from: 0, to: source.frameCount - 1 },
-    (frame, gray) => {
-      detections[frame] = detector.detect(frame, gray, frameTime(source.timebase, frame));
-    },
-    onProgress,
-  );
-  const finished = detector.finish ? detector.finish(detections) : detections;
+  const arenaMask = buildPlatformMask(geometry, source.width, source.height);
+  const detected = await detectFrames(source, background, arenaMask, params, {
+    ...(detectorFactory ? { detector: detectorFactory } : {}),
+    ...(sizeScale === undefined ? {} : { sizeScale }),
+    ...(onProgress ? { onProgress } : {}),
+  });
+  const finished = detected.frames;
 
   const observations: TrackObservation[] = finished.map(({ detection: det, darkPixelsPx }, frame) => {
     if (!det) return missingObservation(frame, darkPixelsPx);
@@ -68,7 +65,7 @@ export async function trackVideo(
     };
   });
 
-  const stats = areaStatistics(observations);
+  const stats = { median: detected.bodyAreaPx, spread: detected.bodyAreaSpread, count: detected.detectedFrames };
   const warnings: string[] = [];
   if (stats.count < 10) {
     warnings.push('Animal detected in fewer than 10 frames. Check the threshold and platform outline.');
@@ -79,24 +76,7 @@ export async function trackVideo(
     );
   }
 
-  return { observations, bodyAreaPx: stats.median, bodyAreaSpread: stats.spread, detectorId: detector.id, warnings };
-}
-
-/**
- * Body area for the whole recording, from the median of every frame that found
- * something.
- *
- * The median rather than the mean, and over all frames rather than a sample,
- * because the contaminants are known and are minorities: the start cylinder is
- * 10% of `test51`, and the head-down frames at the end of `test53` are about
- * 20% of it. A mean would be dragged by both.
- */
-function areaStatistics(observations: ReadonlyArray<TrackObservation>): { median: number; spread: number; count: number } {
-  const areas = observations.filter((o) => o.areaPx > 0).map((o) => o.areaPx).sort((a, b) => a - b);
-  if (areas.length === 0) return { median: 0, spread: 0, count: 0 };
-  const q = (f: number) => areas[Math.min(areas.length - 1, Math.max(0, Math.round(f * (areas.length - 1))))]!;
-  const med = q(0.5);
-  return { median: med, spread: med > 0 ? (q(0.75) - q(0.25)) / med : 0, count: areas.length };
+  return { observations, bodyAreaPx: stats.median, bodyAreaSpread: stats.spread, detectorId: detected.detectorId, warnings };
 }
 
 /** A measured frame in which no animal was found. */

@@ -4,12 +4,12 @@ import {
   packObservations,
   unpackObservations,
   type StoredVideo,
-} from '../src/project/schema';
-import { ProjectFormatError, readProject, suggestProjectFileName, writeProject } from '../src/project/io';
-import { EMPTY_META, NAMING_SCHEMES, parseFilename, schemeConfidence } from '../src/project/filename';
-import { DEFAULT_PARAMS } from '../src/params';
-import { videoMeasurementBasis } from '../src/measurementBasis';
-import type { TrackObservation } from '../src/types';
+} from '../src/paradigms/barnes/project/schema';
+import { ProjectFormatError, readProject, suggestProjectFileName, writeProject } from '../src/paradigms/barnes/project/io';
+import { EMPTY_META, NAMING_SCHEMES, parseFilename, schemeConfidence } from '../src/paradigms/barnes/project/filename';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
+import { videoMeasurementBasis } from '../src/paradigms/barnes/measurementBasis';
+import type { TrackObservation } from '../src/paradigms/barnes/types';
 import { makeGeometry, makeTimebase } from './helpers/synthetic';
 
 /**

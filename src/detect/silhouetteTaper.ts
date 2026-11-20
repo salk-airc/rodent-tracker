@@ -28,6 +28,7 @@ import {
   type NoseEstimate,
 } from './silhouette';
 import { resolveNoseOrientationContinuity, type NoseTrackEntry } from './orientationContinuity';
+import { REFERENCE_PX_PER_CM } from './scale';
 
 const TRACKING_PIXEL_BUDGET = 76_800;
 const DIFFERENCE_THRESHOLD = 22;
@@ -41,6 +42,10 @@ const MINIMUM_DISPLACEMENT_ELAPSED_S = 0.016;
 const TRACK_RESET_GAP_S = 1;
 const NOSE_REFINEMENT_CROP_RADIUS_FRACTION = 0.28;
 const AREA_COLLAPSE_FRACTION = 0.6;
+/** Half the 91.5 cm Barnes platform the constants above were tuned on. */
+const REFERENCE_ARENA_RADIUS_CM = 45.75;
+/** The tuning clips were 640×480, downsampled by half to fit the pixel budget. */
+const REFERENCE_DOWNSAMPLE = 0.5;
 
 export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
   const { width, height, background, arenaMask } = setup;
@@ -54,7 +59,18 @@ export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
   const smallArena = downsample(arenaMask.map((v) => v * 255), width, height, aw, ah).map((v) => (v >= 128 ? 1 : 0));
   let arenaPixels = 0;
   for (const v of smallArena) arenaPixels += v;
-  const arenaRadius = Math.sqrt(arenaPixels / Math.PI);
+  // The original tracker sizes everything off the arena radius, which assumes
+  // a Barnes platform. Given a calibrated scale, use the radius a Barnes
+  // platform would have at this scale instead, so sizes follow the mouse and
+  // not the arena (a 40 cm open field holds the same mouse as a 92 cm platform).
+  const arenaRadius =
+    setup.sizeScale === undefined
+      ? Math.sqrt(arenaPixels / Math.PI)
+      : REFERENCE_ARENA_RADIUS_CM * REFERENCE_PX_PER_CM * setup.sizeScale * scale;
+  const maximumComponentAreaPx =
+    setup.sizeScale === undefined
+      ? MAXIMUM_COMPONENT_AREA_PX
+      : Math.ceil(MAXIMUM_COMPONENT_AREA_PX * ((setup.sizeScale * scale) / REFERENCE_DOWNSAMPLE) ** 2);
   const minimumBodyAreaPx = Math.max(10, Math.round(arenaRadius ** 2 * MINIMUM_BODY_AREA_ARENA_RADIUS_SQUARED_FRACTION));
 
   let previous: Point | null = null;
@@ -78,7 +94,7 @@ export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
     const darkPixelsPx = countForeground(small, smallBackground, smallArena) * sx * sy;
     const candidate = detectForegroundCandidate(
       small, smallBackground, smallArena, aw, ah, previous, maximumDisplacementPx,
-      DIFFERENCE_THRESHOLD, minimumBodyAreaPx, MAXIMUM_COMPONENT_AREA_PX,
+      DIFFERENCE_THRESHOLD, minimumBodyAreaPx, maximumComponentAreaPx,
     );
     if (!candidate) {
       noseTrack[frame] = { timeS, body: null, nose: null, endpoints: null };
@@ -104,7 +120,7 @@ export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
       scale: { x: sx, y: sy },
     };
     if (bodyObserved && nose.estimate.status !== 'observed') {
-      const refined = refineNose(gray, background.data, arenaMask, width, height, body, arenaRadius * Math.max(sx, sy), sx * sy);
+      const refined = refineNose(gray, background.data, arenaMask, width, height, body, arenaRadius * Math.max(sx, sy), sx * sy, maximumComponentAreaPx);
       if (refined) nose = { ...refined, method: 'adaptive-source-detail-tail-taper-v2', scale: { x: 1, y: 1 } };
     }
     const at = (x: number | null, y: number | null): Point | null =>
@@ -178,6 +194,7 @@ function refineNose(
   body: Point,
   arenaRadiusPx: number,
   areaScale: number,
+  maximumComponentAreaPx: number,
 ): { estimate: NoseEstimate; offset: Point } | null {
   const cropRadius = Math.max(24, Math.ceil(arenaRadiusPx * NOSE_REFINEMENT_CROP_RADIUS_FRACTION));
   const left = Math.max(0, Math.floor(body.x - cropRadius));
@@ -200,7 +217,7 @@ function refineNose(
   const candidate = detectForegroundCandidate(
     cropGray, cropBackground, cropArena, cw, ch,
     { x: body.x - left, y: body.y - top }, cropRadius, DIFFERENCE_THRESHOLD,
-    Math.max(10, Math.floor(10 * areaScale)), Math.ceil(MAXIMUM_COMPONENT_AREA_PX * areaScale),
+    Math.max(10, Math.floor(10 * areaScale)), Math.ceil(maximumComponentAreaPx * areaScale),
   );
   if (!candidate) return null;
   return { estimate: estimateNoseFromTaperedSilhouette(candidate, cw, ch), offset: { x: left, y: top } };

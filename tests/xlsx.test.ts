@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { spawnSync } from 'node:child_process';
 import { strFromU8, unzipSync } from 'fflate';
 import { toXlsx } from '../src/io/xlsx';
-import type { Table } from '../src/io/tables';
+import type { Table } from '../src/paradigms/barnes/io/tables';
 
 const table: Table = {
   name: 'Results',
@@ -21,7 +21,7 @@ describe('XLSX reproducibility', () => {
     const createdAt = '2026-03-08T02:30:00.000Z';
     const workbooks = ['UTC', 'America/Los_Angeles', 'Asia/Kathmandu'].map((timeZone) => {
       const result = spawnSync(process.execPath, ['--import', 'tsx', '--input-type=module', '-e', `
-        import { toXlsx } from './src/io/xlsx.ts';
+        import { toXlsx } from './src/io/xlsx';
         process.stdout.write(toXlsx([${JSON.stringify(table)}], {
           createdAt: new Date('${createdAt}'),
         }));

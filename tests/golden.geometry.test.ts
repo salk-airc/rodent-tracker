@@ -18,16 +18,16 @@
  */
 
 import { existsSync } from 'node:fs';
-import { SAMPLE_CLIPS } from '../src/samples';
+import { SAMPLE_CLIPS } from '../src/paradigms/barnes/samples';
 import { spawnSync } from 'node:child_process';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { FfmpegFrameSource } from '../src/video/ffmpeg';
-import { buildBackground } from '../src/geometry/background';
-import { detectGeometry, type DetectResult } from '../src/geometry/detect';
-import { platformBrightness } from '../src/geometry/holes';
-import { sampleBilinear } from '../src/geometry/imageOps';
-import type { Gray } from '../src/geometry/imageOps';
-import type { TimingReport } from '../src/types';
+import { buildBackground } from '../src/image/background';
+import { detectGeometry, type DetectResult } from '../src/paradigms/barnes/geometry/detect';
+import { platformBrightness } from '../src/paradigms/barnes/geometry/holes';
+import { sampleBilinear } from '../src/image/imageOps';
+import type { Gray } from '../src/image/imageOps';
+import type { TimingReport } from '../src/paradigms/barnes/types';
 
 const dir = 'data/barnes-maze';
 

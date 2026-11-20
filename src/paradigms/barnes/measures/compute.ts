@@ -11,7 +11,7 @@ import type {
   TrialMeasures,
 } from '../types';
 import { hasMeasuredPosition, holeByIndex, pxPerCm } from '../types';
-import { clippedFrameDurations, frameAtTime, frameTime } from '../time';
+import { clippedFrameDurations, frameAtTime, frameTime } from '../../../time';
 import { classifyStrategy } from './strategy';
 
 export interface MeasureInput {

@@ -6,8 +6,8 @@
  * and check that exactly one event comes out.
  */
 
-import type { AnalysisParams, Hole, MazeGeometry, Point, TrackFrame, Timebase } from '../../src/types';
-import { DEFAULT_PARAMS } from '../../src/params';
+import type { AnalysisParams, Hole, MazeGeometry, Point, TrackFrame, Timebase } from '../../src/paradigms/barnes/types';
+import { DEFAULT_PARAMS } from '../../src/paradigms/barnes/params';
 
 export const CENTER: Point = { x: 320, y: 240 };
 export const PLATFORM_R = 208;
