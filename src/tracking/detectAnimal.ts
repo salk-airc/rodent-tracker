@@ -3,23 +3,11 @@
 import { chamferDistance, connectedComponents, type Component, type Gray } from '../geometry/imageOps';
 import type { MazeGeometry, Point, TrackingParams } from '../types';
 
-export interface AnimalDetection {
-  readonly areaPx: number;
-  readonly body: Point;
-  readonly nose: Point;
-  readonly tail: Point;
-  readonly thicknessPx: number;
-  readonly noseArmPx: number;
-  readonly tailArmPx: number;
-  /** How clearly the two ends could be told apart, 0..1. */
-  readonly axisConfidence: number;
-  readonly candidateCount: number;
-  readonly reacquired: boolean;
-}
+export type { AnimalDetection } from '../detect/types';
+import type { AnimalDetection } from '../detect/types';
 
 export interface DetectionContext {
   readonly background: Gray;
-  readonly geometry: MazeGeometry;
   readonly params: TrackingParams;
   /**
    * Pixel mask of the platform, precomputed once. Restricting the search to
