@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { detectEvents } from '../src/events';
-import { computeMeasures } from '../src/measures/compute';
-import { longestConsecutiveRun } from '../src/measures/strategy';
+import { detectEvents } from '../src/paradigms/barnes/events';
+import { computeMeasures } from '../src/paradigms/barnes/measures/compute';
+import { longestConsecutiveRun } from '../src/paradigms/barnes/measures/strategy';
 
-import type { TrackingQuality, Timebase } from '../src/types';
+import type { TrackingQuality, Timebase } from '../src/paradigms/barnes/types';
 import { CENTER, PX_PER_CM, hold, makeFrames, makeGeometry, makeTimebase, nearHole, params } from './helpers/synthetic';
 
 const BODY = 700;

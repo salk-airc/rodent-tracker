@@ -10,12 +10,12 @@ import type {
   TrialMeasures,
   TrialStart,
 } from './types';
-import type { Gray } from './geometry/imageOps';
-import { buildBackground } from './geometry/background';
+import type { Gray } from '../../image/imageOps';
+import { buildBackground } from '../../image/background';
 import { applyTemplate, detectGeometry, type RigTemplate } from './geometry/detect';
 import { trackVideo } from './tracking/track';
-import type { DetectorFactory } from './detect/types';
-import { sizeScaleFor } from './detect/scale';
+import type { DetectorFactory } from '../../detect/types';
+import { sizeScaleFor } from '../../detect/scale';
 import { pxPerCm } from './types';
 import { detectTrialStart } from './tracking/trialStart';
 import {

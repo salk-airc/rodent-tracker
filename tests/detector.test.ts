@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { darkBlobDetector } from '../src/detect/darkBlob';
 import { silhouetteTaperDetector } from '../src/detect/silhouetteTaper';
 import type { DetectorFactory, DetectorSetup } from '../src/detect/types';
-import { DEFAULT_PARAMS } from '../src/params';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
 import { REFERENCE_PX_PER_CM, scaleTrackingParams, sizeScaleFor } from '../src/detect/scale';
 
 const W = 320;

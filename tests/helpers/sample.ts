@@ -1,4 +1,4 @@
-import type { ProjectFile } from '../../src/project/schema';
+import type { ProjectFile } from '../../src/paradigms/barnes/project/schema';
 
 /**
  * The sample project with every input confirmed, and the first recording's

@@ -3,7 +3,7 @@
 import type { MazeGeometry, TrackObservation, TrackingParams, TrialStart } from '../types';
 import { holeNumber, nearestHole } from '../types';
 import type { Timebase } from '../types';
-import { frameEndTime, frameTime } from '../time';
+import { frameEndTime, frameTime } from '../../../time';
 
 /** A pre-trial pattern must last this long to be believed, in seconds. */
 const MIN_PRETRIAL_SEC = 0.5;

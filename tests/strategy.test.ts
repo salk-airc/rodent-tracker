@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { detectEvents } from '../src/events';
-import { classifyStrategy } from '../src/measures/strategy';
+import { detectEvents } from '../src/paradigms/barnes/events';
+import { classifyStrategy } from '../src/paradigms/barnes/measures/strategy';
 import { frameDurations } from '../src/time';
 import { CENTER, PX_PER_CM, RING_R, hold, makeFrames, makeGeometry, makeTimebase, nearHole, params } from './helpers/synthetic';
 

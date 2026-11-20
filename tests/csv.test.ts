@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { toCsv } from '../src/io/csv';
-import { parseCsv } from '../src/io/pose';
-import type { Table } from '../src/io/tables';
+import { parseCsv } from '../src/paradigms/barnes/io/pose';
+import type { Table } from '../src/paradigms/barnes/io/tables';
 
 describe('CSV output', () => {
   it('starts with the header and keeps every row rectangular', () => {

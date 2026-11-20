@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { detectEvents } from '../src/events';
+import { detectEvents } from '../src/paradigms/barnes/events';
 import { CENTER, hold, makeFrames, makeGeometry, makeTimebase, nearHole, params } from './helpers/synthetic';
 
 const BODY = 700;

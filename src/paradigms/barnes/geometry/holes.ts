@@ -1,6 +1,6 @@
 /** Refine each predicted hole center against its local image neighborhood. */
 
-import { sampleBilinear, type Gray } from './imageOps';
+import { sampleBilinear, type Gray } from '../../../image/imageOps';
 import type { Hole, Point, Provenance } from '../types';
 
 export interface RefinedHoles {

@@ -5,7 +5,7 @@
  * the same video without touching anything downstream.
  */
 
-import type { Gray } from '../geometry/imageOps';
+import type { Gray } from '../image/imageOps';
 import type { Point, TrackingParams } from '../types';
 
 /** What a detector is given once per video, before the first frame. */

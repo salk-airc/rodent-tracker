@@ -11,16 +11,16 @@
  */
 
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { SAMPLE_CLIPS } from '../src/samples';
+import { SAMPLE_CLIPS } from '../src/paradigms/barnes/samples';
 import { join } from 'node:path';
 import { FfmpegFrameSource } from '../src/video/ffmpeg';
-import { analyzeVideo, reanalyze } from '../src/pipeline';
-import { DEFAULT_PARAMS } from '../src/params';
-import { parseFilename } from '../src/project/filename';
-import { packObservations, TOOL_VERSION } from '../src/project/schema';
-import { writeProject } from '../src/project/io';
-import { scientificReadinessReasons } from '../src/project/readiness';
-import { videoMeasurementBasis } from '../src/measurementBasis';
+import { analyzeVideo, reanalyze } from '../src/paradigms/barnes/pipeline';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
+import { parseFilename } from '../src/paradigms/barnes/project/filename';
+import { packObservations, TOOL_VERSION } from '../src/paradigms/barnes/project/schema';
+import { writeProject } from '../src/paradigms/barnes/project/io';
+import { scientificReadinessReasons } from '../src/paradigms/barnes/project/readiness';
+import { videoMeasurementBasis } from '../src/paradigms/barnes/measurementBasis';
 import {
   eventDetailTable,
   frameDetailTable,
@@ -29,13 +29,13 @@ import {
   qualityTable,
   trialSummaryTable,
   type ExportInput,
-} from '../src/io/tables';
+} from '../src/paradigms/barnes/io/tables';
 import { toCsv } from '../src/io/csv';
 import { toXlsx } from '../src/io/xlsx';
-import { trialOverviewTable } from '../src/io/review';
-import { reviewReportHtml } from '../src/io/report';
+import { trialOverviewTable } from '../src/paradigms/barnes/io/review';
+import { reviewReportHtml } from '../src/paradigms/barnes/io/report';
 import { frameTime } from '../src/time';
-import { holeNumber, type MazeGeometry } from '../src/types';
+import { holeNumber, type MazeGeometry } from '../src/paradigms/barnes/types';
 
 const DATA_DIR = 'data/barnes-maze';
 const OUT_DIR = 'outputs';

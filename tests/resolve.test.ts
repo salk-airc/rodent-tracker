@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { detectEvents } from '../src/events';
-import { DEFAULT_PARAMS } from '../src/params';
-import { resolveTrack, type ManualCorrection } from '../src/tracking/resolve';
-import type { Point, TrackObservation } from '../src/types';
+import { detectEvents } from '../src/paradigms/barnes/events';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
+import { resolveTrack, type ManualCorrection } from '../src/paradigms/barnes/tracking/resolve';
+import type { Point, TrackObservation } from '../src/paradigms/barnes/types';
 import { BODY_AREA_PX, makeGeometry, makeTimebase } from './helpers/synthetic';
 
 const geometry = makeGeometry(3);

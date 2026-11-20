@@ -13,10 +13,10 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { FfmpegFrameSource } from '../src/video/ffmpeg';
-import { analyzeVideo, reanalyze, type AnalysisOutcome } from '../src/pipeline';
-import { DEFAULT_PARAMS } from '../src/params';
-import { SAMPLE_CLIPS } from '../src/samples';
-import type { MazeGeometry, Point } from '../src/types';
+import { analyzeVideo, reanalyze, type AnalysisOutcome } from '../src/paradigms/barnes/pipeline';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
+import { SAMPLE_CLIPS } from '../src/paradigms/barnes/samples';
+import type { MazeGeometry, Point } from '../src/paradigms/barnes/types';
 import type { DetectorFactory } from '../src/detect/types';
 import { darkBlobDetector } from '../src/detect/darkBlob';
 import { silhouetteTaperDetector } from '../src/detect/silhouetteTaper';

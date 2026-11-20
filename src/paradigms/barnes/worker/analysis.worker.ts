@@ -1,9 +1,9 @@
 /** Runs decoding and analysis outside the UI thread. */
 
 import MP4Box from 'mp4box';
-import { WebCodecsFrameSource, UnsupportedBrowserError, VideoDecodeError } from '../video/webcodecs';
+import { WebCodecsFrameSource, UnsupportedBrowserError, VideoDecodeError } from '../../../video/webcodecs';
 import { analyzeVideo } from '../pipeline';
-import { buildBackground } from '../geometry/background';
+import { buildBackground } from '../../../image/background';
 import { packObservations } from '../project/schema';
 import { videoMeasurementBasis } from '../measurementBasis';
 import type { WorkerRequest, WorkerResponse } from './protocol';

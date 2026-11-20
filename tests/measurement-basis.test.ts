@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_PARAMS } from '../src/params';
-import { measurementBasisIssue, videoMeasurementBasis } from '../src/measurementBasis';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
+import { measurementBasisIssue, videoMeasurementBasis } from '../src/paradigms/barnes/measurementBasis';
 import { makeGeometry } from './helpers/synthetic';
 
 describe('measurement provenance', () => {

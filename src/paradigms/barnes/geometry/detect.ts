@@ -5,7 +5,7 @@
 import { fitPlatform, type PlatformFit } from './platform';
 import { fitRing, ringHoleCenters, type RingFit } from './ring';
 import { platformBrightness, refineHoles } from './holes';
-import type { Gray } from './imageOps';
+import type { Gray } from '../../../image/imageOps';
 import type { Hole, MazeGeometry, PlatformDiameterSource, Point, Provenance } from '../types';
 
 /**

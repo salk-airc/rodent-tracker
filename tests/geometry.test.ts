@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { detectGeometry, applyTemplate, templateFromGeometry } from '../src/geometry/detect';
-import { fitPlatform } from '../src/geometry/platform';
-import { fitRing } from '../src/geometry/ring';
-import type { Gray } from '../src/geometry/imageOps';
-import { holeNumber } from '../src/types';
+import { detectGeometry, applyTemplate, templateFromGeometry } from '../src/paradigms/barnes/geometry/detect';
+import { fitPlatform } from '../src/paradigms/barnes/geometry/platform';
+import { fitRing } from '../src/paradigms/barnes/geometry/ring';
+import type { Gray } from '../src/image/imageOps';
+import { holeNumber } from '../src/paradigms/barnes/types';
 
 interface MazeSpec {
   width?: number;

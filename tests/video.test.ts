@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildIndex, presentationIndicesInDecodeSpan } from '../src/video/webcodecs';
 import { describeTiming, frameAtTime, frameDurations, timingUncertaintySec } from '../src/time';
-import type { Timebase } from '../src/types';
+import type { Timebase } from '../src/paradigms/barnes/types';
 
 const sample = (cts: number, is_sync = false) => ({ cts, is_sync });
 

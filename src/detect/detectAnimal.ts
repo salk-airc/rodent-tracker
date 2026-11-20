@@ -1,10 +1,10 @@
 /** Detect the animal and estimate separate body and nose positions. */
 
-import { chamferDistance, connectedComponents, type Component, type Gray } from '../geometry/imageOps';
-import type { MazeGeometry, Point, TrackingParams } from '../types';
+import { chamferDistance, connectedComponents, type Component, type Gray } from '../image/imageOps';
+import type { Point, TrackingParams } from '../types';
 
-export type { AnimalDetection } from '../detect/types';
-import type { AnimalDetection } from '../detect/types';
+export type { AnimalDetection } from './types';
+import type { AnimalDetection } from './types';
 
 export interface DetectionContext {
   readonly background: Gray;
@@ -86,20 +86,6 @@ export function buildDarkCutoff(background: Gray, platformMask: Uint8Array, dark
   }
   if (y0 === Infinity) y0 = 0;
   return { limit, width, x0, x1, y0, y1 };
-}
-
-/** Pixels within the platform, with a small margin so a rim-hugging animal is not clipped. */
-export function buildPlatformMask(geometry: MazeGeometry, width: number, height: number, margin = 1.02): Uint8Array {
-  const mask = new Uint8Array(width * height);
-  const r2 = (geometry.platformRadiusPx * margin) ** 2;
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const dx = x - geometry.center.x;
-      const dy = y - geometry.center.y;
-      if (dx * dx + dy * dy <= r2) mask[y * width + x] = 1;
-    }
-  }
-  return mask;
 }
 
 /** Half-width of the local search box, in px. Generous: a mouse covers ~5 px per frame. */

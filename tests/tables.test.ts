@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { exclusionsTable, parameterFingerprint, settingsFingerprint, validateTableShape } from '../src/io/tables';
-import { DEFAULT_PARAMS } from '../src/params';
-import { videoMeasurementBasis } from '../src/measurementBasis';
+import { exclusionsTable, parameterFingerprint, settingsFingerprint, validateTableShape } from '../src/paradigms/barnes/io/tables';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
+import { videoMeasurementBasis } from '../src/paradigms/barnes/measurementBasis';
 import { makeGeometry } from './helpers/synthetic';
 
 const BASIS = videoMeasurementBasis(DEFAULT_PARAMS, makeGeometry(7));

@@ -9,7 +9,7 @@
  */
 
 import type { Point } from '../types';
-import { buildDarkCutoff, buildFrameMask, detectAnimal, SEARCH_HALF_WIDTH, type DetectionContext } from '../tracking/detectAnimal';
+import { buildDarkCutoff, buildFrameMask, detectAnimal, SEARCH_HALF_WIDTH, type DetectionContext } from './detectAnimal';
 import { median } from '../stats';
 import type { Detector, DetectorFactory } from './types';
 

@@ -2,7 +2,7 @@
 
 import { analysisParameterErrors } from '../params';
 import { parseProtocol } from './protocol';
-import { isVideoHash } from './identity';
+import { isVideoHash } from '../../../identity';
 import { measurementBasisErrors } from '../measurementBasis';
 import type { FrameStatus, MazeGeometry, Point, Provenance, SearchStrategy, TrialStart } from '../types';
 import type { ManualCorrection } from '../tracking/resolve';
