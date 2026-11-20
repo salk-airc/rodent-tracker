@@ -4,7 +4,8 @@ Three sample recordings, published with the AIRC
 [RSE take-home](https://github.com/salk-airc/rse-takehome-2026). They aren't kept in this
 repo: `pnpm samples` downloads them here from a pinned commit of that repo and checks each
 file's SHA-256 (both are in
-[`src/paradigms/barnes/samples.ts`](../../src/paradigms/barnes/samples.ts)). The golden
+[`src/paradigms/barnes/samples.ts`](../../src/paradigms/barnes/samples.ts), which a web app can
+import; the download itself is in `sampleFiles.ts`). The golden
 tests read them from here and skip without them; `pnpm regress` and `pnpm benchmark`
 download them if they're missing. [tracking-platform](https://github.com/salk-airc/tracking-platform)
 downloads them the same way for its export check. The committed results in
