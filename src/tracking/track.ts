@@ -11,6 +11,7 @@ import type { Gray } from '../geometry/imageOps';
 import { buildPlatformMask } from './detectAnimal';
 import { darkBlobDetector } from '../detect/darkBlob';
 import type { DetectorFactory, FrameDetection } from '../detect/types';
+import { scaleTrackingParams } from '../detect/scale';
 
 export interface TrackResult {
   readonly observations: ReadonlyArray<TrackObservation>;
@@ -30,10 +31,22 @@ export async function trackVideo(
   params: TrackingParams,
   onProgress?: (done: number, total: number) => void,
   detectorFactory: DetectorFactory = darkBlobDetector,
+  /**
+   * This video's px/cm over the sample clips' (`sizeScaleFor`). Omit to keep
+   * the pixel sizes as tuned on the sample clips.
+   */
+  sizeScale?: number,
 ): Promise<TrackResult> {
   const { width, height } = source;
   const arenaMask = buildPlatformMask(geometry, width, height);
-  const detector = detectorFactory({ width, height, background, arenaMask, params });
+  const detector = detectorFactory({
+    width,
+    height,
+    background,
+    arenaMask,
+    params: sizeScale === undefined ? params : scaleTrackingParams(params, sizeScale),
+    ...(sizeScale === undefined ? {} : { sizeScale }),
+  });
   const detections: FrameDetection[] = [];
   await source.scan(
     { from: 0, to: source.frameCount - 1 },

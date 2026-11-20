@@ -9,7 +9,7 @@
  */
 
 import type { Point } from '../types';
-import { buildDarkCutoff, buildFrameMask, detectAnimal, type DetectionContext } from '../tracking/detectAnimal';
+import { buildDarkCutoff, buildFrameMask, detectAnimal, SEARCH_HALF_WIDTH, type DetectionContext } from '../tracking/detectAnimal';
 import { median } from '../stats';
 import type { Detector, DetectorFactory } from './types';
 
@@ -20,6 +20,8 @@ const HEADING_MIN_PX = 3;
 
 export const darkBlobDetector: DetectorFactory = (setup): Detector => {
   const { width, height, background, arenaMask, params } = setup;
+  const searchHalfWidthPx = setup.sizeScale === undefined ? undefined : SEARCH_HALF_WIDTH * setup.sizeScale;
+  const headingMinPx = HEADING_MIN_PX * (setup.sizeScale ?? 1);
   const darkCutoff = buildDarkCutoff(background, arenaMask, params.darkThreshold, width);
   const maskBuffer = new Uint8Array(width * height);
   const recentBodies: Point[] = [];
@@ -40,7 +42,8 @@ export const darkBlobDetector: DetectorFactory = (setup): Detector => {
         platformMask: arenaMask,
         bodyAreaPx,
         previous,
-        heading: estimateHeading(recentBodies),
+        heading: estimateHeading(recentBodies, headingMinPx),
+        ...(searchHalfWidthPx === undefined ? {} : { searchHalfWidthPx }),
       };
 
       const { mask, darkPixelsPx } = buildFrameMask(gray, darkCutoff, maskBuffer);
@@ -63,13 +66,13 @@ export const darkBlobDetector: DetectorFactory = (setup): Detector => {
   };
 };
 
-function estimateHeading(recent: ReadonlyArray<Point>): Point | null {
+function estimateHeading(recent: ReadonlyArray<Point>, minPx: number): Point | null {
   if (recent.length < 2) return null;
   const a = recent[0]!;
   const b = recent[recent.length - 1]!;
   const dx = b.x - a.x;
   const dy = b.y - a.y;
   const len = Math.hypot(dx, dy);
-  if (len < HEADING_MIN_PX) return null;
+  if (len < minPx) return null;
   return { x: dx / len, y: dy / len };
 }

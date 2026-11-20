@@ -30,6 +30,27 @@ detectors can be swapped and compared on the same video.
 
 See [docs/BENCHMARK.md](docs/BENCHMARK.md) for how they compare.
 
+Detector sizes (noise floor, erosion, search window, area caps) were tuned on the sample
+clips at about 4.7 px/cm. For a camera that images the animal bigger or smaller, pass
+`sizeScale` (`sizeScaleFor(pxPerCm)` from `src/detect/scale.ts`) and they follow:
+lengths by the scale, areas by its square. The Barnes pipeline leaves this off by default
+(`scaleSizesToCalibration`) so its regression outputs stay fixed.
+
+## Arenas and zones
+
+`src/arena/` describes any arena, not just the Barnes platform:
+
+- **Shapes**: circle, rectangle, polygon (concave is fine, e.g. a plus maze) and annulus.
+- **Calibration**: image px to world cm, from two points a known distance apart, or a
+  least-squares homography from four or more points for a camera at an angle.
+- **Zones**: named shapes in world cm, so a template such as a 40 × 40 cm open field with
+  its center square is written once and fitted to each camera by calibration alone.
+- **Zone measures**: time in zone, entries, latency to first entry and distance, with the
+  conventions for tracking gaps and line flicker written down in `zoneMeasures.ts`.
+
+The Barnes maze still uses its own geometry (`MazeGeometry`); moving it onto these
+arenas is the next step.
+
 ## Develop
 
 ```bash

@@ -16,7 +16,14 @@ export interface DetectorSetup {
   readonly background: Gray;
   /** 1 where the animal can be, 0 elsewhere (rig, cables, the room). */
   readonly arenaMask: Uint8Array;
+  /** Already scaled to this video (see `scaleTrackingParams`). */
   readonly params: TrackingParams;
+  /**
+   * This video's px/cm over the sample clips' (`sizeScaleFor`). When given,
+   * detectors also rescale their built-in pixel sizes; when absent they keep
+   * the sizes tuned on the sample clips, unchanged.
+   */
+  readonly sizeScale?: number;
 }
 
 /** One frame's answer: where the animal is and how sure the detector is. */
