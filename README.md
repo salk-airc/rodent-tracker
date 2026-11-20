@@ -17,6 +17,42 @@ object…) is a small plugin on top of one engine.
   detector (pixel-budget detection, full-resolution nose taper, orientation continuity,
   a written reason for every doubtful frame).
 
+## Layout
+
+| Path | What it is |
+|---|---|
+| `src/video/` | Frame sources: WebCodecs in the browser, ffmpeg in Node |
+| `src/image/` | Image operations and the empty-arena background |
+| `src/detect/` | Detectors, their default settings and size scaling |
+| `src/tracking/detectFrames.ts` | The one pixel pass every paradigm shares |
+| `src/arena/` | Shapes, calibration, zones and zone measures |
+| `src/io/` | CSV and XLSX writers |
+| `src/paradigm.ts` | The `Paradigm` interface apps program against |
+| `src/paradigms/barnes/` | Barnes maze: geometry fit, holes, events, strategy, project format, review and exports |
+| `src/paradigms/open-field/` | Open field: distance, speed, center and wall time |
+
+Nothing outside `src/paradigms/` imports from it.
+
+## Paradigms
+
+| Paradigm | Id | Status |
+|---|---|---|
+| Barnes maze | `barnes-maze` | Full: Simon's analysis, project files, review, exports |
+| Open field | `open-field` | Measures only, checked on synthetic video; needs real IVSS video |
+
+```ts
+import { openField } from './src/paradigms/open-field';
+import { openFieldZones } from './src/arena/arena';
+import { scaleFromTwoPoints } from './src/arena/calibration';
+
+const arena = { ...openFieldZones(40, 40), calibration: scaleFromTwoPoints(topLeftPx, topRightPx, 40) };
+const result = await openField.analyze(source, { arena });
+result.summary; // distance, speed, center time, entries, latency, time near walls
+```
+
+A new paradigm is an arena template plus its measures; see `src/paradigms/open-field/` for
+the smallest complete one.
+
 ## Detectors
 
 A `Detector` (`src/detect/types.ts`) turns each decoded frame into a body, nose and tail
@@ -48,8 +84,8 @@ lengths by the scale, areas by its square. The Barnes pipeline leaves this off b
 - **Zone measures**: time in zone, entries, latency to first entry and distance, with the
   conventions for tracking gaps and line flicker written down in `zoneMeasures.ts`.
 
-The Barnes maze still uses its own geometry (`MazeGeometry`); moving it onto these
-arenas is the next step.
+The Barnes maze keeps its own fitted geometry (`MazeGeometry`) for its analysis, and
+`barnesArena()` expresses it as an arena (platform boundary, a zone per hole) for generic tools.
 
 ## Develop
 
