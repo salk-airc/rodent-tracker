@@ -101,3 +101,46 @@ export function measureZones(
   }
   return { durationS, trackedS, distanceCm, zones: out };
 }
+
+export interface ZoneVisit {
+  readonly zoneId: string;
+  /** When the presence began (the entry's time). */
+  readonly startS: number;
+  /** Time of the last sample inside before the animal was seen elsewhere, or the track ended. */
+  readonly endS: number;
+}
+
+/**
+ * Every counted entry, in time order, with the same entry rules as
+ * `measureZones`: a visit to zone Z is what `measureZones` counts as one entry
+ * to Z. Sequence measures (Y-maze alternation, arm order) are read from this.
+ */
+export function zoneVisits(
+  samples: ReadonlyArray<WorldSample>,
+  zones: ReadonlyArray<Zone>,
+  options: Pick<ZoneMeasureOptions, 'minEntryS'> = {},
+): ZoneVisit[] {
+  const minEntryS = options.minEntryS ?? 0;
+  const visits: ZoneVisit[] = [];
+  for (const zone of zones) {
+    let presenceStart: number | null = null;
+    let lastInside = 0;
+    const close = () => {
+      if (presenceStart !== null && lastInside - presenceStart >= minEntryS) {
+        visits.push({ zoneId: zone.id, startS: presenceStart, endS: lastInside });
+      }
+      presenceStart = null;
+    };
+    for (const s of samples) {
+      if (s.point === null) continue;
+      if (contains(zone.shape, s.point)) {
+        presenceStart ??= s.timeS;
+        lastInside = s.timeS;
+      } else {
+        close();
+      }
+    }
+    close();
+  }
+  return visits.sort((a, b) => a.startS - b.startS || a.zoneId.localeCompare(b.zoneId));
+}

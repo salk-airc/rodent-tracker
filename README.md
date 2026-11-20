@@ -25,11 +25,14 @@ object…) is a small plugin on top of one engine.
 | `src/image/` | Image operations and the empty-arena background |
 | `src/detect/` | Detectors, their default settings and size scaling |
 | `src/tracking/detectFrames.ts` | The one pixel pass every paradigm shares |
-| `src/arena/` | Shapes, calibration, zones and zone measures |
+| `src/tracking/arenaTrack.ts` | Background, detection, world cm and smoothing for zone-based paradigms |
+| `src/arena/` | Shapes, calibration, zones, zone measures and arm-maze layouts |
 | `src/io/` | CSV and XLSX writers |
 | `src/paradigm.ts` | The `Paradigm` interface apps program against |
 | `src/paradigms/barnes/` | Barnes maze: geometry fit, holes, events, strategy, project format, review and exports |
 | `src/paradigms/open-field/` | Open field: distance, speed, center and wall time |
+| `src/paradigms/elevated-plus/` | Elevated plus maze: open- against closed-arm time and entries |
+| `src/paradigms/y-maze/` | Y-maze: spontaneous alternation from the arm-entry order |
 
 Nothing outside `src/paradigms/` imports from it.
 
@@ -39,6 +42,8 @@ Nothing outside `src/paradigms/` imports from it.
 |---|---|---|
 | Barnes maze | `barnes-maze` | Full: Simon's analysis, project files, review, exports |
 | Open field | `open-field` | Measures only, checked on synthetic video; needs real IVSS video |
+| Elevated plus maze | `elevated-plus-maze` | Measures only, checked on synthetic video; no head dips yet |
+| Y-maze spontaneous alternation | `y-maze` | Measures only, checked on synthetic video |
 
 ```ts
 import { openField } from './src/paradigms/open-field';
@@ -52,6 +57,22 @@ result.summary; // distance, speed, center time, entries, latency, time near wal
 
 A new paradigm is an arena template plus its measures; see `src/paradigms/open-field/` for
 the smallest complete one.
+
+Arm mazes come from one layout function, `armMazeLayout` in `src/arena/armMaze.ts`: evenly
+spaced arms of one width around a hub, with `elevatedPlusMaze()` and `yMaze()` on top (an
+8-arm radial maze is the same call). Each layout lists landmarks (arm-end corners and tips)
+in world cm, so an app can calibrate by having someone click them on the first frame:
+
+```ts
+const layout = yMaze({ armLengthCm: 35, armWidthCm: 5 });
+const calibration = homographyFromPoints(clicks.map((image, i) => ({ image, world: layout.landmarks[i].world })));
+const result = await yMazeAlternation.analyze(source, { arena: { ...layout, calibration } });
+result.summary.sequence;       // ['A', 'B', 'C', 'A', …]
+result.summary.alternationPct; // alternations / (entries − 2) × 100
+```
+
+Entries in both mazes are the smoothed body center crossing into an arm and staying 0.2 s.
+`entryMarginCm` moves the arm line further out, which comes closer to an all-four-paws rule.
 
 ## Detectors
 
