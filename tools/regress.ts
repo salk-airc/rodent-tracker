@@ -59,8 +59,8 @@ for (const clip of SAMPLE_CLIPS) {
     warnings: out.warnings,
   };
   // One frame per line, so a diff points at the frames that changed.
-  const body = JSON.stringify(result, null, 2);
-  const frames = out.track.frames.map((f) => `    ${JSON.stringify(f)}`).join(',\n');
+  const body = JSON.stringify(result, roundFloats, 2);
+  const frames = out.track.frames.map((f) => `    ${JSON.stringify(f, roundFloats)}`).join(',\n');
   const text = `${body.slice(0, -2)},\n  "frames": [\n${frames}\n  ]\n}\n`;
   compareOrWrite(join(OUT_DIR, `${clip}.json`), text);
   process.stderr.write(`${Date.now() - started} ms\n`);
@@ -73,6 +73,15 @@ if (check && failures.length) {
   process.exit(1);
 }
 console.error(check ? '\ncommitted results match a fresh run' : `\nwrote ${SAMPLE_CLIPS.length} file(s) to ${OUT_DIR}/`);
+
+/**
+ * Math library results can differ in the last bit between platforms (a frame's
+ * confidence came out …4656 on macOS and …4657 on Linux), so store 12
+ * significant digits: far finer than anything scored, coarse enough to agree.
+ */
+function roundFloats(_key: string, value: unknown): unknown {
+  return typeof value === 'number' && !Number.isInteger(value) ? Number(value.toPrecision(12)) : value;
+}
 
 function compareOrWrite(path: string, text: string): void {
   if (!check) {
