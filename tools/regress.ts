@@ -79,6 +79,22 @@ function compareOrWrite(path: string, text: string): void {
     writeFileSync(path, text, 'utf8');
     return;
   }
-  if (!existsSync(path)) failures.push(`${path} is missing`);
-  else if (readFileSync(path, 'utf8') !== text) failures.push(`${path} differs`);
+  if (!existsSync(path)) {
+    failures.push(`${path} is missing`);
+    return;
+  }
+  const committed = readFileSync(path, 'utf8');
+  if (committed === text) return;
+  failures.push(`${path} differs`);
+  // Show the first few lines that changed, so a CI log says what moved.
+  const a = committed.split('\n');
+  const b = text.split('\n');
+  let shown = 0;
+  let changed = 0;
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    if (a[i] === b[i]) continue;
+    changed++;
+    if (shown++ < 8) console.error(`${path}:${i + 1}\n  - ${a[i]?.slice(0, 200)}\n  + ${b[i]?.slice(0, 200)}`);
+  }
+  console.error(`${path}: ${changed} of ${a.length} lines differ`);
 }
