@@ -1,9 +1,12 @@
 # Sample recordings
 
-Three sample recordings. The app bundles them (see
-[`src/ui/app/samples.ts`](../../src/ui/app/samples.ts)), and the golden tests
-and `npm run analyze` read them from here. The committed outputs were generated
-from these exact files, so don't re-encode them:
+Three sample recordings, listed in
+[`src/paradigms/barnes/samples.ts`](../../src/paradigms/barnes/samples.ts). The
+golden tests, `pnpm regress` and `pnpm benchmark` read them from here, and
+[tracking-platform](https://github.com/salk-airc/tracking-platform) reads them
+from the installed package for its export check. The committed results in
+[`outputs/barnes/`](../../outputs/barnes/) were generated from these exact
+files, so don't re-encode them:
 
 | File | SHA-256 |
 |---|---|
@@ -20,7 +23,5 @@ from these exact files, so don't re-encode them:
 All three are 640×480 H.264, `yuv420p`, no audio, from a grayscale overhead
 camera. None is constant frame rate in practice: the re-encode left frames
 sharing a presentation timestamp with their neighbor and intervals at twice and
-at a fraction of the nominal one. See [KNOWN_LIMITATIONS.md](../../KNOWN_LIMITATIONS.md).
-
-The website loads these clips with **Analyze sample videos**. **Open sample
-analysis** starts from the saved provisional results.
+at a fraction of the nominal one, so durations come from container timestamps
+([`src/time.ts`](../../src/time.ts)), never from frame count over frame rate.
