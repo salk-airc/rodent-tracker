@@ -2,7 +2,11 @@
 
 An engine for tracking a rodent in overhead behavior video, in the browser or in Node:
 decode, detect the animal, fit the arena, find events in zones, compute measures, and keep
-every value's provenance (automatic, imported or corrected by a person) for review.
+every value's provenance (automatic, imported or corrected by a person).
+
+Apps built on it (upload, calibration clicks, review screens, project files, exports) live in
+[salk-airc/tracking-platform](https://github.com/salk-airc/tracking-platform). This repo has
+no UI and no file formats of its own beyond plain CSV and XLSX writers.
 
 Status: early. The code is imported from two Barnes maze apps and is being generalized so
 that each behavior test (Barnes, open field, Y-maze, elevated plus maze, water maze, novel
@@ -29,7 +33,7 @@ object…) is a small plugin on top of one engine.
 | `src/arena/` | Shapes, calibration, zones, zone measures and arm-maze layouts |
 | `src/io/` | CSV and XLSX writers |
 | `src/paradigm.ts` | The `Paradigm` interface apps program against |
-| `src/paradigms/barnes/` | Barnes maze: geometry fit, holes, events, strategy, project format, review and exports |
+| `src/paradigms/barnes/` | Barnes maze: platform and hole fit, events, measures and search strategy |
 | `src/paradigms/open-field/` | Open field: distance, speed, center and wall time |
 | `src/paradigms/elevated-plus/` | Elevated plus maze: open- against closed-arm time and entries |
 | `src/paradigms/y-maze/` | Y-maze: spontaneous alternation from the arm-entry order |
@@ -40,7 +44,7 @@ Nothing outside `src/paradigms/` imports from it.
 
 | Paradigm | Id | Status |
 |---|---|---|
-| Barnes maze | `barnes-maze` | Full: Simon's analysis, project files, review, exports |
+| Barnes maze | `barnes-maze` | Scoring from Simon's app; its project files, review and exports are in tracking-platform |
 | Open field | `open-field` | Measures only, checked on synthetic video; needs real IVSS video |
 | Elevated plus maze | `elevated-plus-maze` | Measures only, checked on synthetic video; no head dips yet |
 | Y-maze spontaneous alternation | `y-maze` | Measures only, checked on synthetic video |
@@ -108,13 +112,32 @@ lengths by the scale, areas by its square. The Barnes pipeline leaves this off b
 The Barnes maze keeps its own fitted geometry (`MazeGeometry`) for its analysis, and
 `barnesArena()` expresses it as an arena (platform boundary, a zone per hole) for generic tools.
 
+## Use it from another repo
+
+The package exports its TypeScript source, so a bundler (Vite), `tsx` or Vitest compiles it
+with the app. Install it from git, pinned to a commit:
+
+```bash
+pnpm add "rodent-tracker@git+https://github.com/salk-airc/rodent-tracker.git#<commit>"
+```
+
+```ts
+import { openFieldZones } from 'rodent-tracker/arena/arena';
+import { barnesMaze } from 'rodent-tracker/paradigms/barnes/index';
+import { makeGeometry } from 'rodent-tracker/testing/synthetic'; // test helpers
+```
+
+Every file under `src/` is importable by its path. Vitest needs
+`server: { deps: { inline: ['rodent-tracker'] } }` so it compiles the package instead of
+handing `.ts` files to Node.
+
 ## Develop
 
 ```bash
 pnpm install
 pnpm test        # unit tests
 pnpm typecheck
-pnpm regress     # re-run the 3 sample clips and compare with outputs/
+pnpm regress     # re-run the 3 sample clips and compare the scoring with outputs/barnes/
 pnpm benchmark   # compare detectors on the sample clips (docs/BENCHMARK.md)
 ```
 

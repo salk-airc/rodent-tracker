@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { spawnSync } from 'node:child_process';
 import { strFromU8, unzipSync } from 'fflate';
 import { toXlsx } from '../src/io/xlsx';
-import type { Table } from '../src/paradigms/barnes/io/tables';
+import type { Table } from '../src/io/table';
 
 const table: Table = {
   name: 'Results',
