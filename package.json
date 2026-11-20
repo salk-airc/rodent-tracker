@@ -11,7 +11,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "regress": "tsx tools/analyze.ts --check",
-    "analyze": "tsx tools/analyze.ts"
+    "analyze": "tsx tools/analyze.ts",
+    "benchmark": "tsx tools/benchmark.ts"
   },
   "dependencies": {
     "fflate": "0.8.3",

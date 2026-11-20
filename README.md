@@ -13,8 +13,22 @@ object…) is a small plugin on top of one engine.
 - [salk-airc/barnes-maze](https://github.com/salk-airc/barnes-maze) by Simon Dräger: the
   base of this repo (decoding, frame sources, detection, resolve, measures, project format,
   export). Imported at commit `3fef1c5`.
-- The Barnes Maze Review app by Andrew Wilson: nose refinement, orientation continuity and
-  per-frame uncertainty reasons, being ported next.
+- The Barnes Maze Review app by Andrew Wilson: its tracker is the `silhouette-taper-v1`
+  detector (pixel-budget detection, full-resolution nose taper, orientation continuity,
+  a written reason for every doubtful frame).
+
+## Detectors
+
+A `Detector` (`src/detect/types.ts`) turns each decoded frame into a body, nose and tail
+position. Everything downstream (arena, events, measures, review) only sees its output, so
+detectors can be swapped and compared on the same video.
+
+| Detector | From | Default |
+|---|---|---|
+| `dark-blob-v1` | Simon's Barnes maze app | yes |
+| `silhouette-taper-v1` | Andrew's Barnes Maze Review | |
+
+See [docs/BENCHMARK.md](docs/BENCHMARK.md) for how they compare.
 
 ## Develop
 
@@ -23,6 +37,7 @@ pnpm install
 pnpm test        # unit tests
 pnpm typecheck
 pnpm regress     # re-run the 3 sample clips and compare with outputs/
+pnpm benchmark   # compare detectors on the sample clips (docs/BENCHMARK.md)
 ```
 
 The sample clips in `data/barnes-maze/` come from the Salk AIRC RSE take-home exercise.
