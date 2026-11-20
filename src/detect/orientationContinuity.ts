@@ -1,6 +1,6 @@
 /**
  * Fixes short runs where the nose end could not be told from the tail end,
- * using the frames just before and after. From Andrew Wilson's Barnes Maze
+ * using the frames just before and after. From the AIRC Barnes Maze
  * Review tracker, behavior unchanged.
  *
  * Only runs where the full-resolution taper (v2) produced both endpoints are
