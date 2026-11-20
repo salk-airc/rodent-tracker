@@ -6,11 +6,11 @@
  */
 
 import type { FrameSource, MazeGeometry, TrackObservation, TrackingParams } from '../types';
-import { nearestHole } from '../types';
+import { frameTime, nearestHole } from '../types';
 import type { Gray } from '../geometry/imageOps';
 import { buildPlatformMask } from './detectAnimal';
 import { darkBlobDetector } from '../detect/darkBlob';
-import type { DetectorFactory } from '../detect/types';
+import type { DetectorFactory, FrameDetection } from '../detect/types';
 
 export interface TrackResult {
   readonly observations: ReadonlyArray<TrackObservation>;
@@ -34,41 +34,39 @@ export async function trackVideo(
   const { width, height } = source;
   const arenaMask = buildPlatformMask(geometry, width, height);
   const detector = detectorFactory({ width, height, background, arenaMask, params });
-  const observations: TrackObservation[] = [];
-
+  const detections: FrameDetection[] = [];
   await source.scan(
     { from: 0, to: source.frameCount - 1 },
     (frame, gray) => {
-      const { detection: det, darkPixelsPx } = detector.detect(frame, gray);
-      if (!det) {
-        observations.push(missingObservation(frame, darkPixelsPx));
-        return;
-      }
-
-      const nearest = nearestHole(geometry, det.nose);
-      const radial = Math.hypot(det.body.x - geometry.center.x, det.body.y - geometry.center.y) / geometry.platformRadiusPx;
-
-      observations.push({
-        frame,
-        areaMeasured: true,
-        areaPx: det.areaPx,
-        darkPixelsPx,
-        body: det.body,
-        nose: det.nose,
-        tail: det.tail,
-        thicknessPx: det.thicknessPx,
-        noseArmPx: det.noseArmPx,
-        tailArmPx: det.tailArmPx,
-        nearestHole: nearest?.hole.index ?? -1,
-        nearestHoleDistPx: nearest?.distPx ?? Number.POSITIVE_INFINITY,
-        radialFraction: radial,
-        candidateCount: det.candidateCount,
-        reacquired: det.reacquired,
-        axisConfidence: det.axisConfidence,
-      });
+      detections[frame] = detector.detect(frame, gray, frameTime(source.timebase, frame));
     },
     onProgress,
   );
+  const finished = detector.finish ? detector.finish(detections) : detections;
+
+  const observations: TrackObservation[] = finished.map(({ detection: det, darkPixelsPx }, frame) => {
+    if (!det) return missingObservation(frame, darkPixelsPx);
+    const nearest = nearestHole(geometry, det.nose);
+    const radial = Math.hypot(det.body.x - geometry.center.x, det.body.y - geometry.center.y) / geometry.platformRadiusPx;
+    return {
+      frame,
+      areaMeasured: true,
+      areaPx: det.areaPx,
+      darkPixelsPx,
+      body: det.body,
+      nose: det.nose,
+      tail: det.tail,
+      thicknessPx: det.thicknessPx,
+      noseArmPx: det.noseArmPx,
+      tailArmPx: det.tailArmPx,
+      nearestHole: nearest?.hole.index ?? -1,
+      nearestHoleDistPx: nearest?.distPx ?? Number.POSITIVE_INFINITY,
+      radialFraction: radial,
+      candidateCount: det.candidateCount,
+      reacquired: det.reacquired,
+      axisConfidence: det.axisConfidence,
+    };
+  });
 
   const stats = areaStatistics(observations);
   const warnings: string[] = [];

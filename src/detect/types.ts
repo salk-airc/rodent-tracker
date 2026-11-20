@@ -36,6 +36,12 @@ export interface AnimalDetection {
   readonly candidateCount: number;
   /** True when the animal had to be found by searching the whole arena. */
   readonly reacquired: boolean;
+  /**
+   * Why the detector trusts or doubts this frame, in words a reviewer can
+   * check against the video, e.g. "selected 1 of 2 similarly plausible
+   * foreground components". Optional: not every detector explains itself.
+   */
+  readonly reason?: string;
 }
 
 export interface FrameDetection {
@@ -53,7 +59,14 @@ export interface FrameDetection {
 export interface Detector {
   /** Stable name recorded with the results, e.g. `dark-blob-v1`. */
   readonly id: string;
-  detect(frame: number, gray: Uint8Array): FrameDetection;
+  /** `timeS` is the frame's presentation time, for speed limits and gaps. */
+  detect(frame: number, gray: Uint8Array, timeS: number): FrameDetection;
+  /**
+   * Optional second pass over the whole video once every frame is detected,
+   * for corrections that need neighbouring frames (e.g. fixing a nose that
+   * flipped to the tail for a few frames). Returns one result per frame.
+   */
+  finish?(detections: ReadonlyArray<FrameDetection>): ReadonlyArray<FrameDetection>;
 }
 
 export type DetectorFactory = (setup: DetectorSetup) => Detector;
