@@ -1,0 +1,26 @@
+{
+  "name": "rodent-tracker",
+  "version": "0.0.1",
+  "description": "Browser-first engine for tracking a rodent in overhead behavior video: arenas, zones, events and measures, with review and provenance.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "regress": "tsx tools/analyze.ts --check",
+    "analyze": "tsx tools/analyze.ts"
+  },
+  "dependencies": {
+    "fflate": "0.8.3",
+    "mp4box": "0.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "26.4.0",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11"
+  }
+}

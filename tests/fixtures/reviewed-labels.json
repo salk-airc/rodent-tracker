@@ -1,0 +1,366 @@
+{
+  "source": "Visual-review labels from an independent implementation of this analysis (headNoseValidation.ts and investigationValidation.ts).",
+  "caveat": "Coarse visual-review labels, partly made by an agent and not blind. A regression set, not ground truth.",
+  "holes": "Hole 1 is the top hole of the 20-hole ring; numbers increase clockwise in the video.",
+  "nose": [
+    {
+      "set": "review",
+      "video": "test50.mp4",
+      "frame": 100,
+      "category": "disappearance",
+      "visible": false,
+      "nose": null,
+      "tolerancePx": null
+    },
+    {
+      "set": "review",
+      "video": "test50.mp4",
+      "frame": 450,
+      "category": "hole-approach",
+      "visible": true,
+      "nose": {
+        "x": 286,
+        "y": 424
+      },
+      "tolerancePx": 32
+    },
+    {
+      "set": "review",
+      "video": "test50.mp4",
+      "frame": 1350,
+      "category": "ordinary-movement",
+      "visible": true,
+      "nose": {
+        "x": 295,
+        "y": 414
+      },
+      "tolerancePx": 32
+    },
+    {
+      "set": "review",
+      "video": "test50.mp4",
+      "frame": 2700,
+      "category": "turn",
+      "visible": true,
+      "nose": {
+        "x": 480,
+        "y": 340
+      },
+      "tolerancePx": 36
+    },
+    {
+      "set": "review",
+      "video": "test51.mp4",
+      "frame": 40,
+      "category": "occlusion",
+      "visible": false,
+      "nose": null,
+      "tolerancePx": null
+    },
+    {
+      "set": "review",
+      "video": "test51.mp4",
+      "frame": 75,
+      "category": "reappearance",
+      "visible": true,
+      "nose": {
+        "x": 174,
+        "y": 171
+      },
+      "tolerancePx": 34
+    },
+    {
+      "set": "review",
+      "video": "test51.mp4",
+      "frame": 225,
+      "category": "hole-approach",
+      "visible": true,
+      "nose": {
+        "x": 103,
+        "y": 153
+      },
+      "tolerancePx": 34
+    },
+    {
+      "set": "review",
+      "video": "test51.mp4",
+      "frame": 375,
+      "category": "stationary-investigation",
+      "visible": true,
+      "nose": {
+        "x": 92,
+        "y": 205
+      },
+      "tolerancePx": 36
+    },
+    {
+      "set": "review",
+      "video": "test53.mp4",
+      "frame": 180,
+      "category": "reappearance",
+      "visible": true,
+      "nose": {
+        "x": 510,
+        "y": 285
+      },
+      "tolerancePx": 36
+    },
+    {
+      "set": "review",
+      "video": "test53.mp4",
+      "frame": 270,
+      "category": "stationary-investigation",
+      "visible": true,
+      "nose": {
+        "x": 492,
+        "y": 321
+      },
+      "tolerancePx": 36
+    },
+    {
+      "set": "review",
+      "video": "test53.mp4",
+      "frame": 540,
+      "category": "hole-approach",
+      "visible": true,
+      "nose": {
+        "x": 396,
+        "y": 414
+      },
+      "tolerancePx": 36
+    },
+    {
+      "set": "review",
+      "video": "test53.mp4",
+      "frame": 630,
+      "category": "turn",
+      "visible": true,
+      "nose": {
+        "x": 402,
+        "y": 422
+      },
+      "tolerancePx": 38
+    },
+    {
+      "set": "review",
+      "video": "test53.mp4",
+      "frame": 860,
+      "category": "disappearance",
+      "visible": false,
+      "nose": null,
+      "tolerancePx": null
+    },
+    {
+      "set": "holdout",
+      "video": "test50.mp4",
+      "frame": 142,
+      "category": "disappearance",
+      "visible": false,
+      "nose": null,
+      "tolerancePx": null
+    },
+    {
+      "set": "holdout",
+      "video": "test50.mp4",
+      "frame": 150,
+      "category": "reappearance",
+      "visible": true,
+      "nose": {
+        "x": 258,
+        "y": 328
+      },
+      "tolerancePx": 30
+    },
+    {
+      "set": "holdout",
+      "video": "test50.mp4",
+      "frame": 620,
+      "category": "stationary",
+      "visible": true,
+      "nose": {
+        "x": 218,
+        "y": 405
+      },
+      "tolerancePx": 34
+    },
+    {
+      "set": "holdout",
+      "video": "test50.mp4",
+      "frame": 3010,
+      "category": "turn-reversal",
+      "visible": true,
+      "nose": {
+        "x": 289,
+        "y": 424
+      },
+      "tolerancePx": 34
+    },
+    {
+      "set": "holdout",
+      "video": "test50.mp4",
+      "frame": 4520,
+      "category": "tail-head-ambiguity",
+      "visible": true,
+      "nose": {
+        "x": 319,
+        "y": 88
+      },
+      "tolerancePx": 34
+    },
+    {
+      "set": "holdout",
+      "video": "test51.mp4",
+      "frame": 479,
+      "category": "hole-approach-without-investigation",
+      "visible": true,
+      "nose": {
+        "x": 407,
+        "y": 96
+      },
+      "tolerancePx": 30
+    }
+  ],
+  "investigationWindows": [
+    {
+      "set": "review",
+      "id": "test50-initial-bottom-investigation",
+      "video": "test50.mp4",
+      "startFrame": 175,
+      "endFrame": 210,
+      "investigations": [
+        {
+          "hole": 11,
+          "startFrame": 183,
+          "endFrame": 202
+        }
+      ]
+    },
+    {
+      "set": "review",
+      "id": "test50-upper-left-reviewed-investigations",
+      "video": "test50.mp4",
+      "startFrame": 990,
+      "endFrame": 1110,
+      "investigations": [
+        {
+          "hole": 17,
+          "startFrame": 995,
+          "endFrame": 1025
+        },
+        {
+          "hole": 18,
+          "startFrame": 1035,
+          "endFrame": 1065
+        }
+      ]
+    },
+    {
+      "set": "review",
+      "id": "test50-upper-ring-reviewed-investigation",
+      "video": "test50.mp4",
+      "startFrame": 2324,
+      "endFrame": 2336,
+      "investigations": [
+        {
+          "hole": 3,
+          "startFrame": 2324,
+          "endFrame": 2336
+        }
+      ]
+    },
+    {
+      "set": "review",
+      "id": "test51-initial-upper-left-investigation",
+      "video": "test51.mp4",
+      "startFrame": 80,
+      "endFrame": 125,
+      "investigations": [
+        {
+          "hole": 18,
+          "startFrame": 86,
+          "endFrame": 123
+        }
+      ]
+    },
+    {
+      "set": "review",
+      "id": "test51-center-transit",
+      "video": "test51.mp4",
+      "startFrame": 410,
+      "endFrame": 475,
+      "investigations": []
+    },
+    {
+      "set": "review",
+      "id": "test53-right-lower-investigation",
+      "video": "test53.mp4",
+      "startFrame": 265,
+      "endFrame": 285,
+      "investigations": [
+        {
+          "hole": 8,
+          "startFrame": 267,
+          "endFrame": 285
+        }
+      ]
+    },
+    {
+      "set": "review",
+      "id": "test53-interior-transit",
+      "video": "test53.mp4",
+      "startFrame": 435,
+      "endFrame": 530,
+      "investigations": []
+    },
+    {
+      "set": "holdout",
+      "id": "test50-stationary-lower-left-investigation",
+      "video": "test50.mp4",
+      "startFrame": 1488,
+      "endFrame": 1560,
+      "investigations": [
+        {
+          "hole": 13,
+          "startFrame": 1493,
+          "endFrame": 1552
+        }
+      ]
+    },
+    {
+      "set": "holdout",
+      "id": "test50-bottom-ring-approach",
+      "video": "test50.mp4",
+      "startFrame": 2940,
+      "endFrame": 3011,
+      "investigations": []
+    },
+    {
+      "set": "holdout",
+      "id": "test51-upper-right-investigation",
+      "video": "test51.mp4",
+      "startFrame": 480,
+      "endFrame": 529,
+      "investigations": [
+        {
+          "hole": 4,
+          "startFrame": 480,
+          "endFrame": 524
+        }
+      ]
+    },
+    {
+      "set": "holdout",
+      "id": "test53-lower-right-investigation",
+      "video": "test53.mp4",
+      "startFrame": 531,
+      "endFrame": 595,
+      "investigations": [
+        {
+          "hole": 10,
+          "startFrame": 535,
+          "endFrame": 588
+        }
+      ]
+    }
+  ]
+}
