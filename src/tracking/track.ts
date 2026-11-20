@@ -5,11 +5,12 @@
  * `resolve.ts`. This file's only job is to measure.
  */
 
-import type { FrameSource, MazeGeometry, Point, TrackObservation, TrackingParams } from '../types';
+import type { FrameSource, MazeGeometry, TrackObservation, TrackingParams } from '../types';
 import { nearestHole } from '../types';
 import type { Gray } from '../geometry/imageOps';
-import { buildDarkCutoff, buildFrameMask, buildPlatformMask, detectAnimal, type DetectionContext } from './detectAnimal';
-import { median } from '../stats';
+import { buildPlatformMask } from './detectAnimal';
+import { darkBlobDetector } from '../detect/darkBlob';
+import type { DetectorFactory } from '../detect/types';
 
 export interface TrackResult {
   readonly observations: ReadonlyArray<TrackObservation>;
@@ -17,13 +18,10 @@ export interface TrackResult {
   readonly bodyAreaPx: number;
   /** Spread of the area distribution, as the interquartile range over the median. */
   readonly bodyAreaSpread: number;
+  /** The detector that produced the positions, e.g. `dark-blob-v1`. */
+  readonly detectorId: string;
   readonly warnings: ReadonlyArray<string>;
 }
-
-/** How many frames of history feed the direction-of-travel estimate. */
-const HEADING_WINDOW = 5;
-/** Below this movement the heading is meaningless, so it is not used. */
-const HEADING_MIN_PX = 3;
 
 export async function trackVideo(
   source: FrameSource,
@@ -31,46 +29,19 @@ export async function trackVideo(
   geometry: MazeGeometry,
   params: TrackingParams,
   onProgress?: (done: number, total: number) => void,
+  detectorFactory: DetectorFactory = darkBlobDetector,
 ): Promise<TrackResult> {
   const { width, height } = source;
-  const platformMask = buildPlatformMask(geometry, width, height);
-  const darkCutoff = buildDarkCutoff(background, platformMask, params.darkThreshold, width);
-
+  const arenaMask = buildPlatformMask(geometry, width, height);
+  const detector = detectorFactory({ width, height, background, arenaMask, params });
   const observations: TrackObservation[] = [];
-  const maskBuffer = new Uint8Array(width * height);
-  const recentBodies: Point[] = [];
-
-  // Body area is learned as we go, from a running median of what we have
-  // accepted so far. It starts unknown, which is why the blob chooser falls
-  // back to "prefer larger" for the first frames, and why the statuses are
-  // finalized in a second, cheap pass once the whole distribution is in.
-  const acceptedAreas: number[] = [];
-  let bodyAreaPx: number | null = null;
 
   await source.scan(
     { from: 0, to: source.frameCount - 1 },
     (frame, gray) => {
-      const previous = recentBodies.length ? recentBodies[recentBodies.length - 1]! : null;
-      const heading = estimateHeading(recentBodies);
-
-      const ctx: DetectionContext = {
-        background,
-        geometry,
-        params,
-        platformMask,
-        bodyAreaPx,
-        previous,
-        heading,
-      };
-
-      const { mask, darkPixelsPx } = buildFrameMask(gray, darkCutoff, maskBuffer);
-      const det = detectAnimal(mask, ctx, width, height);
-
+      const { detection: det, darkPixelsPx } = detector.detect(frame, gray);
       if (!det) {
         observations.push(missingObservation(frame, darkPixelsPx));
-        // Do not clear the position history: the animal is most likely inside a
-        // hole at the last known spot, and the next frame should look there
-        // first rather than searching the whole platform.
         return;
       }
 
@@ -95,16 +66,6 @@ export async function trackVideo(
         reacquired: det.reacquired,
         axisConfidence: det.axisConfidence,
       });
-
-      recentBodies.push(det.body);
-      if (recentBodies.length > HEADING_WINDOW) recentBodies.shift();
-
-      // Only frames that look like a whole animal feed the size estimate. A
-      // head-down animal or the start cylinder would both bias it.
-      if (bodyAreaPx === null || (det.areaPx < bodyAreaPx * params.maxAreaRatio && det.areaPx > bodyAreaPx * 0.5)) {
-        acceptedAreas.push(det.areaPx);
-        if (acceptedAreas.length % 16 === 0 || bodyAreaPx === null) bodyAreaPx = median(acceptedAreas);
-      }
     },
     onProgress,
   );
@@ -120,7 +81,7 @@ export async function trackVideo(
     );
   }
 
-  return { observations, bodyAreaPx: stats.median, bodyAreaSpread: stats.spread, warnings };
+  return { observations, bodyAreaPx: stats.median, bodyAreaSpread: stats.spread, detectorId: detector.id, warnings };
 }
 
 /**
@@ -161,16 +122,3 @@ export function missingObservation(frame: number, darkPixelsPx = 0): TrackObserv
     axisConfidence: 0,
   };
 }
-
-function estimateHeading(recent: ReadonlyArray<Point>): Point | null {
-  if (recent.length < 2) return null;
-  const a = recent[0]!;
-  const b = recent[recent.length - 1]!;
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  const len = Math.hypot(dx, dy);
-  if (len < HEADING_MIN_PX) return null;
-  return { x: dx / len, y: dy / len };
-}
-
-

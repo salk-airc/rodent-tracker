@@ -14,6 +14,7 @@ import type { Gray } from './geometry/imageOps';
 import { buildBackground } from './geometry/background';
 import { applyTemplate, detectGeometry, type RigTemplate } from './geometry/detect';
 import { trackVideo } from './tracking/track';
+import type { DetectorFactory } from './detect/types';
 import { detectTrialStart } from './tracking/trialStart';
 import {
   resolveTrack,
@@ -30,6 +31,8 @@ export interface AnalyzeOptions {
   readonly template?: RigTemplate;
   /** Skip detection entirely; the user has already fixed the geometry. */
   readonly geometry?: MazeGeometry;
+  /** Which detector finds the animal in each frame. Defaults to `dark-blob-v1`. */
+  readonly detector?: DetectorFactory;
   readonly onProgress?: (stage: AnalysisStage, done: number, total: number) => void;
 }
 
@@ -98,8 +101,13 @@ export async function analyzeVideo(
   notes.push(...geometry.fit.warnings);
   opts.onProgress?.('geometry', 1, 1);
 
-  const tracked = await trackVideo(source, bg.image, geometry, opts.params.tracking, (d, t) =>
-    opts.onProgress?.('tracking', d, t),
+  const tracked = await trackVideo(
+    source,
+    bg.image,
+    geometry,
+    opts.params.tracking,
+    (d, t) => opts.onProgress?.('tracking', d, t),
+    opts.detector,
   );
   notes.push(...tracked.warnings);
 
