@@ -1,4 +1,12 @@
-/** Pixel analysis and fast re-analysis from stored observations. */
+/**
+ * Pixel analysis and fast re-analysis from stored observations.
+ *
+ * The engine's three parts, in order: find the arena (`findBarnesArena`, or a
+ * confirmed rig template, or geometry the user fixed), track the animal
+ * (`trackVideo`), then score (`reanalyze`: trial start, events, measures).
+ * Scoring is kept apart because it reruns on every correction while the
+ * pixels are analyzed once.
+ */
 
 import type {
   AnalysisParams,
@@ -12,7 +20,8 @@ import type {
 } from './types';
 import type { Gray } from '../../image/imageOps';
 import { buildBackground } from '../../image/background';
-import { applyTemplate, detectGeometry, type RigTemplate } from './geometry/detect';
+import { applyTemplate, type RigTemplate } from './geometry/detect';
+import { findBarnesArena } from './arena';
 import { trackVideo } from './tracking/track';
 import type { DetectorFactory } from '../../detect/types';
 import { sizeScaleFor } from '../../detect/scale';
@@ -105,7 +114,7 @@ export async function analyzeVideo(
       );
     }
   } else {
-    geometry = detectGeometry(bg.image).geometry;
+    geometry = findBarnesArena(bg.image).geometry;
   }
   notes.push(...geometry.fit.warnings);
   opts.onProgress?.('geometry', 1, 1);

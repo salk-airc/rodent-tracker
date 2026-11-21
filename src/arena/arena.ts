@@ -25,12 +25,18 @@ export interface Arena {
   readonly zones: ReadonlyArray<Zone>;
 }
 
-/** 1 for each image pixel whose center lies inside the arena boundary, else 0. */
+/**
+ * 1 for each image pixel inside the arena boundary, else 0.
+ *
+ * Image coordinates follow the engine's convention: pixel (x, y) is the point
+ * (x, y), the same as detections' centroids and the platform fit, so a pixel
+ * covers x − 0.5 to x + 0.5.
+ */
 export function arenaMask(arena: Pick<Arena, 'boundary' | 'calibration'>, width: number, height: number): Uint8Array {
   const mask = new Uint8Array(width * height);
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      if (contains(arena.boundary, toWorld(arena.calibration, { x: x + 0.5, y: y + 0.5 }))) mask[y * width + x] = 1;
+      if (contains(arena.boundary, toWorld(arena.calibration, { x, y }))) mask[y * width + x] = 1;
     }
   }
   return mask;

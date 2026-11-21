@@ -1,5 +1,5 @@
 /**
- * Silhouette primitives from Andrew Wilson's Barnes Maze Review tracker,
+ * Silhouette primitives from the AIRC Barnes Maze Review tracker,
  * ported with their behavior unchanged: foreground selection with a speed
  * gate and a "competing candidates" count, and two ways to tell the nose end
  * of a silhouette from the tail end without using direction of travel.

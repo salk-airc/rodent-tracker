@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { detectGeometry, applyTemplate, templateFromGeometry } from '../src/paradigms/barnes/geometry/detect';
-import { fitPlatform } from '../src/paradigms/barnes/geometry/platform';
+import { fitBrightDisc } from '../src/arena/find/disc';
 import { fitRing } from '../src/paradigms/barnes/geometry/ring';
 import type { Gray } from '../src/image/imageOps';
 import { holeNumber } from '../src/paradigms/barnes/types';
+import { findBarnesArena } from '../src/paradigms/barnes';
+import { CONFIDENT_FIT } from '../src/arena/find';
+import { toWorld } from '../src/arena/calibration';
 
 interface MazeSpec {
   width?: number;
@@ -74,10 +77,10 @@ function synthMaze(spec: MazeSpec): Gray {
   return { data, width, height };
 }
 
-describe('fitPlatform', () => {
+describe('fitBrightDisc', () => {
   it('recovers center and radius to sub-pixel accuracy', () => {
     const img = synthMaze({ cx: 325, cy: 241, platformR: 208, ringFraction: 0.89, holeCount: 20, phaseDeg: 11.7, holeR: 12 });
-    const fit = fitPlatform(img);
+    const fit = fitBrightDisc(img);
     expect(fit.center.x).toBeCloseTo(325, 0);
     expect(fit.center.y).toBeCloseTo(241, 0);
     expect(fit.radiusPx).toBeCloseTo(208, 0);
@@ -94,7 +97,7 @@ describe('fitPlatform', () => {
    */
   it('is not dragged inward by the hole rims inside the platform', () => {
     const img = synthMaze({ cx: 320, cy: 240, platformR: 200, ringFraction: 0.85, holeCount: 20, phaseDeg: 0, holeR: 16 });
-    const fit = fitPlatform(img);
+    const fit = fitBrightDisc(img);
     expect(fit.radiusPx).toBeGreaterThan(198);
     expect(fit.radiusPx).toBeLessThan(202);
     expect(fit.residualPx).toBeLessThan(1.5);
@@ -105,7 +108,7 @@ describe('fitPlatform', () => {
       cx: 300, cy: 250, platformR: 190, ringFraction: 0.9, holeCount: 20, phaseDeg: 33, holeR: 11,
       noise: 6, vignette: 0.25,
     });
-    const fit = fitPlatform(img);
+    const fit = fitBrightDisc(img);
     expect(fit.center.x).toBeCloseTo(300, 0);
     expect(fit.center.y).toBeCloseTo(250, 0);
     expect(Math.abs(fit.radiusPx - 190)).toBeLessThan(2);
@@ -113,13 +116,13 @@ describe('fitPlatform', () => {
 
   it('reports a warning rather than a wrong answer when the platform runs off frame', () => {
     const img = synthMaze({ cx: 120, cy: 240, platformR: 220, ringFraction: 0.89, holeCount: 20, phaseDeg: 0, holeR: 12 });
-    const fit = fitPlatform(img);
+    const fit = fitBrightDisc(img);
     expect(fit.warnings.join(' ')).toMatch(/off the edge of the frame/);
   });
 
   it('says so when the image is blank rather than fitting a circle to the frame', () => {
     const data = new Uint8Array(64 * 64).fill(20);
-    const fit = fitPlatform({ data, width: 64, height: 64 });
+    const fit = fitBrightDisc({ data, width: 64, height: 64 });
     expect(fit.warnings.join(' ')).toMatch(/no platform could be found/i);
     expect(fit.edgeCoverage).toBe(0);
   });
@@ -131,7 +134,7 @@ describe('fitPlatform', () => {
     // A dark strip down one side: enough contrast for Otsu to have a real
     // threshold, but the bright region still covers over 90% of the frame.
     for (let y = 0; y < h; y++) for (let x = 0; x < 4; x++) data[y * w + x] = 20;
-    const fit = fitPlatform({ data, width: w, height: h });
+    const fit = fitBrightDisc({ data, width: w, height: h });
     expect(fit.warnings.join(' ')).toMatch(/fills the whole frame/i);
   });
 });
@@ -139,7 +142,7 @@ describe('fitPlatform', () => {
 describe('fitRing', () => {
   it.each([12, 18, 20, 24])('recovers hole count %i without being told', (holeCount) => {
     const img = synthMaze({ cx: 320, cy: 240, platformR: 200, ringFraction: 0.9, holeCount, phaseDeg: 7, holeR: 200 * 0.9 * Math.PI / holeCount * 0.35 });
-    const platform = fitPlatform(img);
+    const platform = fitBrightDisc(img);
     const ring = fitRing(img, platform.center, platform.radiusPx);
     expect(ring.holeCount).toBe(holeCount);
     expect(ring.symmetry).toBeGreaterThan(0.55);
@@ -147,7 +150,7 @@ describe('fitRing', () => {
 
   it.each([0, 7.5, 11.7, 17.9])('recovers ring rotation %f degrees', (phaseDeg) => {
     const img = synthMaze({ cx: 320, cy: 240, platformR: 200, ringFraction: 0.89, holeCount: 20, phaseDeg, holeR: 12 });
-    const platform = fitPlatform(img);
+    const platform = fitBrightDisc(img);
     const ring = fitRing(img, platform.center, platform.radiusPx, 20);
     // Rotation is only defined modulo one hole spacing (18 degrees here).
     const spacing = 18;
@@ -159,7 +162,7 @@ describe('fitRing', () => {
 
   it('recovers the ring radius', () => {
     const img = synthMaze({ cx: 320, cy: 240, platformR: 200, ringFraction: 0.82, holeCount: 20, phaseDeg: 3, holeR: 12 });
-    const platform = fitPlatform(img);
+    const platform = fitBrightDisc(img);
     const ring = fitRing(img, platform.center, platform.radiusPx, 20);
     expect(ring.ringRadiusFraction).toBeCloseTo(0.82, 1);
   });
@@ -172,7 +175,7 @@ describe('fitRing', () => {
    */
   it('reports no ring, rather than a confident wrong one, on a plain disk', () => {
     const img = synthMaze({ cx: 320, cy: 240, platformR: 200, ringFraction: 0.9, holeCount: 20, phaseDeg: 0, holeR: 0, noise: 4 });
-    const platform = fitPlatform(img);
+    const platform = fitBrightDisc(img);
     const ring = fitRing(img, platform.center, platform.radiusPx, 20);
     expect(ring.prominence).toBeLessThan(5);
     expect(ring.warnings.join(' ')).toMatch(/No clear hole ring/);
@@ -180,7 +183,7 @@ describe('fitRing', () => {
 
   it('is confident on a disk that does have holes', () => {
     const img = synthMaze({ cx: 320, cy: 240, platformR: 200, ringFraction: 0.89, holeCount: 20, phaseDeg: 4, holeR: 12, noise: 4 });
-    const platform = fitPlatform(img);
+    const platform = fitBrightDisc(img);
     const ring = fitRing(img, platform.center, platform.radiusPx, 20);
     expect(ring.symmetry).toBeGreaterThan(0.55);
     expect(ring.prominence).toBeGreaterThan(5);
@@ -281,5 +284,23 @@ describe('holeNumber', () => {
 
   it('counts the other way when numbers increase counterclockwise', () => {
     expect([5, 4, 6, 0].map((i) => holeNumber(ring(5, 'counterclockwise'), i))).toEqual([1, 2, 20, 6]);
+  });
+});
+
+describe('findBarnesArena', () => {
+  it('returns the maze as an engine arena, with a zone per hole and true centimeters', () => {
+    const img = synthMaze({ cx: 325, cy: 241, platformR: 208, ringFraction: 0.89, holeCount: 20, phaseDeg: 11.7, holeR: 12, noise: 3 });
+    const fit = findBarnesArena(img, { platformDiameterCm: 91.5 });
+    expect(fit.confidence).toBeGreaterThan(CONFIDENT_FIT);
+    expect(fit.arena!.zones).toHaveLength(20);
+    expect(fit.landmarks).toHaveLength(20);
+    // The rim, 208 px right of center, is the platform's 45.75 cm radius.
+    expect(toWorld(fit.arena!.calibration, { x: 325 + 208, y: 241 }).x).toBeCloseTo(45.75, 0);
+  });
+
+  it('proposes nothing on an image with no maze', () => {
+    const fit = findBarnesArena({ data: new Uint8Array(640 * 480).fill(80), width: 640, height: 480 });
+    expect(fit.arena).toBeNull();
+    expect(fit.confidence).toBe(0);
   });
 });
