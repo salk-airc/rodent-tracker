@@ -3,16 +3,29 @@ import { toImage } from '../../src/arena/calibration';
 import type { FrameSource, Point } from '../../src/types';
 import { makeTimebase } from './synthetic';
 
-const FLOOR = 200;
-const OFF_ARENA = 30;
-const MOUSE = 40;
+/** Gray levels: a dark mouse on a lit floor, dark outside the arena. */
+export interface ArenaColors {
+  readonly floor: number;
+  readonly offArena: number;
+  readonly mouse: number;
+}
+export const DARK_MOUSE: ArenaColors = { floor: 200, offArena: 30, mouse: 40 };
+/** An albino mouse on a black floor in a lit room. */
+export const LIGHT_MOUSE: ArenaColors = { floor: 45, offArena: 170, mouse: 225 };
 
 /**
  * A synthetic overhead recording of `arena`: a light floor inside the
  * boundary, dark outside, and a dark mouse (body ellipse and tail) at each
  * path point in world cm, facing the way it is walking. Null hides the mouse.
+ * `colors` changes the gray levels, e.g. `LIGHT_MOUSE`.
  */
-export function arenaRecording(arena: Arena, width: number, height: number, path: ReadonlyArray<Point | null>): FrameSource {
+export function arenaRecording(
+  arena: Arena,
+  width: number,
+  height: number,
+  path: ReadonlyArray<Point | null>,
+  colors: ArenaColors = DARK_MOUSE,
+): FrameSource {
   const mask = arenaMask(arena, width, height);
   const timebase = makeTimebase(path.length);
   let heading = 0;
@@ -28,7 +41,7 @@ export function arenaRecording(arena: Arena, width: number, height: number, path
   });
   const draw = (frame: number): Uint8Array => {
     const gray = new Uint8Array(width * height);
-    for (let i = 0; i < gray.length; i++) gray[i] = mask[i] ? FLOOR : OFF_ARENA;
+    for (let i = 0; i < gray.length; i++) gray[i] = mask[i] ? colors.floor : colors.offArena;
     const at = path[frame];
     if (!at) return gray;
     const c = toImage(arena.calibration, at);
@@ -42,7 +55,7 @@ export function arenaRecording(arena: Arena, width: number, height: number, path
         const v = -(x - c.x) * sin + (y - c.y) * cos;
         const inBody = (u / 14) ** 2 + (v / 7) ** 2 <= 1;
         const inTail = Math.abs(v) <= 0.6 && u < -12 && u >= -28;
-        if (inBody || inTail) gray[y * width + x] = MOUSE;
+        if (inBody || inTail) gray[y * width + x] = colors.mouse;
       }
     }
     return gray;

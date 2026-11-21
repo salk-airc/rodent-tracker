@@ -1,6 +1,6 @@
 /**
  * A box arena: an open field, a light-dark box, a three-chamber social box.
- * The floor is the largest bright region; its four corners, matched to the
+ * The floor is the largest bright region (or dark, with `floor: 'dark'`); its four corners, matched to the
  * box's real width and height, give a perspective calibration, so a camera
  * that isn't straight overhead still measures in true centimeters.
  *
@@ -14,17 +14,21 @@ import { openFieldZones, type Zone } from '../arena';
 import { homographyFromPoints, calibrationResidualCm, type Correspondence } from '../calibration';
 import { connectedComponents, largestComponent, otsuThreshold } from '../../image/imageOps';
 import type { Point } from '../../types';
+import { invertGray } from '../../image/contrast';
 import { noFit, type ArenaFinder } from './types';
 
 export interface BoxArenaOptions {
+  /** Whether the floor is brighter than its surroundings (default) or darker, e.g. a black box in a lit room. */
+  readonly floor?: 'bright' | 'dark';
   readonly widthCm: number;
   readonly heightCm: number;
   /** Zones in world cm, origin at the top-left corner. Default: the central quarter as `center`. */
   readonly zones?: ReadonlyArray<Zone>;
 }
 
-export const findBoxArena: ArenaFinder<BoxArenaOptions> = (background, options) => {
+export const findBoxArena: ArenaFinder<BoxArenaOptions> = (image, options) => {
   const { widthCm, heightCm } = options;
+  const background = options.floor === 'dark' ? invertGray(image) : image;
   if (!(widthCm > 0 && heightCm > 0)) throw new RangeError('widthCm and heightCm must be positive');
   const { width, height, data } = background;
 

@@ -122,6 +122,12 @@ detectors can be swapped and compared on the same video.
 
 See [docs/BENCHMARK.md](docs/BENCHMARK.md) for how they compare.
 
+Detectors look for an animal darker than the floor. For an albino mouse on a dark floor, pass
+`animalContrast: 'lighter'` to any arena paradigm (or `'either'` when it can be both); the
+frames and background are transformed so the animal reads as darker, and every detector works
+unchanged (`src/image/contrast.ts`). Finders take `floor: 'dark'` for a dark floor in a lit
+room. The Barnes pipeline has its own tracker and still assumes a dark animal.
+
 Detector sizes (noise floor, erosion, search window, area caps) were tuned on the sample
 clips at about 4.7 px/cm. For a camera that images the animal bigger or smaller, pass
 `sizeScale` (`sizeScaleFor(pxPerCm)` from `src/detect/scale.ts`) and they follow:

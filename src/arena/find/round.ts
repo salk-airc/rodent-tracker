@@ -10,9 +10,12 @@
 import { roundArenaZones, type Zone } from '../arena';
 import type { Calibration } from '../calibration';
 import { fitBrightDisc } from './disc';
+import { invertGray } from '../../image/contrast';
 import { noFit, type ArenaFinder } from './types';
 
 export interface RoundArenaOptions {
+  /** Whether the floor is brighter than its surroundings (default) or darker, e.g. a black box in a lit room. */
+  readonly floor?: 'bright' | 'dark';
   readonly diameterCm: number;
   /** Zones in world cm, origin at the arena center. Default: center disc and periphery ring. */
   readonly zones?: ReadonlyArray<Zone>;
@@ -22,7 +25,7 @@ export interface RoundArenaOptions {
 
 export const findRoundArena: ArenaFinder<RoundArenaOptions> = (background, options) => {
   if (!(options.diameterCm > 0)) throw new RangeError('diameterCm must be positive');
-  const fit = fitBrightDisc(background);
+  const fit = fitBrightDisc(options.floor === 'dark' ? invertGray(background) : background);
   if (!Number.isFinite(fit.residualPx)) return noFit(fit.warnings[0] ?? 'No round arena found.');
 
   const radiusCm = options.diameterCm / 2;

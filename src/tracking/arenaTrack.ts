@@ -17,7 +17,7 @@ import { frameTime } from '../types';
 import { arenaMask, arenaPxPerCm, zonesAt, type Arena } from '../arena/arena';
 import { toImage, toWorld } from '../arena/calibration';
 import type { WorldSample } from '../arena/zoneMeasures';
-import { buildBackground } from '../image/background';
+import { asDarkerAnimal, buildArenaBackground, type AnimalContrast } from '../image/contrast';
 import { DEFAULT_TRACKING } from '../detect/defaults';
 import { sizeScaleFor } from '../detect/scale';
 import { detectFrames } from './detectFrames';
@@ -32,6 +32,8 @@ export interface ArenaTrackOptions extends ParadigmRunOptions {
    * session, and flickers across zone lines. Default 5; 1 turns it off.
    */
   readonly smoothFrames?: number;
+  /** Whether the animal is darker than the floor (default), lighter (an albino mouse on a dark floor), or either. */
+  readonly animalContrast?: AnimalContrast;
 }
 
 export interface ArenaFrame {
@@ -63,10 +65,12 @@ export async function trackInArena(source: FrameSource, arena: Arena, options: A
   const params = options.params ?? DEFAULT_TRACKING;
   const warnings: string[] = [];
 
-  const bg = await buildBackground(source, params.backgroundSampleFrames, 0.8, (d, t) => options.onProgress?.('background', d, t));
+  const contrast = options.animalContrast ?? 'darker';
+  const bg = await buildArenaBackground(source, contrast, params.backgroundSampleFrames, (d, t) => options.onProgress?.('background', d, t));
   warnings.push(...bg.warnings);
   const sizeScale = sizeScaleFor(arenaPxPerCm(arena));
-  const detected = await detectFrames(source, bg.image, arenaMask(arena, source.width, source.height), params, {
+  const seen = asDarkerAnimal(source, bg.image, contrast);
+  const detected = await detectFrames(seen.source, seen.background, arenaMask(arena, source.width, source.height), params, {
     sizeScale,
     ...(options.detector ? { detector: options.detector } : {}),
     onProgress: (d, t) => options.onProgress?.('tracking', d, t),
@@ -202,6 +206,7 @@ export interface ArenaTrackConfig {
   readonly params?: TrackingParams;
   readonly window?: ArenaTrackOptions['window'];
   readonly smoothFrames?: number;
+  readonly animalContrast?: AnimalContrast;
 }
 
 /** `trackInArena` options from a paradigm's config and run options. */
@@ -211,5 +216,6 @@ export function arenaTrackOptions(config: ArenaTrackConfig, options: ParadigmRun
     ...(config.params ? { params: config.params } : {}),
     ...(config.window ? { window: config.window } : {}),
     ...(config.smoothFrames !== undefined ? { smoothFrames: config.smoothFrames } : {}),
+    ...(config.animalContrast ? { animalContrast: config.animalContrast } : {}),
   };
 }
