@@ -1,5 +1,5 @@
 /**
- * `silhouette-taper-v1`: Andrew Wilson's detector from Barnes Maze Review.
+ * `silhouette-taper-v1`: the detector from the AIRC Barnes Maze Review app.
  *
  * 1. Each frame is reduced to a fixed pixel budget, so thresholds do not
  *    depend on the camera's resolution.

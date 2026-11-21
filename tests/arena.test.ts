@@ -94,7 +94,8 @@ describe('arena', () => {
   it('rasterizes the boundary to an image mask', () => {
     const mask = arenaMask(arena, 260, 230);
     const ones = mask.reduce((s, v) => s + v, 0);
-    expect(ones).toBe(200 * 200);
+    // The box runs from pixel 20 to pixel 220 on each axis, edges included.
+    expect(ones).toBe(201 * 201);
     expect(mask[10 * 260 + 20]).toBe(1);
     expect(mask[5 * 260 + 20]).toBe(0);
     expect(arenaPxPerCm(arena)).toBe(5);

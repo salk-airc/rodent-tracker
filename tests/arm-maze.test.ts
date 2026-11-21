@@ -140,7 +140,8 @@ describe('paradigm registry', () => {
     expect(new Set(all.map((p) => p.id)).size).toBe(all.length);
     for (const p of all) {
       expect(p.id).toMatch(/^[a-z-]+$/);
-      expect(p.measures.length).toBeGreaterThan(0);
+      expect(p.metrics.length).toBeGreaterThan(0);
+      expect(new Set(p.metrics.map((m) => m.id)).size).toBe(p.metrics.length);
     }
   });
 });

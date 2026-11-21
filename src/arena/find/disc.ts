@@ -1,12 +1,17 @@
 /**
- * Finding the platform: a bright disk on a dark surround.
+ * Finding a bright disc on a dark surround: a Barnes platform, a water-maze
+ * pool, any round arena lit against its room.
+ *
+ * Traces the outermost bright-to-dark edge along rays from the bright region's
+ * center and fits a circle to it robustly, so holes in the disc (a Barnes
+ * maze's) and clutter at the frame edge don't pull the fit.
  */
 
-import { otsuThreshold, connectedComponents, largestComponent, type Gray } from '../../../image/imageOps';
-import type { Point } from '../types';
-import { median } from '../../../stats';
+import { otsuThreshold, connectedComponents, largestComponent, type Gray } from '../../image/imageOps';
+import type { Point } from '../../types';
+import { median } from '../../stats';
 
-export interface PlatformFit {
+export interface DiscFit {
   readonly center: Point;
   readonly radiusPx: number;
   /** Median absolute deviation of the traced edge from the fitted circle, px. */
@@ -26,12 +31,12 @@ const SOLID_RUN = 4;
  * Trace the outermost solid transition along radial rays. This excludes the
  * internal hole boundaries from the platform fit.
  */
-export function fitPlatform(img: Gray): PlatformFit {
+export function fitBrightDisc(img: Gray): DiscFit {
   const warnings: string[] = [];
   const threshold = otsuThreshold(img);
   const { width, height, data } = img;
 
-  const noPlatform = (why: string): PlatformFit => ({
+  const noPlatform = (why: string): DiscFit => ({
     center: { x: width / 2, y: height / 2 },
     radiusPx: Math.min(width, height) / 4,
     residualPx: Number.NaN,

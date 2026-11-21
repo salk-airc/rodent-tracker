@@ -1,14 +1,21 @@
 /**
- * The track every zone-based paradigm starts from: build the empty-arena
- * background, detect the animal inside the arena boundary, map its body to
- * world cm and smooth it. Paradigms then score `frames` their own way.
+ * The track every zone-based paradigm scores: the animal's position each
+ * frame, in world cm, with the zones it is in.
+ *
+ * Two ways in, one way out:
+ * - `trackInArena` finds the animal in the video: build the empty-arena
+ *   background, then detect it inside the arena boundary.
+ * - `trackFromPositions` takes positions from elsewhere: SLEAP or DeepLabCut,
+ *   or a camera that tracks on board.
+ * Both then keep the requested time window, map to world cm, smooth, and look
+ * up zones the same way, so a paradigm's `score` can't tell them apart.
  */
 
 import type { ParadigmRunOptions } from '../paradigm';
 import type { FrameSource, Point, TrackingParams } from '../types';
 import { frameTime } from '../types';
 import { arenaMask, arenaPxPerCm, zonesAt, type Arena } from '../arena/arena';
-import { toWorld } from '../arena/calibration';
+import { toImage, toWorld } from '../arena/calibration';
 import type { WorldSample } from '../arena/zoneMeasures';
 import { buildBackground } from '../image/background';
 import { DEFAULT_TRACKING } from '../detect/defaults';
@@ -41,10 +48,13 @@ export interface ArenaFrame {
 
 export interface ArenaTrack {
   readonly frames: ReadonlyArray<ArenaFrame>;
+  /** Found in the video by a detector, or taken from another tracker. */
+  readonly source: 'video' | 'imported';
+  /** The detector's id, or the imported tracker's name. */
   readonly detectorId: string;
   /** How detector pixel sizes were scaled for this camera (1 = as tuned). */
   readonly sizeScale: number;
-  /** Share of kept frames with a detected animal. */
+  /** Share of kept frames with a position. */
   readonly trackedFraction: number;
   readonly warnings: ReadonlyArray<string>;
 }
@@ -62,14 +72,72 @@ export async function trackInArena(source: FrameSource, arena: Arena, options: A
     onProgress: (d, t) => options.onProgress?.('tracking', d, t),
   });
 
+  const raw: RawPosition[] = detected.frames.map((f, frame) => ({
+    frame,
+    timeS: frameTime(source.timebase, frame),
+    bodyPx: f.detection?.body ?? null,
+    nosePx: f.detection?.nose ?? null,
+  }));
+  const placed = place(raw, arena, options);
+  warnings.push(...placed.warnings);
+  if (detected.bodyAreaSpread > 0.8) {
+    warnings.push(`Animal-area spread is high (${detected.bodyAreaSpread.toFixed(2)}). Check for false detections.`);
+  }
+  return { frames: placed.frames, source: 'video', detectorId: detected.detectorId, sizeScale, trackedFraction: placed.trackedFraction, warnings };
+}
+
+/** One position from another tracker. */
+export interface PositionSample {
+  readonly frame: number;
+  readonly timeS: number;
+  /** Body center, or null when the tracker lost the animal. */
+  readonly body: Point | null;
+  readonly nose?: Point | null;
+}
+
+export interface PositionTrackOptions {
+  /** Whether positions are image px (SLEAP, DeepLabCut) or already world cm. Default `image`. */
+  readonly space?: 'image' | 'world';
+  /** Names the tracker in results, e.g. `sleap`. Default `imported`. */
+  readonly sourceId?: string;
+  readonly window?: ArenaTrackOptions['window'];
+  readonly smoothFrames?: number;
+}
+
+/** A track from positions found by another tracker, ready for a paradigm's `score`. */
+export function trackFromPositions(samples: ReadonlyArray<PositionSample>, arena: Arena, options: PositionTrackOptions = {}): ArenaTrack {
+  const px = (p: Point | null | undefined): Point | null => {
+    if (!p || !Number.isFinite(p.x) || !Number.isFinite(p.y)) return null;
+    return options.space === 'world' ? toImage(arena.calibration, p) : p;
+  };
+  const raw: RawPosition[] = samples.map((s) => ({ frame: s.frame, timeS: s.timeS, bodyPx: px(s.body), nosePx: px(s.nose) }));
+  const placed = place(raw, arena, options);
+  return {
+    frames: placed.frames,
+    source: 'imported',
+    detectorId: options.sourceId ?? 'imported',
+    sizeScale: 1,
+    trackedFraction: placed.trackedFraction,
+    warnings: placed.warnings,
+  };
+}
+
+interface RawPosition {
+  readonly frame: number;
+  readonly timeS: number;
+  readonly bodyPx: Point | null;
+  readonly nosePx: Point | null;
+}
+
+/** The shared second half: keep the window, map to world cm, smooth, look up zones. */
+function place(
+  all: ReadonlyArray<RawPosition>,
+  arena: Arena,
+  options: Pick<ArenaTrackOptions, 'window' | 'smoothFrames'>,
+): { frames: ArenaFrame[]; trackedFraction: number; warnings: string[] } {
   const start = options.window?.startS ?? 0;
   const end = options.window?.durationS === undefined ? Number.POSITIVE_INFINITY : start + options.window.durationS;
-  const raw: Array<{ frame: number; timeS: number; bodyPx: Point | null; nosePx: Point | null }> = [];
-  detected.frames.forEach((f, frame) => {
-    const timeS = frameTime(source.timebase, frame);
-    if (timeS < start || timeS > end) return;
-    raw.push({ frame, timeS, bodyPx: f.detection?.body ?? null, nosePx: f.detection?.nose ?? null });
-  });
+  const raw = all.filter((r) => r.timeS >= start && r.timeS <= end);
 
   const smooth = runningMedian(
     raw.map((r) => (r.bodyPx ? toWorld(arena.calibration, r.bodyPx) : null)),
@@ -77,17 +145,15 @@ export async function trackInArena(source: FrameSource, arena: Arena, options: A
   );
   const frames: ArenaFrame[] = raw.map((r, i) => {
     const body = smooth[i]!;
-    return { ...r, body, zones: body ? zonesAt(arena, body) : [] };
+    return { frame: r.frame, timeS: r.timeS, bodyPx: r.bodyPx, nosePx: r.nosePx, body, zones: body ? zonesAt(arena, body) : [] };
   });
 
+  const warnings: string[] = [];
   const trackedFraction = frames.length ? frames.filter((f) => f.body !== null).length / frames.length : 0;
   if (trackedFraction < 0.9) {
     warnings.push(`The animal was found in ${(trackedFraction * 100).toFixed(0)}% of frames. Check the arena outline and lighting.`);
   }
-  if (detected.bodyAreaSpread > 0.8) {
-    warnings.push(`Animal-area spread is high (${detected.bodyAreaSpread.toFixed(2)}). Check for false detections.`);
-  }
-  return { frames, detectorId: detected.detectorId, sizeScale, trackedFraction, warnings };
+  return { frames, trackedFraction, warnings };
 }
 
 export function worldSamples(frames: ReadonlyArray<ArenaFrame>): WorldSample[] {
@@ -129,4 +195,21 @@ export function runningMedian(points: ReadonlyArray<Point | null>, window: numbe
     }
     return { x: mid(xs), y: mid(ys) };
   });
+}
+
+/** The settings every arena paradigm's config shares with `trackInArena`. */
+export interface ArenaTrackConfig {
+  readonly params?: TrackingParams;
+  readonly window?: ArenaTrackOptions['window'];
+  readonly smoothFrames?: number;
+}
+
+/** `trackInArena` options from a paradigm's config and run options. */
+export function arenaTrackOptions(config: ArenaTrackConfig, options: ParadigmRunOptions = {}): ArenaTrackOptions {
+  return {
+    ...options,
+    ...(config.params ? { params: config.params } : {}),
+    ...(config.window ? { window: config.window } : {}),
+    ...(config.smoothFrames !== undefined ? { smoothFrames: config.smoothFrames } : {}),
+  };
 }

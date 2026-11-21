@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { detectEvents } from '../src/paradigms/barnes/events';
 import { computeMeasures } from '../src/paradigms/barnes/measures/compute';
 import { longestConsecutiveRun } from '../src/paradigms/barnes/measures/strategy';
+import { barnesMaze, type AnalysisOutcome } from '../src/paradigms/barnes';
 
 import type { TrackingQuality, Timebase } from '../src/paradigms/barnes/types';
 import { CENTER, PX_PER_CM, hold, makeFrames, makeGeometry, makeTimebase, nearHole, params } from './helpers/synthetic';
@@ -346,5 +347,19 @@ describe('longestConsecutiveRun', () => {
   it('is 0 for an empty sequence and 1 for a single hole', () => {
     expect(longestConsecutiveRun([], 20)).toBe(0);
     expect(longestConsecutiveRun([7], 20)).toBe(1);
+  });
+});
+
+describe('common report', () => {
+  it('reports every Barnes metric, and a latency cut off by the trial end as a lower bound', () => {
+    // Visits hole 3, never reaches the target (hole 5).
+    const { measures } = measure([...hold(30, away), ...visit(3), ...hold(30, away)], 5);
+    const report = barnesMaze.report({ measures, warnings: [] } as unknown as AnalysisOutcome);
+    expect(report.values.map((v) => v.id)).toEqual(barnesMaze.metrics.map((m) => m.id));
+    const latency = report.values.find((v) => v.id === 'primary_latency_s')!;
+    expect(latency.complete).toBe(false);
+    expect(latency.note).toContain('lower bound');
+    expect(report.values.find((v) => v.id === 'total_errors')).toMatchObject({ value: 1, complete: true });
+    expect(typeof report.values.find((v) => v.id === 'search_strategy')!.value).toBe('string');
   });
 });

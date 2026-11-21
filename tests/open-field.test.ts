@@ -117,7 +117,8 @@ describe('paradigm registry', () => {
   it('describes both paradigms the same way', () => {
     for (const p of [barnesMaze, openField]) {
       expect(p.id).toMatch(/^[a-z-]+$/);
-      expect(p.measures.length).toBeGreaterThan(0);
+      expect(p.metrics.length).toBeGreaterThan(0);
+      expect(new Set(p.metrics.map((m) => m.id)).size).toBe(p.metrics.length);
       expect(typeof p.analyze).toBe('function');
     }
   });

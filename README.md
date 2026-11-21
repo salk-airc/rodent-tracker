@@ -12,12 +12,49 @@ Status: early. The code is imported from two Barnes maze apps and is being gener
 that each behavior test (Barnes, open field, Y-maze, elevated plus maze, water maze, novel
 object…) is a small plugin on top of one engine.
 
+## How it fits together
+
+The engine has three parts. A paradigm (one behavior test) is the configuration that joins
+them.
+
+1. **Arena** (`src/arena/`): where the apparatus is in the image and how pixels map to
+   centimeters. A finder proposes it from the empty-arena background and the apparatus's
+   real size (`findRoundArena`, `findBoxArena`, `findBarnesArena`), with a confidence; a
+   person confirms it, or places it by hand from the layout's landmarks.
+2. **Tracking** (`src/tracking/`, `src/detect/`): where the animal is each frame. Found in
+   the video (`trackInArena`), or taken from another tracker such as SLEAP, DeepLabCut or a
+   camera that tracks on board (`trackFromPositions`). Both give the same `ArenaTrack`.
+3. **Scoring** (`src/paradigms/`): the test's measures from the arena and the track. Every
+   paradigm also returns them in one common form (`report`): each metric's id, label, unit,
+   one-line definition, value, and whether the value is complete, so an app can show and
+   export any test without knowing it.
+
+```ts
+import { CONFIDENT_FIT, findBoxArena } from 'rodent-tracker/arena/find/index';
+import { buildBackground } from 'rodent-tracker/image/background';
+import { openField } from 'rodent-tracker/paradigms/open-field/index';
+import { reportRows } from 'rodent-tracker/paradigm';
+
+const background = await buildBackground(source);
+const fit = findBoxArena(background.image, { widthCm: 40, heightCm: 40 }); // 1. arena
+const arena = fit.arena && fit.confidence >= CONFIDENT_FIT ? fit.arena : await askSomeoneToPlaceIt(fit);
+const result = await openField.analyze(source, { arena }); // 2. track, 3. score
+reportRows(openField, openField.report(result)); // [{ id, label, unit, definition, value, complete }, …]
+```
+
+Scoring positions from another tracker skips the video:
+
+```ts
+const track = trackFromPositions(sleapPositions, arena, { sourceId: 'sleap' }); // image px, or { space: 'world' }
+const result = openField.score(track, { arena });
+```
+
 ## Origins
 
 - [salk-airc/barnes-maze](https://github.com/salk-airc/barnes-maze) by Simon Dräger: the
   base of this repo (decoding, frame sources, detection, resolve, measures, project format,
   export). Imported at commit `3fef1c5`.
-- The Barnes Maze Review app by Andrew Wilson: its tracker is the `silhouette-taper-v1`
+- The AIRC Barnes Maze Review app: its tracker is the `silhouette-taper-v1`
   detector (pixel-budget detection, full-resolution nose taper, orientation continuity,
   a written reason for every doubtful frame).
 
@@ -29,10 +66,11 @@ object…) is a small plugin on top of one engine.
 | `src/image/` | Image operations and the empty-arena background |
 | `src/detect/` | Detectors, their default settings and size scaling |
 | `src/tracking/detectFrames.ts` | The one pixel pass every paradigm shares |
-| `src/tracking/arenaTrack.ts` | Background, detection, world cm and smoothing for zone-based paradigms |
+| `src/tracking/arenaTrack.ts` | A track in world cm with zones, from the video or from imported positions |
 | `src/arena/` | Shapes, calibration, zones, zone measures and arm-maze layouts |
+| `src/arena/find/` | Arena finders: round arenas, boxes (with perspective), the bright-disc fit they share |
 | `src/io/` | CSV and XLSX writers |
-| `src/paradigm.ts` | The `Paradigm` interface apps program against |
+| `src/paradigm.ts` | The `Paradigm` interface apps program against, and the common report |
 | `src/paradigms/barnes/` | Barnes maze: platform and hole fit, events, measures and search strategy |
 | `src/paradigms/open-field/` | Open field: distance, speed, center and wall time |
 | `src/paradigms/elevated-plus/` | Elevated plus maze: open- against closed-arm time and entries |
@@ -42,25 +80,18 @@ Nothing outside `src/paradigms/` imports from it.
 
 ## Paradigms
 
-| Paradigm | Id | Status |
-|---|---|---|
-| Barnes maze | `barnes-maze` | Scoring from Simon's app; its project files, review and exports are in tracking-platform |
-| Open field | `open-field` | Measures only, checked on synthetic video; needs real IVSS video |
-| Elevated plus maze | `elevated-plus-maze` | Measures only, checked on synthetic video; no head dips yet |
-| Y-maze spontaneous alternation | `y-maze` | Measures only, checked on synthetic video |
+| Paradigm | Id | Arena finder | Status |
+|---|---|---|---|
+| Barnes maze | `barnes-maze` | `findBarnesArena` | Scoring from Simon's app; its project files, review and exports are in tracking-platform |
+| Open field | `open-field` | `findBoxArena`, or `findRoundArena` for a round one | Checked on synthetic video; needs real IVSS video |
+| Elevated plus maze | `elevated-plus-maze` | Landmarks, placed by hand | Checked on synthetic video; no head dips yet |
+| Y-maze spontaneous alternation | `y-maze` | Landmarks, placed by hand | Checked on synthetic video |
 
-```ts
-import { openField } from './src/paradigms/open-field';
-import { openFieldZones } from './src/arena/arena';
-import { scaleFromTwoPoints } from './src/arena/calibration';
+Open field, plus maze and Y-maze are `ArenaParadigm`s: besides `analyze` (track the video,
+then score) they have `score(track, config)`, so they score imported tracks too.
 
-const arena = { ...openFieldZones(40, 40), calibration: scaleFromTwoPoints(topLeftPx, topRightPx, 40) };
-const result = await openField.analyze(source, { arena });
-result.summary; // distance, speed, center time, entries, latency, time near walls
-```
-
-A new paradigm is an arena template plus its measures; see `src/paradigms/open-field/` for
-the smallest complete one.
+A new paradigm is an arena template, its metric definitions, a `score` and a `report`; see
+`src/paradigms/open-field/` for the smallest complete one.
 
 Arm mazes come from one layout function, `armMazeLayout` in `src/arena/armMaze.ts`: evenly
 spaced arms of one width around a hub, with `elevatedPlusMaze()` and `yMaze()` on top (an
@@ -87,7 +118,7 @@ detectors can be swapped and compared on the same video.
 | Detector | From | Default |
 |---|---|---|
 | `dark-blob-v1` | Simon's Barnes maze app | yes |
-| `silhouette-taper-v1` | Andrew's Barnes Maze Review | |
+| `silhouette-taper-v1` | The AIRC Barnes Maze Review app | |
 
 See [docs/BENCHMARK.md](docs/BENCHMARK.md) for how they compare.
 
@@ -109,8 +140,18 @@ lengths by the scale, areas by its square. The Barnes pipeline leaves this off b
 - **Zone measures**: time in zone, entries, latency to first entry and distance, with the
   conventions for tracking gaps and line flicker written down in `zoneMeasures.ts`.
 
-The Barnes maze keeps its own fitted geometry (`MazeGeometry`) for its analysis, and
-`barnesArena()` expresses it as an arena (platform boundary, a zone per hole) for generic tools.
+- **Finders** (`src/arena/find/`): an `ArenaFit` is the placed arena, a confidence from 0
+  to 1, the image points it rests on, and warnings. Below `CONFIDENT_FIT` (0.6), have
+  someone check it. `findRoundArena` needs only the diameter; `findBoxArena` takes the
+  floor's four corners and the box's width and height, so a camera at an angle still measures
+  true centimeters.
+
+Image coordinates follow one convention throughout: pixel (x, y) is the point (x, y), so a
+pixel covers half a pixel either side of it. Detections, finders and arena masks all agree.
+
+The Barnes maze keeps its own fitted geometry (`MazeGeometry`) for its analysis.
+`findBarnesArena` finds it (Simon's platform, hole and ring fit) and returns it alongside the
+same maze as an engine arena (platform boundary, a zone per hole).
 
 ## Use it from another repo
 

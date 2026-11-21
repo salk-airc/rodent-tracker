@@ -2,7 +2,7 @@
  * Putting the maze together: platform, then ring, then holes.
  */
 
-import { fitPlatform, type PlatformFit } from './platform';
+import { fitBrightDisc, type DiscFit } from '../../../arena/find/disc';
 import { fitRing, ringHoleCenters, type RingFit } from './ring';
 import { platformBrightness, refineHoles } from './holes';
 import type { Gray } from '../../../image/imageOps';
@@ -27,7 +27,7 @@ export interface DetectOptions {
 
 export interface DetectResult {
   readonly geometry: MazeGeometry;
-  readonly platform: PlatformFit;
+  readonly platform: DiscFit;
   readonly ring: RingFit;
   readonly platformLevel: number;
 }
@@ -39,7 +39,7 @@ export interface DetectResult {
  * never sitting on a hole while we try to find it.
  */
 export function detectGeometry(background: Gray, opts: DetectOptions = {}): DetectResult {
-  const platform = fitPlatform(background);
+  const platform = fitBrightDisc(background);
   const ring = fitRing(background, platform.center, platform.radiusPx, opts.holeCount);
   const platformLevel = platformBrightness(background, platform.center, platform.radiusPx);
   const predicted = ringHoleCenters(platform.center, ring);
