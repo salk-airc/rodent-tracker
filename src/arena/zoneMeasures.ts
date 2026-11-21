@@ -27,6 +27,12 @@ export interface ZoneMeasureOptions {
   readonly maxGapS?: number;
   /** Presence needed before an entry counts. Default 0 (any presence). */
   readonly minEntryS?: number;
+  /**
+   * Whether being in a zone at the first sample counts as an entry (at latency
+   * 0). Default true. Time bins after the first turn it off, so an animal that
+   * stays put across a bin boundary isn't counted as entering again.
+   */
+  readonly countStartInside?: boolean;
 }
 
 export interface ZoneMeasures {
@@ -66,6 +72,15 @@ export function measureZones(
     // Start of the current unbroken presence, and whether it has been counted.
     let presenceStart: number | null = null;
     let counted = false;
+    // Already inside at the start, and told not to count that: the presence is
+    // taken as begun earlier and already counted.
+    if (options.countStartInside === false) {
+      const first = samples.find((x) => x.point !== null);
+      if (first && contains(zone.shape, first.point!)) {
+        presenceStart = Number.NEGATIVE_INFINITY;
+        counted = true;
+      }
+    }
     for (let i = 0; i < samples.length; i++) {
       const s = samples[i]!;
       const inside = s.point !== null && contains(zone.shape, s.point);
@@ -118,14 +133,22 @@ export interface ZoneVisit {
 export function zoneVisits(
   samples: ReadonlyArray<WorldSample>,
   zones: ReadonlyArray<Zone>,
-  options: Pick<ZoneMeasureOptions, 'minEntryS'> = {},
+  options: Pick<ZoneMeasureOptions, 'minEntryS' | 'countStartInside'> = {},
 ): ZoneVisit[] {
   const minEntryS = options.minEntryS ?? 0;
   const visits: ZoneVisit[] = [];
+  const firstTracked = samples.find((x) => x.point !== null);
   for (const zone of zones) {
     let presenceStart: number | null = null;
     let lastInside = 0;
+    // A presence under way at the first sample, when that isn't to count as an entry.
+    let carriedIn = options.countStartInside === false && firstTracked !== undefined && contains(zone.shape, firstTracked.point!);
     const close = () => {
+      if (carriedIn) {
+        carriedIn = false;
+        presenceStart = null;
+        return;
+      }
       if (presenceStart !== null && lastInside - presenceStart >= minEntryS) {
         visits.push({ zoneId: zone.id, startS: presenceStart, endS: lastInside });
       }

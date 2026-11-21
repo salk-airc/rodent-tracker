@@ -42,6 +42,17 @@ const result = await openField.analyze(source, { arena }); // 2. track, 3. score
 reportRows(openField, openField.report(result)); // [{ id, label, unit, definition, value, complete }, …]
 ```
 
+Results per time bin (per minute, say) come from the same paradigm, for any arena paradigm:
+
+```ts
+const track = await trackInArena(source, arena);
+binReports(openField, track, { arena }, 60); // [{ startS: 0, endS: 60, report }, { startS: 60, … }, …]
+```
+
+Each bin is the smoothed track cut to the bin and scored by the paradigm. An entry belongs to
+the bin it happens in, so an animal sitting in a zone across a bin edge isn't counted as
+entering again, and latencies are from the start of the bin.
+
 Scoring positions from another tracker skips the video:
 
 ```ts
