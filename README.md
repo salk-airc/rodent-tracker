@@ -75,6 +75,8 @@ const result = openField.score(track, { arena });
 | `src/paradigms/open-field/` | Open field: distance, speed, center and wall time |
 | `src/paradigms/elevated-plus/` | Elevated plus maze: open- against closed-arm time and entries |
 | `src/paradigms/y-maze/` | Y-maze: spontaneous alternation from the arm-entry order |
+| `src/paradigms/fear-conditioning/` | Fear conditioning: freezing from frame-to-frame motion |
+| `src/tracking/motion.ts` | Motion per frame and freezing bouts, no tracking needed |
 
 Nothing outside `src/paradigms/` imports from it.
 
@@ -86,6 +88,7 @@ Nothing outside `src/paradigms/` imports from it.
 | Open field | `open-field` | `findBoxArena`, or `findRoundArena` for a round one | Checked on synthetic video; needs real IVSS video |
 | Elevated plus maze | `elevated-plus-maze` | Landmarks, placed by hand | Checked on synthetic video; no head dips yet |
 | Y-maze spontaneous alternation | `y-maze` | Landmarks, placed by hand | Checked on synthetic video |
+| Fear conditioning | `fear-conditioning` | None needed; an optional mask | Checked on synthetic video; the freezing threshold is set per rig |
 
 Open field, plus maze and Y-maze are `ArenaParadigm`s: besides `analyze` (track the video,
 then score) they have `score(track, config)`, so they score imported tracks too.
@@ -105,6 +108,13 @@ const result = await yMazeAlternation.analyze(source, { arena: { ...layout, cali
 result.summary.sequence;       // ['A', 'B', 'C', 'A', …]
 result.summary.alternationPct; // alternations / (entries − 2) × 100
 ```
+
+Fear conditioning scores freezing from motion alone, following ezTrack's freeze analysis
+(Pennington et al. 2019): each frame is blurred, the pixels that changed by more than a
+cutoff since the previous frame are counted, and freezing is that count staying below a
+threshold for at least 1 s. The cutoff is twice the 99.99th percentile of frame-to-frame
+change on animal-free frames when given (`calibration`), or estimated robustly from the
+whole recording. No tracking is needed, so a side-on camera works.
 
 Entries in both mazes are the smoothed body center crossing into an arm and staying 0.2 s.
 `entryMarginCm` moves the arm line further out, which comes closer to an all-four-paws rule.
