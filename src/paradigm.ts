@@ -15,6 +15,7 @@
  */
 
 import type { Arena } from './arena/arena';
+import type { ZoneMeasureOptions } from './arena/zoneMeasures';
 import type { DetectorFactory } from './detect/types';
 import type { ArenaTrack } from './tracking/arenaTrack';
 import type { FrameSource } from './types';
@@ -94,4 +95,48 @@ export function reportRows(paradigm: Pick<Paradigm<unknown, unknown>, 'metrics'>
 /** A number that may be missing, as a metric value. */
 export function metric(id: string, value: number | string | null, complete = value !== null, note?: string): MetricValue {
   return note === undefined ? { id, value, complete } : { id, value, complete, note };
+}
+
+export interface TimeBin {
+  /** Seconds from the start of the track. */
+  readonly startS: number;
+  readonly endS: number;
+  readonly report: ParadigmReport;
+}
+
+/**
+ * The paradigm's report per time bin (per minute, say), as AnyMaze-style
+ * tables give it. Each bin is the same track, already smoothed, cut to the bin
+ * and scored by the paradigm itself, so every arena paradigm gets bins.
+ *
+ * Conventions: a bin includes the frame on each of its edges, so no interval
+ * is lost between bins. An entry belongs to the bin it happens in: an animal
+ * already in a zone when a bin starts is not counted as entering it again.
+ * Latencies are from the start of the bin. Warnings are the bin's own.
+ */
+export function binReports<Config extends { readonly arena: Arena; readonly zoneOptions?: ZoneMeasureOptions }, Result>(
+  paradigm: ArenaParadigm<Config, Result>,
+  track: ArenaTrack,
+  config: Config,
+  binS: number,
+): TimeBin[] {
+  if (!(binS > 0)) throw new RangeError('binS must be positive');
+  const frames = track.frames;
+  if (frames.length === 0) return [];
+  const t0 = frames[0]!.timeS;
+  const total = frames[frames.length - 1]!.timeS - t0;
+  const bins: TimeBin[] = [];
+  for (let startS = 0; startS < total || (startS === 0 && total === 0); startS += binS) {
+    const endS = Math.min(startS + binS, total);
+    const slice = frames.filter((f) => f.timeS - t0 >= startS - 1e-9 && f.timeS - t0 <= endS + 1e-9);
+    const trackedFraction = slice.length ? slice.filter((f) => f.body !== null).length / slice.length : 0;
+    const zoneOptions = startS === 0 ? config.zoneOptions : { ...config.zoneOptions, countStartInside: false };
+    const result = paradigm.score(
+      { ...track, frames: slice, trackedFraction, warnings: [] },
+      { ...config, ...(zoneOptions ? { zoneOptions } : {}) },
+    );
+    bins.push({ startS, endS, report: paradigm.report(result) });
+    if (total === 0) break;
+  }
+  return bins;
 }
