@@ -8,6 +8,7 @@ import { elevatedPlus } from '../src/paradigms/elevated-plus';
 import { alternation, yMazeAlternation } from '../src/paradigms/y-maze';
 import { openField } from '../src/paradigms/open-field';
 import { barnesMaze } from '../src/paradigms/barnes';
+import { fearConditioning } from '../src/paradigms/fear-conditioning';
 import { arenaRecording, PathBuilder } from './helpers/arenaVideo';
 
 const SIZE = 360;
@@ -136,7 +137,7 @@ describe('Y-maze', () => {
 
 describe('paradigm registry', () => {
   it('describes every paradigm the same way', () => {
-    const all = [barnesMaze, openField, elevatedPlus, yMazeAlternation];
+    const all = [barnesMaze, openField, elevatedPlus, yMazeAlternation, fearConditioning];
     expect(new Set(all.map((p) => p.id)).size).toBe(all.length);
     for (const p of all) {
       expect(p.id).toMatch(/^[a-z-]+$/);
