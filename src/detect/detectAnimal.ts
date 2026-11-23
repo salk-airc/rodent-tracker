@@ -26,6 +26,13 @@ export interface DetectionContext {
   readonly heading: Point | null;
   /** Half-width of the local search box; defaults to `SEARCH_HALF_WIDTH`. */
   readonly searchHalfWidthPx?: number;
+  /**
+   * Combined linear scale (camera px/cm × animal size relative to reference
+   * mouse) for pixel-sized taper kernels and arm-walk limits. Defaults to 1.
+   */
+  readonly taperScale?: number;
+  /** Whether the rodent has a long thin tail that separates nose from tail. Defaults to true. */
+  readonly hasTail?: boolean;
 }
 
 export interface FrameMasks {
@@ -303,7 +310,35 @@ function describeBlob(
   }
 
   const body = { x: bodyX, y: bodyY };
-  const taper = tailTaper(local, width, height, win);
+  const taperScale = ctx.taperScale ?? 1;
+  const hasTail = ctx.hasTail ?? true;
+
+  if (!hasTail) {
+    const plus = walkArm(local, width, height, win, bodyX, bodyY, axis, dist, taperScale);
+    const minus = walkArm(local, width, height, win, bodyX, bodyY, { x: -axis.x, y: -axis.y }, dist, taperScale);
+    let noseArm = plus;
+    let tailArm = minus;
+    let axisConfidence = 0.2;
+    if (ctx.heading) {
+      const dotPlus = axis.x * ctx.heading.x + axis.y * ctx.heading.y;
+      if (dotPlus < 0) {
+        noseArm = minus;
+        tailArm = plus;
+      }
+      axisConfidence = Math.min(0.75, 0.35 + Math.abs(dotPlus) * 0.4);
+    }
+    return {
+      body,
+      nose: noseArm.tip,
+      tail: tailArm.tip,
+      thicknessPx: thickness,
+      noseArmPx: noseArm.lengthPx,
+      tailArmPx: tailArm.lengthPx,
+      axisConfidence,
+    };
+  }
+
+  const taper = tailTaper(local, width, height, win, taperScale);
   if (taper?.decided) {
     return {
       body,
@@ -316,8 +351,8 @@ function describeBlob(
     };
   }
 
-  const plus = walkArm(local, width, height, win, bodyX, bodyY, axis, dist);
-  const minus = walkArm(local, width, height, win, bodyX, bodyY, { x: -axis.x, y: -axis.y }, dist);
+  const plus = walkArm(local, width, height, win, bodyX, bodyY, axis, dist, taperScale);
+  const minus = walkArm(local, width, height, win, bodyX, bodyY, { x: -axis.x, y: -axis.y }, dist, taperScale);
 
   // Tail score: long and thin. Higher means more tail-like.
   const tailiness = (arm: Arm) => arm.lengthPx / Math.max(0.75, arm.meanThickness);
@@ -370,8 +405,9 @@ function describeBlob(
 function tailTaper(
   local: Uint8Array,
   width: number,
-  height: number,
+  _height: number,
   win: { x0: number; y0: number; x1: number; y1: number },
+  scale = 1,
 ): { nose: Point; tail: Point; decided: boolean; confidence: number } | null {
   const xs: number[] = [];
   const ys: number[] = [];
@@ -384,7 +420,8 @@ function tailTaper(
     }
   }
   const n = xs.length;
-  if (n < 40) return null;
+  const minPixels = Math.max(12, Math.round(40 * scale * scale));
+  if (n < minPixels) return null;
 
   let mx = 0;
   let my = 0;
@@ -416,18 +453,31 @@ function tailTaper(
     if (a > high) high = a;
   }
   const span = high - low;
-  if (span < 8) return null;
+  if (span < Math.max(4, 8 * scale)) return null;
 
-  const neighbors = (x: number, y: number) => {
-    let count = 0;
-    for (let dy = -2; dy <= 2; dy++) {
-      for (let dx = -2; dx <= 2; dx++) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx >= 0 && ny >= 0 && nx < width && ny < height && local[ny * width + nx]) count++;
-      }
+  // Summed-area table over `win` so any scaled neighborhood radius queries in O(1).
+  const bw = win.x1 - win.x0 + 1;
+  const bh = win.y1 - win.y0 + 1;
+  const stride = bw + 1;
+  const sat = new Int32Array(stride * (bh + 1));
+  for (let ry = 0; ry < bh; ry++) {
+    const rowBase = (win.y0 + ry) * width + win.x0;
+    const satPrev = ry * stride;
+    const satCurr = (ry + 1) * stride;
+    let rowSum = 0;
+    for (let rx = 0; rx < bw; rx++) {
+      rowSum += local[rowBase + rx] ? 1 : 0;
+      sat[satCurr + rx + 1] = sat[satPrev + rx + 1]! + rowSum;
     }
-    return count;
+  }
+  const radius = Math.max(2, Math.round(2 * scale));
+  const windowArea = (2 * radius + 1) ** 2;
+  const neighbors = (x: number, y: number) => {
+    const xA = Math.max(0, x - win.x0 - radius);
+    const yA = Math.max(0, y - win.y0 - radius);
+    const xB = Math.min(bw, x - win.x0 + radius + 1);
+    const yB = Math.min(bh, y - win.y0 + radius + 1);
+    return sat[yB * stride + xB]! - sat[yA * stride + xB]! - sat[yB * stride + xA]! + sat[yA * stride + xA]!;
   };
   /** Spread of the middle 80% across the axis, for pixels whose position along it passes `keep`. */
   const bandWidth = (keep: (a: number) => boolean) => {
@@ -444,7 +494,7 @@ function tailTaper(
       density += neighbors(xs[i]!, ys[i]!);
       count++;
     }
-    const sparse = Math.max(0, 1 - density / Math.max(1, count) / 25);
+    const sparse = Math.max(0, 1 - density / Math.max(1, count) / windowArea);
     const narrow = Math.max(0, 1 - bandWidth(keep) / centralWidth);
     return 0.7 * sparse + 0.3 * narrow;
   };
@@ -496,9 +546,11 @@ function walkArm(
   by: number,
   dir: Point,
   dist: { data: Float32Array },
+  scale = 1,
 ): Arm {
   const step = 0.5;
-  const maxGap = 3;
+  const maxGap = Math.max(3, 3 * scale);
+  const maxArm = Math.max(400, Math.round(400 * scale));
   let tipX = bx;
   let tipY = by;
   let length = 0;
@@ -506,7 +558,7 @@ function walkArm(
   let thicknessSum = 0;
   let thicknessCount = 0;
 
-  for (let r = step; r < 400; r += step) {
+  for (let r = step; r < maxArm; r += step) {
     const x = Math.round(bx + dir.x * r);
     const y = Math.round(by + dir.y * r);
     if (x < win.x0 || x > win.x1 || y < win.y0 || y > win.y1 || x < 0 || y < 0 || x >= width || y >= height) break;

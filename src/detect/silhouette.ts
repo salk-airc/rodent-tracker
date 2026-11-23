@@ -113,28 +113,23 @@ const ambiguous = (confidence: number, uncertaintyReason: string): NoseEstimate 
  * core. Deliberately ignores direction of travel, which is unreliable during
  * pauses and reversals.
  */
-export function estimateNoseFromSilhouette(candidate: ForegroundCandidate, width: number, height: number): NoseEstimate {
-  if (candidate.pixels.length < 20 || width <= 0 || height <= 0) {
+export function estimateNoseFromSilhouette(candidate: ForegroundCandidate, width: number, height: number, scale = 1): NoseEstimate {
+  const minPixels = Math.max(12, Math.round(20 * scale * scale));
+  if (candidate.pixels.length < minPixels || width <= 0 || height <= 0) {
     return ambiguous(0, 'silhouette is too small to separate head from tail');
   }
 
-  const mask = new Set(candidate.pixels);
+  const radius = Math.max(2, Math.round(2 * scale));
+  const windowArea = (2 * radius + 1) ** 2;
+  const minNeighbors = Math.ceil((windowArea * 12) / 25);
+  const neighbors = buildPixelDensity(candidate.pixels, width);
   const core = candidate.pixels.filter((index) => {
     const x = index % width;
-    const y = Math.floor(index / width);
-    let neighbors = 0;
-    for (let dy = -2; dy <= 2; dy++) {
-      const ny = y + dy;
-      if (ny < 0 || ny >= height) continue;
-      for (let dx = -2; dx <= 2; dx++) {
-        const nx = x + dx;
-        if (nx < 0 || nx >= width) continue;
-        if (mask.has(ny * width + nx)) neighbors++;
-      }
-    }
-    return neighbors >= 12;
+    const y = (index - x) / width;
+    return neighbors(x, y, radius) >= minNeighbors;
   });
-  if (core.length < 12) return ambiguous(0.1, 'no sufficiently dense body core was visible');
+  const minCore = Math.max(8, Math.round(12 * scale * scale));
+  if (core.length < minCore) return ambiguous(0.1, 'no sufficiently dense body core was visible');
 
   const { mean, axis } = principalAxis(core.map((index) => ({ x: index % width, y: Math.floor(index / width) })));
   const project = (index: number) =>
@@ -144,16 +139,16 @@ export function estimateNoseFromSilhouette(candidate: ForegroundCandidate, width
   const coreLow = quantile(coreProjections, 0.05);
   const coreHigh = quantile(coreProjections, 0.95);
   const bodyLength = coreHigh - coreLow;
-  if (bodyLength < 3) return ambiguous(0.1, 'body axis was too short to orient reliably');
+  if (bodyLength < Math.max(3, 3 * scale)) return ambiguous(0.1, 'body axis was too short to orient reliably');
 
   const first = allProjections[0]!;
   const last = allProjections[allProjections.length - 1]!;
   const lowExtension = coreLow - first;
   const highExtension = last - coreHigh;
   const extensionDifference = Math.abs(highExtension - lowExtension);
-  const minimumTailEvidence = Math.max(2, bodyLength * 0.2);
+  const minimumTailEvidence = Math.max(2 * scale, bodyLength * 0.2);
   const tailIsHigh = highExtension > lowExtension;
-  const outerTolerance = Math.max(1, bodyLength * 0.08);
+  const outerTolerance = Math.max(1 * scale, bodyLength * 0.08);
   const nose = meanOf(
     candidate.pixels.filter((i) => (tailIsHigh ? project(i) <= first + outerTolerance : project(i) >= last - outerTolerance)),
     width,
@@ -187,12 +182,13 @@ export function estimateNoseFromTaperedSilhouette(
   candidate: ForegroundCandidate,
   width: number,
   height: number,
+  scale = 1,
 ): NoseEstimate {
-  if (candidate.pixels.length < 40 || width <= 0 || height <= 0) {
+  const minPixels = Math.max(20, Math.round(40 * scale * scale));
+  if (candidate.pixels.length < minPixels || width <= 0 || height <= 0) {
     return ambiguous(0, 'silhouette is too small to measure head-tail taper');
   }
 
-  const mask = new Set(candidate.pixels);
   const points = candidate.pixels.map((index) => ({ x: index % width, y: Math.floor(index / width) }));
   const { mean, axis } = principalAxis(points);
   const transverse = { x: -axis.y, y: axis.x };
@@ -205,26 +201,16 @@ export function estimateNoseFromTaperedSilhouette(
   const low = along[0]!;
   const high = along[along.length - 1]!;
   const span = high - low;
-  if (span < 8) return ambiguous(0.1, 'body axis was too short to measure head-tail taper');
+  if (span < Math.max(4, 8 * scale)) return ambiguous(0.1, 'body axis was too short to measure head-tail taper');
 
-  const localNeighbors = (p: { x: number; y: number }) => {
-    let count = 0;
-    for (let dy = -2; dy <= 2; dy++) {
-      const y = p.y + dy;
-      if (y < 0 || y >= height) continue;
-      for (let dx = -2; dx <= 2; dx++) {
-        const x = p.x + dx;
-        if (x < 0 || x >= width) continue;
-        if (mask.has(y * width + x)) count++;
-      }
-    }
-    return count;
-  };
+  const radius = Math.max(2, Math.round(2 * scale));
+  const windowArea = (2 * radius + 1) ** 2;
+  const neighbors = buildPixelDensity(candidate.pixels, width);
   const endpointStats = (side: 'low' | 'high') => {
     const band = projected.filter((p) => (side === 'low' ? p.along <= low + span * 0.2 : p.along >= high - span * 0.2));
     const across = band.map((p) => p.across).sort((a, b) => a - b);
     const widthPx = quantile(across, 0.9) - quantile(across, 0.1);
-    const meanNeighbors = band.reduce((t, p) => t + localNeighbors(p), 0) / Math.max(1, band.length);
+    const meanNeighbors = band.reduce((t, p) => t + neighbors(p.x, p.y, radius), 0) / Math.max(1, band.length);
     return { widthPx, meanNeighbors };
   };
   const lowStats = endpointStats('low');
@@ -236,7 +222,7 @@ export function estimateNoseFromTaperedSilhouette(
   const centralWidth =
     centralAcross.length === 0 ? 1 : Math.max(1, quantile(centralAcross, 0.9) - quantile(centralAcross, 0.1));
   const tailScore = (s: typeof lowStats) =>
-    Math.max(0, 1 - s.meanNeighbors / 25) * 0.7 + Math.max(0, 1 - s.widthPx / centralWidth) * 0.3;
+    Math.max(0, 1 - s.meanNeighbors / windowArea) * 0.7 + Math.max(0, 1 - s.widthPx / centralWidth) * 0.3;
   const lowTailScore = tailScore(lowStats);
   const highTailScore = tailScore(highStats);
   const scoreDifference = Math.abs(lowTailScore - highTailScore);
@@ -258,6 +244,108 @@ export function estimateNoseFromTaperedSilhouette(
     uncertaintyReason: observed
       ? `tail taper resolved the opposite silhouette endpoint as the nose (${lowStats.widthPx.toFixed(1)} px vs ${highStats.widthPx.toFixed(1)} px endpoint width)`
       : `head and tail taper remained too similar (${lowStats.widthPx.toFixed(1)} px vs ${highStats.widthPx.toFixed(1)} px endpoint width)`,
+  };
+}
+
+/**
+ * Orientation for short-tailed / tailless rodents (e.g. hamsters, voles):
+ * place endpoints along the silhouette's principal axis and pick the end
+ * aligned with recent movement heading when moving.
+ */
+export function estimateNoseFromHeading(
+  candidate: ForegroundCandidate,
+  width: number,
+  height: number,
+  heading: Point | null,
+): NoseEstimate {
+  if (candidate.pixels.length < 12 || width <= 0 || height <= 0) {
+    return ambiguous(0, 'silhouette is too small to find a body axis');
+  }
+  const points = candidate.pixels.map((index) => ({ x: index % width, y: Math.floor(index / width) }));
+  const { mean, axis } = principalAxis(points);
+  const projected = points.map((p) => ({
+    ...p,
+    along: (p.x - mean.x) * axis.x + (p.y - mean.y) * axis.y,
+  }));
+  let low = Infinity;
+  let high = -Infinity;
+  for (const p of projected) {
+    if (p.along < low) low = p.along;
+    if (p.along > high) high = p.along;
+  }
+  const span = high - low;
+  if (span < 2) return ambiguous(0.1, 'body axis was too short to orient');
+  const lowEnd = centroid(projected.filter((p) => p.along <= low + span * 0.1));
+  const highEnd = centroid(projected.filter((p) => p.along >= high - span * 0.1));
+  if (!heading) {
+    return {
+      x: highEnd.x,
+      y: highEnd.y,
+      alternativeX: lowEnd.x,
+      alternativeY: lowEnd.y,
+      status: 'ambiguous',
+      confidence: 0.2,
+      uncertaintyReason: 'tailless profile and stationary; head-tail orientation is ambiguous',
+    };
+  }
+  const dot = axis.x * heading.x + axis.y * heading.y;
+  const noseIsHigh = dot >= 0;
+  const nose = noseIsHigh ? highEnd : lowEnd;
+  const alt = noseIsHigh ? lowEnd : highEnd;
+  const confidence = Math.round(Math.min(0.75, 0.35 + Math.abs(dot) * 0.4) * 1000) / 1000;
+  return {
+    x: nose.x,
+    y: nose.y,
+    alternativeX: alt.x,
+    alternativeY: alt.y,
+    status: Math.abs(dot) >= 0.5 ? 'observed' : 'ambiguous',
+    confidence,
+    uncertaintyReason: 'oriented along direction of travel (tailless profile)',
+  };
+}
+
+/** O(1) local neighbor counter over `pixels` using a compact summed-area table. */
+function buildPixelDensity(pixels: readonly number[], width: number): (x: number, y: number, radius: number) => number {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (let i = 0; i < pixels.length; i++) {
+    const idx = pixels[i]!;
+    const x = idx % width;
+    const y = (idx - x) / width;
+    if (x < minX) minX = x;
+    if (x > maxX) maxX = x;
+    if (y < minY) minY = y;
+    if (y > maxY) maxY = y;
+  }
+  const bw = maxX - minX + 1;
+  const bh = maxY - minY + 1;
+  const grid = new Uint8Array(bw * bh);
+  for (let i = 0; i < pixels.length; i++) {
+    const idx = pixels[i]!;
+    const x = idx % width;
+    const y = (idx - x) / width;
+    grid[(y - minY) * bw + (x - minX)] = 1;
+  }
+  const stride = bw + 1;
+  const sat = new Int32Array(stride * (bh + 1));
+  for (let ry = 0; ry < bh; ry++) {
+    const gBase = ry * bw;
+    const satPrev = ry * stride;
+    const satCurr = (ry + 1) * stride;
+    let rowSum = 0;
+    for (let rx = 0; rx < bw; rx++) {
+      rowSum += grid[gBase + rx]!;
+      sat[satCurr + rx + 1] = sat[satPrev + rx + 1]! + rowSum;
+    }
+  }
+  return (x: number, y: number, radius: number) => {
+    const xA = Math.max(0, x - minX - radius);
+    const yA = Math.max(0, y - minY - radius);
+    const xB = Math.min(bw, x - minX + radius + 1);
+    const yB = Math.min(bh, y - minY + radius + 1);
+    return sat[yB * stride + xB]! - sat[yA * stride + xB]! - sat[yB * stride + xA]! + sat[yA * stride + xA]!;
   };
 }
 

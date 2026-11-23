@@ -7,8 +7,9 @@
  *
  * - `darker` (default): unchanged.
  * - `lighter`, an albino mouse on a dark floor: the image is inverted.
- * - `either`: each pixel becomes the background minus its distance from the
- *   background, so any change, lighter or darker, reads as darker. Use it for
+ * - `either`: each pixel becomes `255 - |pixel - background|` against a uniform
+ *   white (`255`) reference, so any change — lighter or darker, even on a near-
+ *   black floor — keeps its full 8-bit contrast and reads as darker. Use it for
  *   a mottled animal, or one whose contrast flips across the arena.
  *
  * The background is built to match. The 80th percentile keeps a dark animal
@@ -56,7 +57,11 @@ export function asDarkerAnimal(
   if (contrast === 'darker') return { source, background };
   if (contrast === 'lighter') return { source: mapFrames(source, (v) => 255 - v), background: invertGray(background) };
   const bg = background.data;
-  return { source: mapFrames(source, (v, i) => Math.max(0, bg[i]! - Math.abs(v - bg[i]!))), background };
+  const flat = new Uint8Array(bg.length).fill(255);
+  return {
+    source: mapFrames(source, (v, i) => 255 - Math.abs(v - bg[i]!)),
+    background: { data: flat, width: background.width, height: background.height },
+  };
 }
 
 /** A source whose frames pass through `f` (value, pixel index). */

@@ -10,6 +10,7 @@
 
 import type { Point } from '../types';
 import { buildDarkCutoff, buildFrameMask, detectAnimal, SEARCH_HALF_WIDTH, type DetectionContext } from './detectAnimal';
+import { animalSizeScale, MOUSE_PROFILE } from './scale';
 import { median } from '../stats';
 import type { Detector, DetectorFactory } from './types';
 
@@ -20,8 +21,17 @@ const HEADING_MIN_PX = 3;
 
 export const darkBlobDetector: DetectorFactory = (setup): Detector => {
   const { width, height, background, arenaMask, params } = setup;
-  const searchHalfWidthPx = setup.sizeScale === undefined ? undefined : SEARCH_HALF_WIDTH * setup.sizeScale;
-  const headingMinPx = HEADING_MIN_PX * (setup.sizeScale ?? 1);
+  const camScale = setup.sizeScale ?? 1;
+  const animalLinear = animalSizeScale(setup.animal);
+  const effectiveScale = camScale * animalLinear;
+  const speedRatio = setup.animal ? setup.animal.maxSpeedCmPerS / MOUSE_PROFILE.maxSpeedCmPerS : 1;
+  const searchHalfWidthPx =
+    setup.sizeScale === undefined && setup.animal === undefined
+      ? undefined
+      : SEARCH_HALF_WIDTH * camScale * Math.max(animalLinear, speedRatio);
+  const headingMinPx = HEADING_MIN_PX * effectiveScale;
+  const taperScale = setup.sizeScale === undefined && setup.animal === undefined ? 1 : effectiveScale;
+  const hasTail = setup.animal?.hasTail ?? true;
   const darkCutoff = buildDarkCutoff(background, arenaMask, params.darkThreshold, width);
   const maskBuffer = new Uint8Array(width * height);
   const recentBodies: Point[] = [];
@@ -43,6 +53,8 @@ export const darkBlobDetector: DetectorFactory = (setup): Detector => {
         bodyAreaPx,
         previous,
         heading: estimateHeading(recentBodies, headingMinPx),
+        taperScale,
+        hasTail,
         ...(searchHalfWidthPx === undefined ? {} : { searchHalfWidthPx }),
       };
 

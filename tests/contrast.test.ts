@@ -2,9 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { openFieldZones } from '../src/arena/arena';
 import { scaleFromTwoPoints } from '../src/arena/calibration';
 import { findBoxArena } from '../src/arena/find';
+import { silhouetteTaperDetector } from '../src/detect/silhouetteTaper';
 import { asDarkerAnimal, buildArenaBackground, invertGray } from '../src/image/contrast';
 import { openField } from '../src/paradigms/open-field';
+import { barnesMaze } from '../src/paradigms/barnes';
+import { DEFAULT_PARAMS } from '../src/paradigms/barnes/params';
 import { arenaRecording, DARK_MOUSE, LIGHT_MOUSE, PathBuilder } from './helpers/arenaVideo';
+import { makeGeometry } from './helpers/synthetic';
 
 const W = 320;
 const H = 240;
@@ -29,12 +33,19 @@ describe('animal contrast', () => {
     expect(asLight.summary.zones[0]!.timeS).toBeCloseTo(dark.summary.zones[0]!.timeS, 1);
   });
 
-  it('finds either kind of mouse with `either`', async () => {
-    for (const colors of [DARK_MOUSE, LIGHT_MOUSE]) {
+  it('finds either kind of mouse with `either`, including on a near-black floor', async () => {
+    const veryDarkFloor = { floor: 15, offArena: 180, mouse: 225 };
+    for (const colors of [DARK_MOUSE, LIGHT_MOUSE, veryDarkFloor]) {
       const result = await openField.analyze(arenaRecording(arena, W, H, walk, colors), { arena, animalContrast: 'either' });
       expect(result.summary.trackedFraction).toBe(1);
       expect(result.summary.zones[0]!.entries).toBe(1);
     }
+    const taper = await openField.analyze(
+      arenaRecording(arena, W, H, walk, veryDarkFloor),
+      { arena, animalContrast: 'either' },
+      { detector: silhouetteTaperDetector },
+    );
+    expect(taper.summary.trackedFraction).toBe(1);
   });
 
   it('keeps a still light mouse out of its background, and shows it darker to detectors', async () => {
@@ -56,5 +67,22 @@ describe('animal contrast', () => {
     const fit = findBoxArena(bg.image, { widthCm: 40, heightCm: 40, floor: 'dark' });
     expect(fit.confidence).toBeGreaterThan(0.6);
     expect(invertGray(invertGray(bg.image)).data).toEqual(bg.image.data);
+  });
+
+  it('tracks a light mouse in the Barnes pipeline when animalContrast is lighter', async () => {
+    const geom = makeGeometry();
+    const roundArena = {
+      boundary: { kind: 'circle' as const, center: { x: 0, y: 0 }, radius: geom.platformDiameterCm / 2 },
+      calibration: { kind: 'scale' as const, pxPerCm: (geom.platformRadiusPx * 2) / geom.platformDiameterCm, originPx: geom.center },
+      zones: [],
+    };
+    const barnesWalk = new PathBuilder({ x: 0, y: 0 }).to({ x: 25, y: 0 }, 2).to({ x: 0, y: 25 }, 2).points;
+    const source = arenaRecording(roundArena, 640, 480, barnesWalk, LIGHT_MOUSE);
+    const outcome = await barnesMaze.analyze(source, {
+      params: DEFAULT_PARAMS,
+      geometry: geom,
+      animalContrast: 'lighter',
+    });
+    expect(outcome.track.quality.measuredPositionFraction).toBeGreaterThan(0.9);
   });
 });

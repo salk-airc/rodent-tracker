@@ -19,12 +19,12 @@ import type {
   TrialStart,
 } from './types';
 import type { Gray } from '../../image/imageOps';
-import { buildBackground } from '../../image/background';
+import { asDarkerAnimal, buildArenaBackground, type AnimalContrast } from '../../image/contrast';
 import { applyTemplate, type RigTemplate } from './geometry/detect';
 import { findBarnesArena } from './arena';
 import { trackVideo } from './tracking/track';
 import type { DetectorFactory } from '../../detect/types';
-import { sizeScaleFor } from '../../detect/scale';
+import { sizeScaleFor, type AnimalProfile } from '../../detect/scale';
 import { pxPerCm } from './types';
 import { detectTrialStart } from './tracking/trialStart';
 import {
@@ -51,6 +51,10 @@ export interface AnalyzeOptions {
    * camera images the animal at a different size.
    */
   readonly scaleSizesToCalibration?: boolean;
+  /** Whether the animal is darker than the platform (default), lighter (albino on dark platform), or either. */
+  readonly animalContrast?: AnimalContrast;
+  /** Physical rodent morphology (defaults to adult mouse). */
+  readonly animal?: AnimalProfile;
   readonly onProgress?: (stage: AnalysisStage, done: number, total: number) => void;
 }
 
@@ -92,10 +96,11 @@ export async function analyzeVideo(
 ): Promise<VideoObservations> {
   const notes: string[] = [];
 
-  const bg = await buildBackground(
+  const contrast = opts.animalContrast ?? 'darker';
+  const bg = await buildArenaBackground(
     source,
+    contrast,
     opts.params.tracking.backgroundSampleFrames,
-    0.8,
     (d, t) => opts.onProgress?.('background', d, t),
   );
   notes.push(...bg.warnings);
@@ -119,14 +124,16 @@ export async function analyzeVideo(
   notes.push(...geometry.fit.warnings);
   opts.onProgress?.('geometry', 1, 1);
 
+  const seen = asDarkerAnimal(source, bg.image, contrast);
   const tracked = await trackVideo(
-    source,
-    bg.image,
+    seen.source,
+    seen.background,
     geometry,
     opts.params.tracking,
     (d, t) => opts.onProgress?.('tracking', d, t),
     opts.detector,
     opts.scaleSizesToCalibration ? sizeScaleFor(pxPerCm(geometry)) : undefined,
+    opts.animal,
   );
   notes.push(...tracked.warnings);
 
