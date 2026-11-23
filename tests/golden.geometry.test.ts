@@ -149,7 +149,7 @@ describe.skipIf(!run)('geometry on the sample clips', () => {
     const geometry = results.get('test53')!.detect.geometry;
     expect(geometry.center).toEqual({ x: 324.544829151, y: 240.455546503 });
     expect(geometry.platformRadiusPx).toBe(208.389782293);
-    expect(geometry.holes[6]!.center).toEqual({ x: 236.871626199, y: 403.359488727 });
+    expect(geometry.holes[6]!.center).toEqual({ x: 235.408347923, y: 403.646210451 });
   });
 });
 

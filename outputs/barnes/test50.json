@@ -11,188 +11,188 @@
       "y": 240.816077972
     },
     "platformRadiusPx": 208.418435954,
-    "ringRadiusPx": 185.712688348,
-    "phaseRad": 0.205801139,
+    "ringRadiusPx": 185.56765696,
+    "phaseRad": 0.205417459,
     "holeCount": 20,
     "holes": [
       {
         "index": 0,
         "center": {
-          "x": 508.452420125,
-          "y": 281.41778611
+          "x": 506.471134293,
+          "y": 281.186500278
         },
-        "radiusPx": 12.5,
+        "radiusPx": 11.106285832,
         "provenance": "auto"
       },
       {
         "index": 1,
         "center": {
-          "x": 486.504095591,
-          "y": 335.762402623
+          "x": 484.772809759,
+          "y": 336.281116791
         },
-        "radiusPx": 12.5,
+        "radiusPx": 11.106285832,
         "provenance": "auto"
       },
       {
         "index": 2,
         "center": {
-          "x": 450.020653111,
-          "y": 379.700711402
+          "x": 448.539367279,
+          "y": 380.21942557
         },
-        "radiusPx": 12,
+        "radiusPx": 11.106285832,
         "provenance": "auto"
       },
       {
         "index": 3,
         "center": {
-          "x": 402.390456153,
-          "y": 410.605582161
+          "x": 400.909170321,
+          "y": 410.874296329
         },
-        "radiusPx": 12,
+        "radiusPx": 10.981285832,
         "provenance": "auto"
       },
       {
         "index": 4,
         "center": {
-          "x": 347.462758157,
-          "y": 425.818588761
+          "x": 345.731472324,
+          "y": 426.087302929
         },
-        "radiusPx": 12,
+        "radiusPx": 10.856285832,
         "provenance": "auto"
       },
       {
         "index": 5,
         "center": {
-          "x": 290.862102104,
-          "y": 423.595618034
+          "x": 289.380816272,
+          "y": 423.864332202
         },
-        "radiusPx": 12.25,
+        "radiusPx": 10.606285832,
         "provenance": "auto"
       },
       {
         "index": 6,
         "center": {
-          "x": 236.443740695,
-          "y": 403.651426181
+          "x": 235.212454863,
+          "y": 403.670140349
         },
-        "radiusPx": 10.5,
+        "radiusPx": 10.731285832,
         "provenance": "auto"
       },
       {
         "index": 7,
         "center": {
-          "x": 191.84891322,
-          "y": 368.413050291
+          "x": 189.367627388,
+          "y": 368.431764459
         },
-        "radiusPx": 9.5,
+        "radiusPx": 10.981285832,
         "provenance": "auto"
       },
       {
         "index": 8,
         "center": {
-          "x": 159.791352618,
-          "y": 320.565902194
+          "x": 157.060066786,
+          "y": 320.334616362
         },
-        "radiusPx": 9.25,
+        "radiusPx": 11.106285832,
         "provenance": "auto"
       },
       {
         "index": 9,
         "center": {
-          "x": 144.092707037,
-          "y": 264.773088354
+          "x": 141.111421205,
+          "y": 264.541802522
         },
-        "radiusPx": 9,
+        "radiusPx": 11.106285832,
         "provenance": "auto"
       },
       {
         "index": 10,
         "center": {
-          "x": 146.274709824,
-          "y": 206.764700962
+          "x": 143.293423992,
+          "y": 206.53341513
         },
-        "radiusPx": 8.75,
+        "radiusPx": 11.106285832,
         "provenance": "auto"
       },
       {
         "index": 11,
         "center": {
-          "x": 166.621674025,
-          "y": 151.225939997
+          "x": 163.640388193,
+          "y": 150.744654165
         },
-        "radiusPx": 9,
+        "radiusPx": 11.356285832,
         "provenance": "auto"
       },
       {
         "index": 12,
         "center": {
-          "x": 202.626700791,
-          "y": 105.398900009
+          "x": 199.895414959,
+          "y": 104.917614177
         },
-        "radiusPx": 9.25,
+        "radiusPx": 11.356285832,
         "provenance": "auto"
       },
       {
         "index": 13,
         "center": {
-          "x": 251.741347655,
-          "y": 72.70785267
+          "x": 249.010061823,
+          "y": 72.726566838
         },
-        "radiusPx": 9.75,
+        "radiusPx": 11.356285832,
         "provenance": "auto"
       },
       {
         "index": 14,
         "center": {
-          "x": 308.208064303,
-          "y": 57.100589975
+          "x": 305.976778471,
+          "y": 56.869304143
         },
-        "radiusPx": 11.25,
+        "radiusPx": 11.356285832,
         "provenance": "auto"
       },
       {
         "index": 15,
         "center": {
-          "x": 367.165537893,
-          "y": 60.202930979
+          "x": 365.184252061,
+          "y": 60.471645146
         },
-        "radiusPx": 12,
+        "radiusPx": 11.356285832,
         "provenance": "auto"
       },
       {
         "index": 16,
         "center": {
-          "x": 421.025630199,
-          "y": 81.595514577
+          "x": 419.044344367,
+          "y": 81.364228745
         },
-        "radiusPx": 12.5,
+        "radiusPx": 11.606285832,
         "provenance": "auto"
       },
       {
         "index": 17,
         "center": {
-          "x": 465.707778532,
-          "y": 118.472846579
+          "x": 463.9764927,
+          "y": 118.241560747
         },
-        "radiusPx": 12.5,
+        "radiusPx": 11.356285832,
         "provenance": "auto"
       },
       {
         "index": 18,
         "center": {
-          "x": 497.080947124,
-          "y": 167.391509982
+          "x": 495.099661292,
+          "y": 167.41022415
         },
-        "radiusPx": 12.5,
+        "radiusPx": 11.481285832,
         "provenance": "auto"
       },
       {
         "index": 19,
         "center": {
-          "x": 512.059060874,
-          "y": 223.381027621
+          "x": 509.577775042,
+          "y": 223.649741788
         },
-        "radiusPx": 12.5,
+        "radiusPx": 11.481285832,
         "provenance": "auto"
       }
     ],
@@ -204,7 +204,7 @@
     "fit": {
       "platformResidualPx": 0.392752861,
       "ringSymmetry": 0.757656003,
-      "ringRadiusFraction": 0.891056914,
+      "ringRadiusFraction": 0.890361048,
       "warnings": []
     }
   },
@@ -242,27 +242,27 @@
       "id": "inv-0",
       "type": "investigation",
       "holeIndex": 4,
-      "startFrame": 192,
-      "endFrame": 216,
+      "startFrame": 191,
+      "endFrame": 217,
       "isTarget": true,
       "isError": false,
-      "minNoseDistanceCm": 1.0279933669,
+      "minNoseDistanceCm": 0.715069431195,
       "minAreaRatio": 1.00500625782,
       "provenance": "auto",
-      "evidence": "Hole 5: nose distance 1.03 cm for 0.87 s, frames 192-216. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 5: nose distance 0.72 cm for 0.93 s, frames 191-217. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-1",
       "type": "investigation",
       "holeIndex": 4,
-      "startFrame": 278,
+      "startFrame": 277,
       "endFrame": 301,
       "isTarget": true,
       "isError": false,
-      "minNoseDistanceCm": 1.09331067388,
+      "minNoseDistanceCm": 0.782273404326,
       "minAreaRatio": 0.93491864831,
       "provenance": "auto",
-      "evidence": "Hole 5: nose distance 1.09 cm for 0.80 s, frames 278-301. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 5: nose distance 0.78 cm for 0.83 s, frames 277-301. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-2",
@@ -272,23 +272,23 @@
       "endFrame": 387,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.08816284017,
+      "minNoseDistanceCm": 1.26217417895,
       "minAreaRatio": 0.663329161452,
       "provenance": "auto",
-      "evidence": "Hole 6: nose distance 1.09 cm for 2.50 s, frames 313-387. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 6: nose distance 1.26 cm for 2.50 s, frames 313-387. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-3",
       "type": "investigation",
       "holeIndex": 5,
-      "startFrame": 433,
+      "startFrame": 434,
       "endFrame": 462,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.789757237545,
+      "minNoseDistanceCm": 0.936779946942,
       "minAreaRatio": 0.683354192741,
       "provenance": "auto",
-      "evidence": "Hole 6: nose distance 0.79 cm for 1.00 s, frames 433-462. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 6: nose distance 0.94 cm for 0.97 s, frames 434-462. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-4",
@@ -298,36 +298,36 @@
       "endFrame": 550,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.80400103073,
+      "minNoseDistanceCm": 2.07144947843,
       "minAreaRatio": 0.529411764706,
       "provenance": "auto",
-      "evidence": "Hole 7: nose distance 1.80 cm for 2.53 s, frames 475-550. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 7: nose distance 2.07 cm for 2.53 s, frames 475-550. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-5",
       "type": "investigation",
       "holeIndex": 6,
-      "startFrame": 631,
-      "endFrame": 657,
+      "startFrame": 630,
+      "endFrame": 659,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.83616173436,
+      "minNoseDistanceCm": 2.56671081592,
       "minAreaRatio": 0.927409261577,
       "provenance": "auto",
-      "evidence": "Hole 7: nose distance 2.84 cm for 0.90 s, frames 631-657. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 7: nose distance 2.57 cm for 1.03 s, frames 630-659. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-6",
       "type": "investigation",
       "holeIndex": 7,
       "startFrame": 703,
-      "endFrame": 782,
+      "endFrame": 785,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.73540013891,
+      "minNoseDistanceCm": 1.34902497259,
       "minAreaRatio": 0.828535669587,
       "provenance": "auto",
-      "evidence": "Hole 8: nose distance 1.74 cm for 2.70 s, frames 703-782. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 8: nose distance 1.35 cm for 2.80 s, frames 703-785. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-7",
@@ -337,88 +337,88 @@
       "endFrame": 907,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.82480827171,
+      "minNoseDistanceCm": 2.42646002406,
       "minAreaRatio": 0.807259073842,
       "provenance": "auto",
-      "evidence": "Hole 9: nose distance 1.82 cm for 1.37 s, frames 867-907. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 9: nose distance 2.43 cm for 1.37 s, frames 867-907. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-8",
       "type": "investigation",
       "holeIndex": 9,
       "startFrame": 916,
-      "endFrame": 982,
+      "endFrame": 981,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.29615137322,
+      "minNoseDistanceCm": 1.19125583738,
       "minAreaRatio": 0.93491864831,
       "provenance": "auto",
-      "evidence": "Hole 10: nose distance 1.30 cm for 2.23 s, frames 916-982. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 10: nose distance 1.19 cm for 2.20 s, frames 916-981. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-9",
       "type": "investigation",
       "holeIndex": 10,
-      "startFrame": 999,
-      "endFrame": 1026,
+      "startFrame": 1001,
+      "endFrame": 1025,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.84064502975,
+      "minNoseDistanceCm": 2.49015239451,
       "minAreaRatio": 0.9774718398,
       "provenance": "auto",
-      "evidence": "Hole 11: nose distance 1.84 cm for 0.90 s, frames 999-1026. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 11: nose distance 2.49 cm for 0.83 s, frames 1001-1025. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-10",
       "type": "investigation",
       "holeIndex": 11,
-      "startFrame": 1040,
-      "endFrame": 1102,
+      "startFrame": 1037,
+      "endFrame": 1101,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.427327619747,
+      "minNoseDistanceCm": 0.49230210991,
       "minAreaRatio": 0.951188986233,
       "provenance": "auto",
-      "evidence": "Hole 12: nose distance 0.43 cm for 2.13 s, frames 1040-1102. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 12: nose distance 0.49 cm for 2.20 s, frames 1037-1101. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-11",
       "type": "investigation",
       "holeIndex": 5,
-      "startFrame": 1359,
-      "endFrame": 1391,
+      "startFrame": 1372,
+      "endFrame": 1392,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.943339518101,
+      "minNoseDistanceCm": 0.619574228882,
       "minAreaRatio": 0.854818523154,
       "provenance": "auto",
-      "evidence": "Hole 6: nose distance 0.94 cm for 1.10 s, frames 1359-1391. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 6: nose distance 0.62 cm for 0.70 s, frames 1372-1392. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-12",
       "type": "investigation",
       "holeIndex": 5,
       "startFrame": 1432,
-      "endFrame": 1449,
+      "endFrame": 1450,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.34170097367,
+      "minNoseDistanceCm": 2.01701262669,
       "minAreaRatio": 0.899874843554,
       "provenance": "auto",
-      "evidence": "Hole 6: nose distance 2.34 cm for 0.60 s, frames 1432-1449. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 6: nose distance 2.02 cm for 0.63 s, frames 1432-1450. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-13",
       "type": "investigation",
       "holeIndex": 6,
-      "startFrame": 1468,
-      "endFrame": 1545,
+      "startFrame": 1470,
+      "endFrame": 1547,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.80033055184,
+      "minNoseDistanceCm": 2.03320941317,
       "minAreaRatio": 0.608260325407,
       "provenance": "auto",
-      "evidence": "Hole 7: nose distance 1.80 cm for 2.63 s, frames 1468-1545. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 7: nose distance 2.03 cm for 2.63 s, frames 1470-1547. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-14",
@@ -428,88 +428,88 @@
       "endFrame": 1597,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.15001410588,
+      "minNoseDistanceCm": 1.65111753297,
       "minAreaRatio": 0.837296620776,
       "provenance": "auto",
-      "evidence": "Hole 8: nose distance 2.15 cm for 1.03 s, frames 1567-1597. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 8: nose distance 1.65 cm for 1.03 s, frames 1567-1597. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-15",
       "type": "investigation",
       "holeIndex": 8,
-      "startFrame": 1607,
+      "startFrame": 1608,
       "endFrame": 1632,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.00013630731,
+      "minNoseDistanceCm": 1.5592216516,
       "minAreaRatio": 0.793491864831,
       "provenance": "auto",
-      "evidence": "Hole 9: nose distance 1.00 cm for 0.87 s, frames 1607-1632. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 9: nose distance 1.56 cm for 0.83 s, frames 1608-1632. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-16",
       "type": "investigation",
       "holeIndex": 9,
-      "startFrame": 1723,
+      "startFrame": 1722,
       "endFrame": 1780,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.532821510076,
+      "minNoseDistanceCm": 0.139596854535,
       "minAreaRatio": 0.922403003755,
       "provenance": "auto",
-      "evidence": "Hole 10: nose distance 0.53 cm for 1.93 s, frames 1723-1780. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 10: nose distance 0.14 cm for 1.97 s, frames 1722-1780. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-17",
       "type": "investigation",
       "holeIndex": 10,
-      "startFrame": 1791,
-      "endFrame": 1812,
+      "startFrame": 1790,
+      "endFrame": 1811,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.814267554982,
+      "minNoseDistanceCm": 0.538026161931,
       "minAreaRatio": 0.997496871089,
       "provenance": "auto",
-      "evidence": "Hole 11: nose distance 0.81 cm for 0.73 s, frames 1791-1812. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 11: nose distance 0.54 cm for 0.73 s, frames 1790-1811. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-18",
       "type": "investigation",
       "holeIndex": 11,
-      "startFrame": 1833,
-      "endFrame": 1854,
+      "startFrame": 1828,
+      "endFrame": 1851,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.711878548483,
+      "minNoseDistanceCm": 0.467648588062,
       "minAreaRatio": 1.06382978723,
       "provenance": "auto",
-      "evidence": "Hole 12: nose distance 0.71 cm for 0.73 s, frames 1833-1854. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 12: nose distance 0.47 cm for 0.80 s, frames 1828-1851. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-19",
       "type": "investigation",
       "holeIndex": 11,
       "startFrame": 1945,
-      "endFrame": 1964,
+      "endFrame": 1963,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.24166920435,
+      "minNoseDistanceCm": 2.50888749877,
       "minAreaRatio": 0.978723404255,
       "provenance": "auto",
-      "evidence": "Hole 12: nose distance 2.24 cm for 0.67 s, frames 1945-1964. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 12: nose distance 2.51 cm for 0.63 s, frames 1945-1963. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-20",
       "type": "investigation",
       "holeIndex": 13,
-      "startFrame": 2007,
-      "endFrame": 2038,
+      "startFrame": 2014,
+      "endFrame": 2037,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.965785341642,
-      "minAreaRatio": 1.04380475594,
+      "minNoseDistanceCm": 0.846241984959,
+      "minAreaRatio": 1.07634543179,
       "provenance": "auto",
-      "evidence": "Hole 14: nose distance 0.97 cm for 1.10 s, frames 2007-2038. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 14: nose distance 0.85 cm for 0.80 s, frames 2014-2037. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-21",
@@ -519,10 +519,10 @@
       "endFrame": 2093,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.90781889316,
+      "minNoseDistanceCm": 2.4855404824,
       "minAreaRatio": 0.844806007509,
       "provenance": "auto",
-      "evidence": "Hole 14: nose distance 1.91 cm for 0.40 s, frames 2082-2093. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 14: nose distance 2.49 cm for 0.40 s, frames 2082-2093. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-22",
@@ -532,36 +532,36 @@
       "endFrame": 2111,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.807960627426,
+      "minNoseDistanceCm": 0.608319363213,
       "minAreaRatio": 0.899874843554,
       "provenance": "auto",
-      "evidence": "Hole 15: nose distance 0.81 cm for 0.60 s, frames 2094-2111. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 15: nose distance 0.61 cm for 0.60 s, frames 2094-2111. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-23",
       "type": "investigation",
       "holeIndex": 15,
-      "startFrame": 2128,
-      "endFrame": 2253,
+      "startFrame": 2127,
+      "endFrame": 2252,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.280344598443,
+      "minNoseDistanceCm": 0.121412836047,
       "minAreaRatio": 0.808510638298,
       "provenance": "auto",
-      "evidence": "Hole 16: nose distance 0.28 cm for 4.20 s, frames 2128-2253. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 16: nose distance 0.12 cm for 4.20 s, frames 2127-2252. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-24",
       "type": "investigation",
       "holeIndex": 16,
-      "startFrame": 2268,
+      "startFrame": 2265,
       "endFrame": 2345,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.23923094373,
+      "minNoseDistanceCm": 0.20064395275,
       "minAreaRatio": 0.80225281602,
       "provenance": "auto",
-      "evidence": "Hole 17: nose distance 0.24 cm for 2.60 s, frames 2268-2345. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 17: nose distance 0.20 cm for 2.70 s, frames 2265-2345. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-25",
@@ -571,153 +571,153 @@
       "endFrame": 2397,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.20670224084,
+      "minNoseDistanceCm": 2.57385951004,
       "minAreaRatio": 0.834793491865,
       "provenance": "auto",
-      "evidence": "Hole 16: nose distance 2.21 cm for 0.27 s, frames 2391-2397. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 16: nose distance 2.57 cm for 0.27 s, frames 2391-2397. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-26",
       "type": "investigation",
       "holeIndex": 16,
-      "startFrame": 2411,
-      "endFrame": 2453,
+      "startFrame": 2402,
+      "endFrame": 2454,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.644540393367,
+      "minNoseDistanceCm": 0.430293289026,
       "minAreaRatio": 0.792240300375,
       "provenance": "auto",
-      "evidence": "Hole 17: nose distance 0.64 cm for 1.43 s, frames 2411-2453. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 17: nose distance 0.43 cm for 1.80 s, frames 2402-2454. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-27",
       "type": "investigation",
       "holeIndex": 17,
       "startFrame": 2486,
-      "endFrame": 2540,
+      "endFrame": 2539,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.4861470374,
+      "minNoseDistanceCm": 1.43559398091,
       "minAreaRatio": 0.807259073842,
       "provenance": "auto",
-      "evidence": "Hole 18: nose distance 1.49 cm for 1.83 s, frames 2486-2540. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 18: nose distance 1.44 cm for 1.80 s, frames 2486-2539. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-28",
       "type": "investigation",
       "holeIndex": 18,
       "startFrame": 2586,
-      "endFrame": 2612,
+      "endFrame": 2613,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.894548066706,
+      "minNoseDistanceCm": 0.52416676608,
       "minAreaRatio": 0.854818523154,
       "provenance": "auto",
-      "evidence": "Hole 19: nose distance 0.89 cm for 0.90 s, frames 2586-2612. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 19: nose distance 0.52 cm for 0.93 s, frames 2586-2613. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-29",
       "type": "investigation",
       "holeIndex": 19,
-      "startFrame": 2628,
-      "endFrame": 2644,
+      "startFrame": 2627,
+      "endFrame": 2645,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.56490710035,
+      "minNoseDistanceCm": 1.0560588416,
       "minAreaRatio": 1.01627033792,
       "provenance": "auto",
-      "evidence": "Hole 20: nose distance 1.56 cm for 0.57 s, frames 2628-2644. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 20: nose distance 1.06 cm for 0.63 s, frames 2627-2645. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-30",
       "type": "investigation",
       "holeIndex": 0,
-      "startFrame": 2658,
-      "endFrame": 2674,
+      "startFrame": 2657,
+      "endFrame": 2675,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 2.21746130324,
+      "minNoseDistanceCm": 1.81560760188,
       "minAreaRatio": 0.978723404255,
       "provenance": "auto",
-      "evidence": "Hole 1: nose distance 2.22 cm for 0.57 s, frames 2658-2674. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 1: nose distance 1.82 cm for 0.63 s, frames 2657-2675. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-31",
       "type": "investigation",
       "holeIndex": 1,
-      "startFrame": 2682,
-      "endFrame": 2703,
+      "startFrame": 2683,
+      "endFrame": 2704,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.49267718167,
+      "minNoseDistanceCm": 1.34496098244,
       "minAreaRatio": 1.01251564456,
       "provenance": "auto",
-      "evidence": "Hole 2: nose distance 1.49 cm for 0.73 s, frames 2682-2703. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 2: nose distance 1.34 cm for 0.73 s, frames 2683-2704. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-32",
       "type": "investigation",
       "holeIndex": 2,
-      "startFrame": 2734,
+      "startFrame": 2731,
       "endFrame": 2755,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.71636262306,
+      "minNoseDistanceCm": 1.3999470518,
       "minAreaRatio": 0.932415519399,
       "provenance": "auto",
-      "evidence": "Hole 3: nose distance 1.72 cm for 0.73 s, frames 2734-2755. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 3: nose distance 1.40 cm for 0.83 s, frames 2731-2755. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-33",
       "type": "investigation",
       "holeIndex": 3,
       "startFrame": 2766,
-      "endFrame": 2788,
+      "endFrame": 2789,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.82086231637,
+      "minNoseDistanceCm": 1.88613761789,
       "minAreaRatio": 0.740926157697,
       "provenance": "auto",
-      "evidence": "Hole 4: nose distance 1.82 cm for 0.77 s, frames 2766-2788. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 4: nose distance 1.89 cm for 0.80 s, frames 2766-2789. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-34",
       "type": "investigation",
       "holeIndex": 4,
-      "startFrame": 2798,
-      "endFrame": 2821,
+      "startFrame": 2799,
+      "endFrame": 2822,
       "isTarget": true,
       "isError": false,
-      "minNoseDistanceCm": 1.61825840079,
+      "minNoseDistanceCm": 1.65191541477,
       "minAreaRatio": 0.732165206508,
       "provenance": "auto",
-      "evidence": "Hole 5: nose distance 1.62 cm for 0.80 s, frames 2798-2821. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 5: nose distance 1.65 cm for 0.80 s, frames 2799-2822. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-35",
       "type": "investigation",
       "holeIndex": 5,
-      "startFrame": 2892,
+      "startFrame": 2893,
       "endFrame": 2962,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.33701993654,
+      "minNoseDistanceCm": 1.66004617052,
       "minAreaRatio": 0.727158948686,
       "provenance": "auto",
-      "evidence": "Hole 6: nose distance 1.34 cm for 2.37 s, frames 2892-2962. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 6: nose distance 1.66 cm for 2.37 s, frames 2893-2962. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-36",
       "type": "investigation",
       "holeIndex": 5,
       "startFrame": 3005,
-      "endFrame": 3019,
+      "endFrame": 3020,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.40162002148,
+      "minNoseDistanceCm": 1.59208640811,
       "minAreaRatio": 0.655819774718,
       "provenance": "auto",
-      "evidence": "Hole 6: nose distance 1.40 cm for 0.50 s, frames 3005-3019. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 6: nose distance 1.59 cm for 0.53 s, frames 3005-3020. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-37",
@@ -727,205 +727,205 @@
       "endFrame": 3216,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.66218115187,
+      "minNoseDistanceCm": 1.86277839697,
       "minAreaRatio": 0.566958698373,
       "provenance": "auto",
-      "evidence": "Hole 7: nose distance 1.66 cm for 6.30 s, frames 3028-3216. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 7: nose distance 1.86 cm for 6.30 s, frames 3028-3216. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-38",
       "type": "investigation",
       "holeIndex": 7,
       "startFrame": 3233,
-      "endFrame": 3275,
+      "endFrame": 3276,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.66810091091,
+      "minNoseDistanceCm": 1.72702194222,
       "minAreaRatio": 0.729662077597,
       "provenance": "auto",
-      "evidence": "Hole 8: nose distance 1.67 cm for 1.43 s, frames 3233-3275. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 8: nose distance 1.73 cm for 1.47 s, frames 3233-3276. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-39",
       "type": "investigation",
       "holeIndex": 8,
-      "startFrame": 3293,
+      "startFrame": 3294,
       "endFrame": 3323,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.77057164559,
+      "minNoseDistanceCm": 1.69459008402,
       "minAreaRatio": 0.849812265332,
       "provenance": "auto",
-      "evidence": "Hole 9: nose distance 1.77 cm for 1.00 s, frames 3293-3323. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 9: nose distance 1.69 cm for 0.97 s, frames 3294-3323. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-40",
       "type": "investigation",
       "holeIndex": 9,
-      "startFrame": 3329,
+      "startFrame": 3330,
       "endFrame": 3350,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.69461842112,
+      "minNoseDistanceCm": 1.07627841897,
       "minAreaRatio": 0.967459324155,
       "provenance": "auto",
-      "evidence": "Hole 10: nose distance 1.69 cm for 0.73 s, frames 3329-3350. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 10: nose distance 1.08 cm for 0.70 s, frames 3330-3350. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-41",
       "type": "investigation",
       "holeIndex": 10,
       "startFrame": 3360,
-      "endFrame": 3379,
+      "endFrame": 3382,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.87820166092,
+      "minNoseDistanceCm": 1.73932518884,
       "minAreaRatio": 1.14142678348,
       "provenance": "auto",
-      "evidence": "Hole 11: nose distance 1.88 cm for 0.67 s, frames 3360-3379. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 11: nose distance 1.74 cm for 0.77 s, frames 3360-3382. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-42",
       "type": "investigation",
       "holeIndex": 10,
-      "startFrame": 3426,
-      "endFrame": 3436,
+      "startFrame": 3425,
+      "endFrame": 3435,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.15770307353,
+      "minNoseDistanceCm": 0.963342358748,
       "minAreaRatio": 1.04380475594,
       "provenance": "auto",
-      "evidence": "Hole 11: nose distance 1.16 cm for 0.37 s, frames 3426-3436. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 11: nose distance 0.96 cm for 0.37 s, frames 3425-3435. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-43",
       "type": "investigation",
       "holeIndex": 11,
       "startFrame": 3445,
-      "endFrame": 3468,
+      "endFrame": 3467,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.633532987931,
+      "minNoseDistanceCm": 0.795367878654,
       "minAreaRatio": 1.10763454318,
       "provenance": "auto",
-      "evidence": "Hole 12: nose distance 0.63 cm for 0.80 s, frames 3445-3468. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 12: nose distance 0.80 cm for 0.77 s, frames 3445-3467. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-44",
       "type": "investigation",
       "holeIndex": 12,
       "startFrame": 3478,
-      "endFrame": 3501,
+      "endFrame": 3500,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 1.14583275646,
+      "minNoseDistanceCm": 0.981462261667,
       "minAreaRatio": 1.09386733417,
       "provenance": "auto",
-      "evidence": "Hole 13: nose distance 1.15 cm for 0.80 s, frames 3478-3501. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 13: nose distance 0.98 cm for 0.77 s, frames 3478-3500. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-45",
       "type": "investigation",
       "holeIndex": 13,
       "startFrame": 3513,
-      "endFrame": 3533,
+      "endFrame": 3531,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.11391940407,
-      "minAreaRatio": 1.07008760951,
+      "minNoseDistanceCm": 0.633137661012,
+      "minAreaRatio": 1.07509386733,
       "provenance": "auto",
-      "evidence": "Hole 14: nose distance 1.11 cm for 0.70 s, frames 3513-3533. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 14: nose distance 0.63 cm for 0.63 s, frames 3513-3531. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-46",
       "type": "investigation",
       "holeIndex": 14,
-      "startFrame": 3550,
+      "startFrame": 3549,
       "endFrame": 3572,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.945187209015,
+      "minNoseDistanceCm": 0.589279842498,
       "minAreaRatio": 0.937421777222,
       "provenance": "auto",
-      "evidence": "Hole 15: nose distance 0.95 cm for 0.77 s, frames 3550-3572. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 15: nose distance 0.59 cm for 0.80 s, frames 3549-3572. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-47",
       "type": "investigation",
       "holeIndex": 19,
-      "startFrame": 3728,
+      "startFrame": 3727,
       "endFrame": 3736,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.71129469827,
+      "minNoseDistanceCm": 2.49967446574,
       "minAreaRatio": 0.93491864831,
       "provenance": "auto",
-      "evidence": "Hole 20: nose distance 2.71 cm for 0.30 s, frames 3728-3736. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 20: nose distance 2.50 cm for 0.33 s, frames 3727-3736. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-48",
       "type": "investigation",
       "holeIndex": 0,
-      "startFrame": 3779,
+      "startFrame": 3781,
       "endFrame": 3793,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.926661749728,
+      "minNoseDistanceCm": 0.79125917712,
       "minAreaRatio": 0.892365456821,
       "provenance": "auto",
-      "evidence": "Hole 1: nose distance 0.93 cm for 0.50 s, frames 3779-3793. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 1: nose distance 0.79 cm for 0.43 s, frames 3781-3793. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-49",
       "type": "investigation",
       "holeIndex": 2,
-      "startFrame": 3853,
+      "startFrame": 3851,
       "endFrame": 3866,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.00895878829,
+      "minNoseDistanceCm": 1.66494243523,
       "minAreaRatio": 0.946182728411,
       "provenance": "auto",
-      "evidence": "Hole 3: nose distance 2.01 cm for 0.47 s, frames 3853-3866. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 3: nose distance 1.66 cm for 0.53 s, frames 3851-3866. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-50",
       "type": "investigation",
       "holeIndex": 4,
       "startFrame": 3975,
-      "endFrame": 4005,
+      "endFrame": 4006,
       "isTarget": true,
       "isError": false,
-      "minNoseDistanceCm": 1.56023133282,
+      "minNoseDistanceCm": 1.76463963131,
       "minAreaRatio": 0.789737171464,
       "provenance": "auto",
-      "evidence": "Hole 5: nose distance 1.56 cm for 1.03 s, frames 3975-4005. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 5: nose distance 1.76 cm for 1.07 s, frames 3975-4006. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-51",
       "type": "investigation",
       "holeIndex": 5,
-      "startFrame": 4014,
+      "startFrame": 4016,
       "endFrame": 4086,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.63388852502,
+      "minNoseDistanceCm": 1.92581308124,
       "minAreaRatio": 0.752190237797,
       "provenance": "auto",
-      "evidence": "Hole 6: nose distance 1.63 cm for 2.47 s, frames 4014-4086. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 6: nose distance 1.93 cm for 2.40 s, frames 4016-4086. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-52",
       "type": "investigation",
       "holeIndex": 6,
-      "startFrame": 4110,
-      "endFrame": 4149,
+      "startFrame": 4111,
+      "endFrame": 4150,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.84864105211,
+      "minNoseDistanceCm": 1.94598600978,
       "minAreaRatio": 0.660826032541,
       "provenance": "auto",
-      "evidence": "Hole 7: nose distance 1.85 cm for 1.30 s, frames 4110-4149. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 7: nose distance 1.95 cm for 1.30 s, frames 4111-4150. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-53",
@@ -935,10 +935,10 @@
       "endFrame": 4196,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.36944901772,
+      "minNoseDistanceCm": 1.59136484714,
       "minAreaRatio": 0.730913642053,
       "provenance": "auto",
-      "evidence": "Hole 8: nose distance 1.37 cm for 1.00 s, frames 4167-4196. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 8: nose distance 1.59 cm for 1.00 s, frames 4167-4196. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-54",
@@ -948,148 +948,161 @@
       "endFrame": 4226,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.44335084227,
+      "minNoseDistanceCm": 2.0447120991,
       "minAreaRatio": 0.892365456821,
       "provenance": "auto",
-      "evidence": "Hole 9: nose distance 1.44 cm for 0.50 s, frames 4212-4226. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 9: nose distance 2.04 cm for 0.50 s, frames 4212-4226. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-55",
       "type": "investigation",
       "holeIndex": 9,
-      "startFrame": 4247,
-      "endFrame": 4261,
+      "startFrame": 4243,
+      "endFrame": 4260,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.49623144588,
+      "minNoseDistanceCm": 0.929843404487,
       "minAreaRatio": 1.0225281602,
       "provenance": "auto",
-      "evidence": "Hole 10: nose distance 1.50 cm for 0.50 s, frames 4247-4261. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 10: nose distance 0.93 cm for 0.60 s, frames 4243-4260. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-56",
       "type": "investigation",
       "holeIndex": 10,
       "startFrame": 4275,
-      "endFrame": 4297,
+      "endFrame": 4296,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.44749943365,
-      "minAreaRatio": 1.10763454318,
+      "minNoseDistanceCm": 0.840362011709,
+      "minAreaRatio": 1.14267834793,
       "provenance": "auto",
-      "evidence": "Hole 11: nose distance 1.45 cm for 0.77 s, frames 4275-4297. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 11: nose distance 0.84 cm for 0.73 s, frames 4275-4296. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-57",
       "type": "investigation",
       "holeIndex": 11,
-      "startFrame": 4309,
-      "endFrame": 4328,
+      "startFrame": 4307,
+      "endFrame": 4327,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.04689967653,
+      "minNoseDistanceCm": 1.03403977661,
       "minAreaRatio": 1.1464330413,
       "provenance": "auto",
-      "evidence": "Hole 12: nose distance 1.05 cm for 0.67 s, frames 4309-4328. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 12: nose distance 1.03 cm for 0.70 s, frames 4307-4327. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-58",
       "type": "investigation",
       "holeIndex": 12,
-      "startFrame": 4344,
-      "endFrame": 4358,
+      "startFrame": 4343,
+      "endFrame": 4360,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.54567877999,
+      "minNoseDistanceCm": 1.94099425956,
       "minAreaRatio": 1.27284105131,
       "provenance": "auto",
-      "evidence": "Hole 13: nose distance 2.55 cm for 0.50 s, frames 4344-4358. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 13: nose distance 1.94 cm for 0.60 s, frames 4343-4360. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-59",
       "type": "investigation",
       "holeIndex": 13,
-      "startFrame": 4438,
-      "endFrame": 4467,
+      "startFrame": 4437,
+      "endFrame": 4465,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.04986876677,
+      "minNoseDistanceCm": 0.451853358335,
       "minAreaRatio": 1.0788485607,
       "provenance": "auto",
-      "evidence": "Hole 14: nose distance 1.05 cm for 1.00 s, frames 4438-4467. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 14: nose distance 0.45 cm for 0.97 s, frames 4437-4465. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-60",
       "type": "investigation",
       "holeIndex": 14,
-      "startFrame": 4478,
-      "endFrame": 4507,
+      "startFrame": 4476,
+      "endFrame": 4505,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.784574059903,
+      "minNoseDistanceCm": 0.32123390535,
       "minAreaRatio": 0.891113892365,
       "provenance": "auto",
-      "evidence": "Hole 15: nose distance 0.78 cm for 1.03 s, frames 4478-4507. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 15: nose distance 0.32 cm for 1.03 s, frames 4476-4505. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-61",
       "type": "investigation",
       "holeIndex": 15,
-      "startFrame": 4537,
-      "endFrame": 4550,
+      "startFrame": 4536,
+      "endFrame": 4549,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 1.86002072563,
+      "minNoseDistanceCm": 1.78582666375,
       "minAreaRatio": 0.964956195244,
       "provenance": "auto",
-      "evidence": "Hole 16: nose distance 1.86 cm for 0.50 s, frames 4537-4550. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 16: nose distance 1.79 cm for 0.50 s, frames 4536-4549. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-62",
       "type": "investigation",
-      "holeIndex": 15,
-      "startFrame": 4653,
-      "endFrame": 4667,
+      "holeIndex": 16,
+      "startFrame": 4639,
+      "endFrame": 4652,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 2.20670224084,
-      "minAreaRatio": 0.807259073842,
+      "minNoseDistanceCm": 2.70323865365,
+      "minAreaRatio": 0.838548185232,
       "provenance": "auto",
-      "evidence": "Hole 16: nose distance 2.21 cm for 0.50 s, frames 4653-4667. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 17: nose distance 2.70 cm for 0.47 s, frames 4639-4652. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-63",
+      "type": "investigation",
+      "holeIndex": 15,
+      "startFrame": 4653,
+      "endFrame": 4665,
+      "isTarget": false,
+      "isError": false,
+      "minNoseDistanceCm": 2.57385951004,
+      "minAreaRatio": 0.807259073842,
+      "provenance": "auto",
+      "evidence": "Hole 16: nose distance 2.57 cm for 0.43 s, frames 4653-4665. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-64",
       "type": "investigation",
       "holeIndex": 3,
       "startFrame": 4935,
       "endFrame": 5000,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.687054461884,
+      "minNoseDistanceCm": 0.489175043067,
       "minAreaRatio": 0.823529411765,
       "provenance": "auto",
-      "evidence": "Hole 4: nose distance 0.69 cm for 2.20 s, frames 4935-5000. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 4: nose distance 0.49 cm for 2.20 s, frames 4935-5000. Threshold: 3 cm for at least 0.25 s."
     },
     {
-      "id": "inv-64",
+      "id": "inv-65",
       "type": "investigation",
       "holeIndex": 4,
       "startFrame": 5047,
       "endFrame": 5537,
       "isTarget": true,
       "isError": false,
-      "minNoseDistanceCm": 1.54041164874,
+      "minNoseDistanceCm": 1.15584220711,
       "minAreaRatio": 0.662077596996,
       "provenance": "auto",
-      "evidence": "Hole 5: nose distance 1.54 cm for 16.40 s, frames 5047-5537. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 5: nose distance 1.16 cm for 16.40 s, frames 5047-5537. Threshold: 3 cm for at least 0.25 s."
     }
   ],
   "measures": {
     "videoId": "test50",
     "primaryLatency": {
-      "sec": 1.4,
+      "sec": 1.36666666667,
       "observed": true,
-      "frame": 192,
+      "frame": 191,
       "provenance": "auto"
     },
     "totalLatency": {
@@ -1106,8 +1119,8 @@
     "meanSpeedCmPerSec": 7.13465056602,
     "meanMovingSpeedCmPerSec": 10.6822692994,
     "maxSpeedCmPerSec": 42.2236553496,
-    "timeInTargetQuadrantSec": 76.5,
-    "targetQuadrantFraction": 0.425,
+    "timeInTargetQuadrantSec": 76.8333333333,
+    "targetQuadrantFraction": 0.426851851852,
     "targetQuadrantCoverage": 1,
     "trialDurationSec": 180,
     "strategy": {
@@ -1118,9 +1131,9 @@
         "holesBeforeTarget": 0,
         "longestSerialRun": 1,
         "centerCrossings": 0,
-        "peripheryFraction": 0.285714285714,
-        "meanTurnRateDegPerSec": 131.200455542,
-        "startDistanceCm": 31.4424325066
+        "peripheryFraction": 0.268292682927,
+        "meanTurnRateDegPerSec": 134.84491264,
+        "startDistanceCm": 31.2767320772
       },
       "rule": "spatial: direct path with few wrong holes",
       "provenance": "auto",
