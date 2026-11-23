@@ -11,188 +11,188 @@
       "y": 242.670536611
     },
     "platformRadiusPx": 221.197403583,
-    "ringRadiusPx": 197.639024781,
-    "phaseRad": 0.194274083,
+    "ringRadiusPx": 197.254955844,
+    "phaseRad": 0.192234723,
     "holeCount": 20,
     "holes": [
       {
         "index": 0,
         "center": {
-          "x": 474.819740282,
-          "y": 286.433822317
+          "x": 473.125130471,
+          "y": 285.989212506
         },
-        "radiusPx": 13.25,
+        "radiusPx": 12.19460981,
         "provenance": "auto"
       },
       {
         "index": 1,
         "center": {
-          "x": 452.617974403,
-          "y": 343.399150102
+          "x": 450.923364592,
+          "y": 342.704540292
         },
-        "radiusPx": 13,
+        "radiusPx": 12.19460981,
         "provenance": "auto"
       },
       {
         "index": 2,
         "center": {
-          "x": 414.388201154,
-          "y": 390.411351093
+          "x": 412.193591343,
+          "y": 389.716741283
         },
-        "radiusPx": 13,
+        "radiusPx": 12.19460981,
         "provenance": "auto"
       },
       {
         "index": 3,
         "center": {
-          "x": 362.993811487,
-          "y": 424.394564913
+          "x": 362.049201677,
+          "y": 423.449955103
         },
-        "radiusPx": 12.75,
+        "radiusPx": 11.44460981,
         "provenance": "auto"
       },
       {
         "index": 4,
         "center": {
-          "x": 304.390524583,
-          "y": 440.24221312
+          "x": 303.195914773,
+          "y": 439.79760331
         },
-        "radiusPx": 12.75,
+        "radiusPx": 11.44460981,
         "provenance": "auto"
       },
       {
         "index": 5,
         "center": {
-          "x": 243.466053807,
-          "y": 437.82930349
+          "x": 242.771443996,
+          "y": 436.88469368
         },
-        "radiusPx": 12.75,
+        "radiusPx": 11.81960981,
         "provenance": "auto"
       },
       {
         "index": 6,
         "center": {
-          "x": 186.358875594,
-          "y": 416.973312567
+          "x": 186.164265784,
+          "y": 416.528702757
         },
-        "radiusPx": 12.75,
+        "radiusPx": 11.56960981,
         "provenance": "auto"
       },
       {
         "index": 7,
         "center": {
-          "x": 138.255916793,
-          "y": 379.961024847
+          "x": 138.061306983,
+          "y": 379.516415037
         },
-        "radiusPx": 12.75,
+        "radiusPx": 11.81960981,
         "provenance": "auto"
       },
       {
         "index": 8,
         "center": {
-          "x": 103.208423797,
-          "y": 329.169735709
+          "x": 103.013813986,
+          "y": 328.975125899
         },
-        "radiusPx": 13,
+        "radiusPx": 11.69460981,
         "provenance": "auto"
       },
       {
         "index": 9,
         "center": {
-          "x": 85.422824349,
-          "y": 271.100544128
+          "x": 84.978214538,
+          "y": 271.155934318
         },
-        "radiusPx": 12.75,
+        "radiusPx": 11.81960981,
         "provenance": "auto"
       },
       {
         "index": 10,
         "center": {
-          "x": 86.883325373,
-          "y": 209.38431526
+          "x": 85.938715563,
+          "y": 209.68970545
         },
-        "radiusPx": 13.25,
+        "radiusPx": 12.06960981,
         "provenance": "auto"
       },
       {
         "index": 11,
         "center": {
-          "x": 106.971712102,
-          "y": 151.000142332
+          "x": 105.777102291,
+          "y": 151.555532521
         },
-        "radiusPx": 13.25,
+        "radiusPx": 12.31960981,
         "provenance": "auto"
       },
       {
         "index": 12,
         "center": {
-          "x": 144.840897896,
-          "y": 101.157922726
+          "x": 143.646288086,
+          "y": 101.463312916
         },
-        "radiusPx": 13.25,
+        "radiusPx": 12.44460981,
         "provenance": "auto"
       },
       {
         "index": 13,
         "center": {
-          "x": 195.95987262,
-          "y": 66.255802868
+          "x": 194.515262809,
+          "y": 66.561193057
         },
-        "radiusPx": 13.5,
+        "radiusPx": 12.56960981,
         "provenance": "auto"
       },
       {
         "index": 14,
         "center": {
-          "x": 255.547408057,
-          "y": 48.394007608
+          "x": 254.102798246,
+          "y": 48.699397798
         },
-        "radiusPx": 13.5,
+        "radiusPx": 12.31960981,
         "provenance": "auto"
       },
       {
         "index": 15,
         "center": {
-          "x": 318.694365234,
-          "y": 50.570200326
+          "x": 316.499755424,
+          "y": 50.625590515
         },
-        "radiusPx": 13.25,
+        "radiusPx": 12.81960981,
         "provenance": "auto"
       },
       {
         "index": 16,
         "center": {
-          "x": 377.965497744,
-          "y": 72.439309791
+          "x": 376.770887934,
+          "y": 72.744699981
         },
-        "radiusPx": 13.25,
+        "radiusPx": 12.19460981,
         "provenance": "auto"
       },
       {
         "index": 17,
         "center": {
-          "x": 427.47036584,
-          "y": 111.969380598
+          "x": 425.52575603,
+          "y": 111.524770788
         },
-        "radiusPx": 13,
+        "radiusPx": 12.56960981,
         "provenance": "auto"
       },
       {
         "index": 18,
         "center": {
-          "x": 463.378740467,
-          "y": 165.779227243
+          "x": 459.934130657,
+          "y": 164.584617433
         },
-        "radiusPx": 13.5,
+        "radiusPx": 12.81960981,
         "provenance": "auto"
       },
       {
         "index": 19,
         "center": {
-          "x": 478.007193163,
-          "y": 225.30935592
+          "x": 476.062583353,
+          "y": 224.86474611
         },
-        "radiusPx": 13,
+        "radiusPx": 12.31960981,
         "provenance": "auto"
       }
     ],
@@ -204,14 +204,14 @@
     "fit": {
       "platformResidualPx": 0.302512348,
       "ringSymmetry": 0.780371313,
-      "ringRadiusFraction": 0.893496133,
+      "ringRadiusFraction": 0.891759816,
       "warnings": []
     }
   },
   "targetSuggestion": {
     "holeIndex": 18,
     "confidence": "medium",
-    "evidence": "No entry detected. The final 11.01 s were spent at hole 19. This is a suggestion, not a measured escape hole."
+    "evidence": "No entry detected. The final 3.74 s were spent at hole 19. This is a suggestion, not a measured escape hole."
   },
   "trialStart": {
     "frame": 75,
@@ -242,14 +242,14 @@
       "id": "inv-0",
       "type": "investigation",
       "holeIndex": 11,
-      "startFrame": 89,
+      "startFrame": 90,
       "endFrame": 122,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.751152092958,
+      "minNoseDistanceCm": 0.479959230095,
       "minAreaRatio": 0.910621761658,
       "provenance": "auto",
-      "evidence": "Hole 12: nose distance 0.75 cm for 2.27 s, frames 89-122. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 12: nose distance 0.48 cm for 2.20 s, frames 90-122. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-1",
@@ -259,10 +259,10 @@
       "endFrame": 175,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.945481128705,
+      "minNoseDistanceCm": 0.765280743146,
       "minAreaRatio": 0.928756476684,
       "provenance": "auto",
-      "evidence": "Hole 13: nose distance 0.95 cm for 2.94 s, frames 132-175. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 13: nose distance 0.77 cm for 2.94 s, frames 132-175. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-2",
@@ -272,70 +272,83 @@
       "endFrame": 347,
       "isTarget": false,
       "isError": false,
-      "minNoseDistanceCm": 0.79589725687,
+      "minNoseDistanceCm": 0.5294053626,
       "minAreaRatio": 0.838082901554,
       "provenance": "auto",
-      "evidence": "Hole 12: nose distance 0.80 cm for 10.14 s, frames 196-347. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 12: nose distance 0.53 cm for 10.14 s, frames 196-347. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-3",
       "type": "investigation",
       "holeIndex": 10,
-      "startFrame": 365,
+      "startFrame": 366,
       "endFrame": 394,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.372448836678,
+      "minNoseDistanceCm": 0.176629240326,
       "minAreaRatio": 0.924870466321,
       "provenance": "auto",
-      "evidence": "Hole 11: nose distance 0.37 cm for 2.00 s, frames 365-394. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 11: nose distance 0.18 cm for 1.94 s, frames 366-394. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-4",
       "type": "investigation",
       "holeIndex": 17,
-      "startFrame": 486,
+      "startFrame": 484,
       "endFrame": 525,
       "isTarget": false,
       "isError": true,
-      "minNoseDistanceCm": 0.229447642819,
+      "minNoseDistanceCm": 0.0647820340748,
       "minAreaRatio": 0.854922279793,
       "provenance": "auto",
-      "evidence": "Hole 18: nose distance 0.23 cm for 2.67 s, frames 486-525. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 18: nose distance 0.06 cm for 2.80 s, frames 484-525. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-5",
       "type": "investigation",
       "holeIndex": 18,
-      "startFrame": 538,
-      "endFrame": 556,
+      "startFrame": 535,
+      "endFrame": 555,
       "isTarget": true,
       "isError": false,
-      "minNoseDistanceCm": 1.23315995898,
+      "minNoseDistanceCm": 0.978890528306,
       "minAreaRatio": 0.914507772021,
       "provenance": "auto",
-      "evidence": "Hole 19: nose distance 1.23 cm for 1.27 s, frames 538-556. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 19: nose distance 0.98 cm for 1.40 s, frames 535-555. Threshold: 3 cm for at least 0.25 s."
     },
     {
       "id": "inv-6",
       "type": "investigation",
       "holeIndex": 18,
       "startFrame": 574,
+      "endFrame": 665,
+      "isTarget": true,
+      "isError": false,
+      "minNoseDistanceCm": 0.0929873537478,
+      "minAreaRatio": 0.794041450777,
+      "provenance": "auto",
+      "evidence": "Hole 19: nose distance 0.09 cm for 6.14 s, frames 574-665. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-7",
+      "type": "investigation",
+      "holeIndex": 18,
+      "startFrame": 684,
       "endFrame": 740,
       "isTarget": true,
       "isError": false,
-      "minNoseDistanceCm": 0.177735885703,
+      "minNoseDistanceCm": 0.0677238352356,
       "minAreaRatio": 0.493523316062,
       "provenance": "auto",
-      "evidence": "Hole 19: nose distance 0.18 cm for 11.01 s, frames 574-740. Threshold: 3 cm for at least 0.25 s."
+      "evidence": "Hole 19: nose distance 0.07 cm for 3.74 s, frames 684-740. Threshold: 3 cm for at least 0.25 s."
     }
   ],
   "measures": {
     "videoId": "test51",
     "primaryLatency": {
-      "sec": 30.8975333333,
+      "sec": 30.6973333333,
       "observed": true,
-      "frame": 538,
+      "frame": 535,
       "provenance": "auto"
     },
     "totalLatency": {
@@ -352,21 +365,21 @@
     "meanSpeedCmPerSec": 4.14381823878,
     "meanMovingSpeedCmPerSec": 8.42205687146,
     "maxSpeedCmPerSec": 25.6632454411,
-    "timeInTargetQuadrantSec": 18.4851333333,
-    "targetQuadrantFraction": 0.417168674699,
+    "timeInTargetQuadrantSec": 18.5518666667,
+    "targetQuadrantFraction": 0.418674698795,
     "targetQuadrantCoverage": 1,
     "trialDurationSec": 44.3109333333,
     "strategy": {
       "strategy": "unclassified",
       "features": {
-        "pathEfficiency": 0.347386210101,
+        "pathEfficiency": 0.345794885472,
         "pathCoverage": 1,
         "holesBeforeTarget": 4,
         "longestSerialRun": 2,
         "centerCrossings": 1,
-        "peripheryFraction": 0.840172786177,
-        "meanTurnRateDegPerSec": 83.4676797554,
-        "startDistanceCm": 55.7553788452
+        "peripheryFraction": 0.839130434783,
+        "meanTurnRateDegPerSec": 83.8227223567,
+        "startDistanceCm": 55.0534958814
       },
       "rule": "insufficient-pattern-evidence",
       "provenance": "auto",
