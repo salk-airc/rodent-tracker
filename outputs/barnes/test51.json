@@ -11,17 +11,17 @@
       "y": 242.670536611
     },
     "platformRadiusPx": 221.197403583,
-    "ringRadiusPx": 197.247120843,
-    "phaseRad": 0.192191316,
+    "ringRadiusPx": 197.254955844,
+    "phaseRad": 0.192234723,
     "holeCount": 20,
     "holes": [
       {
         "index": 0,
         "center": {
-          "x": 472.875130471,
-          "y": 285.739212506
+          "x": 473.125130471,
+          "y": 285.989212506
         },
-        "radiusPx": 12.44460981,
+        "radiusPx": 12.19460981,
         "provenance": "auto"
       },
       {
@@ -183,7 +183,7 @@
           "x": 459.934130657,
           "y": 164.584617433
         },
-        "radiusPx": 12.69460981,
+        "radiusPx": 12.81960981,
         "provenance": "auto"
       },
       {
@@ -204,7 +204,7 @@
     "fit": {
       "platformResidualPx": 0.302512348,
       "ringSymmetry": 0.780371313,
-      "ringRadiusFraction": 0.891724395,
+      "ringRadiusFraction": 0.891759816,
       "warnings": []
     }
   },

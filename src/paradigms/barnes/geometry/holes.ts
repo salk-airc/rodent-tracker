@@ -113,18 +113,28 @@ const MIN_RIM_COVERAGE = 0.45;
  */
 export function fitHoleRim(img: Gray, start: Point, guessRadius: number): { center: Point; radiusPx: number; coverage: number } | null {
   const edge = Math.max(0.75, guessRadius * 0.08);
+  // Unit directions around the rim, once: the coarse pass needs half as many.
+  const ring = (n: number) => Array.from({ length: n }, (_, i) => [Math.cos((i * 2 * Math.PI) / n), Math.sin((i * 2 * Math.PI) / n)] as const);
+  const fine = ring(RIM_SAMPLES);
+  const coarse = ring(RIM_SAMPLES / 2);
+  let dirs = coarse;
+  const steps = new Float64Array(RIM_SAMPLES);
   const score = (cx: number, cy: number, r: number) => {
-    const steps: number[] = [];
-    for (let i = 0; i < RIM_SAMPLES; i++) {
-      const a = (i * 2 * Math.PI) / RIM_SAMPLES;
-      const ux = Math.cos(a);
-      const uy = Math.sin(a);
-      steps.push(sampleBilinear(img, cx + ux * (r + edge), cy + uy * (r + edge)) - sampleBilinear(img, cx + ux * (r - edge), cy + uy * (r - edge)));
+    const n = dirs.length;
+    for (let i = 0; i < n; i++) {
+      const [ux, uy] = dirs[i]!;
+      steps[i] = sampleBilinear(img, cx + ux * (r + edge), cy + uy * (r + edge)) - sampleBilinear(img, cx + ux * (r - edge), cy + uy * (r - edge));
     }
-    steps.sort((p, q) => q - p);
-    const kept = steps.slice(0, Math.ceil(RIM_SAMPLES * 0.7));
-    const coverage = steps.filter((v) => v >= RIM_STEP).length / RIM_SAMPLES;
-    return { value: (kept.reduce((t, v) => t + v, 0) / kept.length) * Math.min(1, coverage / 0.65), coverage };
+    const sorted = steps.subarray(0, n).sort().reverse();
+    const keep = Math.ceil(n * 0.7);
+    let total = 0;
+    let rim = 0;
+    for (let i = 0; i < n; i++) {
+      if (i < keep) total += sorted[i]!;
+      if (sorted[i]! >= RIM_STEP) rim++;
+    }
+    const coverage = rim / n;
+    return { value: (total / keep) * Math.min(1, coverage / 0.65), coverage };
   };
   const search = (c: Point, reach: number, step: number, rMin: number, rMax: number, rStep: number) => {
     let best = { x: c.x, y: c.y, r: (rMin + rMax) / 2, value: Number.NEGATIVE_INFINITY, coverage: 0 };
@@ -139,10 +149,12 @@ export function fitHoleRim(img: Gray, start: Point, guessRadius: number): { cent
     return best;
   };
   // Coarse over the neighborhood, then fine around the best.
-  const coarse = search(start, Math.max(2, guessRadius * 0.6), 1, guessRadius * 0.6, guessRadius * 1.5, 0.5);
-  const fine = search({ x: coarse.x, y: coarse.y }, 1, 0.25, Math.max(2, coarse.r - 0.5), coarse.r + 0.5, 0.125);
-  if (fine.coverage < MIN_RIM_COVERAGE) return null;
-  return { center: { x: fine.x, y: fine.y }, radiusPx: fine.r, coverage: fine.coverage };
+  // Coarse over the neighborhood with half the rim samples, then fine around the best.
+  const found = search(start, Math.max(2, guessRadius * 0.6), 1, guessRadius * 0.6, guessRadius * 1.5, 1);
+  dirs = fine;
+  const best = search({ x: found.x, y: found.y }, 1, 0.25, Math.max(2, found.r - 1), found.r + 1, 0.125);
+  if (best.coverage < MIN_RIM_COVERAGE) return null;
+  return { center: { x: best.x, y: best.y }, radiusPx: best.r, coverage: best.coverage };
 }
 
 /**
