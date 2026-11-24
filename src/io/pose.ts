@@ -23,9 +23,15 @@ export interface PoseImportOptions {
 }
 
 export interface PosePositionImportOptions extends PoseImportOptions {
-  /** Video timebase to map frame indices to seconds. Takes precedence over `fps`. */
+  /**
+   * The video's timebase: each pose frame's time is that frame's timestamp, as
+   * everywhere else in the engine. Required unless `fps` is given.
+   */
   readonly timebase?: Timebase;
-  /** Constant frame rate used when `timebase` is omitted. Defaults to 30 fps. */
+  /**
+   * Only when the video isn't available: an explicit constant frame rate.
+   * Times then assume it, and the result says so in a warning. Never defaulted.
+   */
   readonly fps?: number;
   /** Require separate nose and body columns (default false for general arena scoring). */
   readonly requireNose?: boolean;
@@ -95,14 +101,26 @@ export function importPosePositions(text: string, options: PosePositionImportOpt
     ...(options.minLikelihood !== undefined ? { minLikelihood: options.minLikelihood } : {}),
     requireNose: options.requireNose ?? false,
   });
-  const fps = options.fps ?? 30;
-  if (!(fps > 0)) throw new RangeError('fps must be positive');
-  const timeOf = (frame: number): number => {
-    if (options.timebase && frame < options.timebase.ptsTicks.length) {
-      return frameTime(options.timebase, frame);
+  const warnings = [...parsed.warnings];
+  let timeOf: (frame: number) => number;
+  if (options.timebase) {
+    const timebase = options.timebase;
+    const frames = timebase.ptsTicks.length;
+    const beyond = parsed.frames.find((f) => f.frame >= frames);
+    if (beyond) {
+      throw new RangeError(
+        `Pose frame ${beyond.frame} is beyond the video's ${frames} frames. Check that the pose file was made from this video.`,
+      );
     }
-    return frame / fps;
-  };
+    timeOf = (frame) => frameTime(timebase, frame);
+  } else if (options.fps !== undefined) {
+    const fps = options.fps;
+    if (!(fps > 0) || !Number.isFinite(fps)) throw new RangeError('fps must be a positive number');
+    warnings.push(`Times assume a constant ${fps} fps; no video timestamps were given.`);
+    timeOf = (frame) => frame / fps;
+  } else {
+    throw new Error("Pose import needs the video's timebase to time each frame (or, without the video, an explicit fps).");
+  }
   const samples: PositionSample[] = parsed.frames.map((f) => {
     const present = f.body !== null;
     const confidence =
@@ -129,7 +147,7 @@ export function importPosePositions(text: string, options: PosePositionImportOpt
     mapping: parsed.mapping,
     frameCount: parsed.frameCount,
     lowConfidenceFrames: parsed.lowConfidenceFrames,
-    warnings: parsed.warnings,
+    warnings,
   };
 }
 

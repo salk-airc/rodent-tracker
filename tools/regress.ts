@@ -61,6 +61,24 @@ for (const clip of SAMPLE_CLIPS) {
   const frames = out.track.frames.map((f) => `    ${JSON.stringify(f, roundFloats)}`).join(',\n');
   const text = `${body.slice(0, -2)},\n  "frames": [\n${frames}\n  ]\n}\n`;
   compareOrWrite(join(OUT_DIR, `${clip}.json`), text);
+
+  // The same clip with detector sizes scaled to the measured calibration: the
+  // path every calibrated run (open field, other arenas) takes. Summary only.
+  const scaledSrc = new FfmpegFrameSource(path);
+  const scaledObs = await analyzeVideo(clip, scaledSrc, { params: DEFAULT_PARAMS, scaleSizesToCalibration: true });
+  const scaled = reanalyze(scaledObs, { params: DEFAULT_PARAMS, timebase: scaledSrc.timebase, geometry });
+  scaledSrc.close();
+  const scaledResult = {
+    clip,
+    scaleSizesToCalibration: true,
+    bodyAreaPx: scaledObs.bodyAreaPx,
+    trialStart: scaled.track.trialStart,
+    quality: scaled.track.quality,
+    events: scaled.events,
+    measures: scaled.measures,
+    warnings: scaled.warnings,
+  };
+  compareOrWrite(join(OUT_DIR, `${clip}.calibrated.json`), `${JSON.stringify(scaledResult, roundFloats, 2)}\n`);
   process.stderr.write(`${Date.now() - started} ms\n`);
 }
 
@@ -70,7 +88,7 @@ if (check && failures.length) {
   console.error('\nRun `pnpm analyze` and commit the result if the change is intended.');
   process.exit(1);
 }
-console.error(check ? '\ncommitted results match a fresh run' : `\nwrote ${SAMPLE_CLIPS.length} file(s) to ${OUT_DIR}/`);
+console.error(check ? '\ncommitted results match a fresh run' : `\nwrote ${SAMPLE_CLIPS.length * 2} file(s) to ${OUT_DIR}/`);
 
 /**
  * Math library results can differ in the last bit between platforms (a frame's

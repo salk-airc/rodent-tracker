@@ -207,6 +207,17 @@ describe('size scaling', () => {
     }
   });
 
+  it('treats an explicit MOUSE_PROFILE the same as no profile', () => {
+    for (const [, factory] of detectors) {
+      const plain = factory(setup);
+      const mouse = factory({ ...setup, animal: MOUSE_PROFILE });
+      for (let i = 0; i < 12; i++) {
+        const gray = frameWithMouse(90 + i * 6, 120, i < 6 ? 1 : -1);
+        expect(mouse.detect(i, gray, i / 30)).toEqual(plain.detect(i, gray, i / 30));
+      }
+    }
+  });
+
   it('orients a short-tailed rodent from movement heading across both detectors', () => {
     const oval = (cx: number, cy: number): Uint8Array => {
       const gray = new Uint8Array(W2 * H2).fill(FLOOR);

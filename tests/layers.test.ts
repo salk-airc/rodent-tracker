@@ -131,7 +131,7 @@ describe('tracks from another tracker', () => {
         return `${i},${px.x.toFixed(2)},${px.y.toFixed(2)},0.95`;
       }),
     ].join('\n');
-    const imported = importPosePositions(bodyOnlyDlc, { fps: 30 });
+    const imported = importPosePositions(bodyOnlyDlc, { timebase: timebaseOf(path.length) });
     expect(imported.format).toBe('deeplabcut');
     expect(imported.warnings.join(' ')).toMatch(/No nose column/);
     const track = trackFromPositions(imported.samples, arena, { sourceId: imported.format });
@@ -142,6 +142,39 @@ describe('tracks from another tracker', () => {
     expect(track.frames[0]!.confidence).toBeCloseTo(0.95, 5);
   });
 });
+
+describe('pose import timing', () => {
+  const csv = (frames: number) =>
+    ['scorer,s,s,s', 'bodyparts,thorax,thorax,thorax', 'coords,x,y,likelihood',
+      ...Array.from({ length: frames }, (_, i) => `${i},${10 + i},20,0.95`)].join('\n');
+
+  it("times each frame from the video's timestamps, not a frame rate", () => {
+    // Uneven frames: the third arrives late.
+    const timebase = { timescale: 1000, ptsTicks: [0, 33, 100, 133] };
+    const imported = importPosePositions(csv(4), { timebase });
+    expect(imported.samples.map((s) => s.timeS)).toEqual([0, 0.033, 0.1, 0.133]);
+    expect(imported.warnings.join(' ')).not.toMatch(/fps/);
+  });
+
+  it('refuses a pose frame beyond the end of the video', () => {
+    expect(() => importPosePositions(csv(5), { timebase: timebaseOf(4) })).toThrow(/beyond the video's 4 frames/);
+  });
+
+  it('never assumes a frame rate', () => {
+    expect(() => importPosePositions(csv(3))).toThrow(/timebase/);
+  });
+
+  it('uses an explicit fps only when asked, and says so', () => {
+    const imported = importPosePositions(csv(3), { fps: 25 });
+    expect(imported.samples[2]!.timeS).toBeCloseTo(0.08, 12);
+    expect(imported.warnings.join(' ')).toMatch(/constant 25 fps/);
+  });
+});
+
+/** A constant 30 fps timebase of `frames` frames. */
+function timebaseOf(frames: number) {
+  return { timescale: 30, ptsTicks: Array.from({ length: frames }, (_, i) => i) };
+}
 
 describe('common report', () => {
   it('reports one value per defined metric, in order, for every arena paradigm', async () => {

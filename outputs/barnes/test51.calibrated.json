@@ -1,0 +1,201 @@
+{
+  "clip": "test51",
+  "scaleSizesToCalibration": true,
+  "bodyAreaPx": 772,
+  "trialStart": {
+    "frame": 75,
+    "reason": "cylinderLift",
+    "provenance": "auto",
+    "evidence": "Trial start: frame 75. A central 3336 px object disappeared after 5.00 s (4.3 times normal animal area)."
+  },
+  "quality": {
+    "frameCount": 741,
+    "trackedFrames": 637,
+    "partialFrames": 29,
+    "inHoleFrames": 0,
+    "lostFrames": 0,
+    "preTrialFrames": 75,
+    "postTrialFrames": 0,
+    "manuallyEditedFrames": 0,
+    "measuredPositionFrames": 666,
+    "measuredPositionFraction": 1,
+    "trackedFraction": 1,
+    "bodyAreaPx": 772,
+    "longestGapFrames": 0,
+    "longestGapStart": null,
+    "warnings": []
+  },
+  "events": [
+    {
+      "id": "inv-0",
+      "type": "investigation",
+      "holeIndex": 11,
+      "startFrame": 90,
+      "endFrame": 122,
+      "isTarget": false,
+      "isError": true,
+      "minNoseDistanceCm": 0.479959230095,
+      "minAreaRatio": 0.910621761658,
+      "provenance": "auto",
+      "evidence": "Hole 12: nose distance 0.48 cm for 2.20 s, frames 90-122. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-1",
+      "type": "investigation",
+      "holeIndex": 12,
+      "startFrame": 132,
+      "endFrame": 175,
+      "isTarget": false,
+      "isError": true,
+      "minNoseDistanceCm": 0.765280743146,
+      "minAreaRatio": 0.928756476684,
+      "provenance": "auto",
+      "evidence": "Hole 13: nose distance 0.77 cm for 2.94 s, frames 132-175. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-2",
+      "type": "investigation",
+      "holeIndex": 11,
+      "startFrame": 196,
+      "endFrame": 347,
+      "isTarget": false,
+      "isError": false,
+      "minNoseDistanceCm": 0.5294053626,
+      "minAreaRatio": 0.838082901554,
+      "provenance": "auto",
+      "evidence": "Hole 12: nose distance 0.53 cm for 10.14 s, frames 196-347. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-3",
+      "type": "investigation",
+      "holeIndex": 10,
+      "startFrame": 366,
+      "endFrame": 394,
+      "isTarget": false,
+      "isError": true,
+      "minNoseDistanceCm": 0.176629240326,
+      "minAreaRatio": 0.924870466321,
+      "provenance": "auto",
+      "evidence": "Hole 11: nose distance 0.18 cm for 1.94 s, frames 366-394. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-4",
+      "type": "investigation",
+      "holeIndex": 17,
+      "startFrame": 484,
+      "endFrame": 525,
+      "isTarget": false,
+      "isError": true,
+      "minNoseDistanceCm": 0.0647820340748,
+      "minAreaRatio": 0.854922279793,
+      "provenance": "auto",
+      "evidence": "Hole 18: nose distance 0.06 cm for 2.80 s, frames 484-525. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-5",
+      "type": "investigation",
+      "holeIndex": 18,
+      "startFrame": 535,
+      "endFrame": 555,
+      "isTarget": true,
+      "isError": false,
+      "minNoseDistanceCm": 0.978890528306,
+      "minAreaRatio": 0.914507772021,
+      "provenance": "auto",
+      "evidence": "Hole 19: nose distance 0.98 cm for 1.40 s, frames 535-555. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-6",
+      "type": "investigation",
+      "holeIndex": 18,
+      "startFrame": 574,
+      "endFrame": 665,
+      "isTarget": true,
+      "isError": false,
+      "minNoseDistanceCm": 0.0929873537478,
+      "minAreaRatio": 0.794041450777,
+      "provenance": "auto",
+      "evidence": "Hole 19: nose distance 0.09 cm for 6.14 s, frames 574-665. Threshold: 3 cm for at least 0.25 s."
+    },
+    {
+      "id": "inv-7",
+      "type": "investigation",
+      "holeIndex": 18,
+      "startFrame": 684,
+      "endFrame": 740,
+      "isTarget": true,
+      "isError": false,
+      "minNoseDistanceCm": 0.0677238352356,
+      "minAreaRatio": 0.493523316062,
+      "provenance": "auto",
+      "evidence": "Hole 19: nose distance 0.07 cm for 3.74 s, frames 684-740. Threshold: 3 cm for at least 0.25 s."
+    }
+  ],
+  "measures": {
+    "videoId": "test51",
+    "primaryLatency": {
+      "sec": 30.6973333333,
+      "observed": true,
+      "frame": 535,
+      "provenance": "auto"
+    },
+    "totalLatency": {
+      "sec": 44.3109333333,
+      "observed": false,
+      "frame": null,
+      "provenance": "censored_cutoff"
+    },
+    "primaryErrors": 4,
+    "primaryErrorCoverage": 1,
+    "totalErrors": 4,
+    "totalErrorCoverage": 1,
+    "pathLengthCm": 183.616453724,
+    "meanSpeedCmPerSec": 4.14381823878,
+    "meanMovingSpeedCmPerSec": 8.42205687146,
+    "maxSpeedCmPerSec": 25.6632454411,
+    "timeInTargetQuadrantSec": 18.5518666667,
+    "targetQuadrantFraction": 0.418674698795,
+    "targetQuadrantCoverage": 1,
+    "trialDurationSec": 44.3109333333,
+    "strategy": {
+      "strategy": "unclassified",
+      "features": {
+        "pathEfficiency": 0.345794885472,
+        "pathCoverage": 1,
+        "holesBeforeTarget": 4,
+        "longestSerialRun": 2,
+        "centerCrossings": 1,
+        "peripheryFraction": 0.839130434783,
+        "meanTurnRateDegPerSec": 83.8227223567,
+        "startDistanceCm": 55.0534958814
+      },
+      "rule": "insufficient-pattern-evidence",
+      "provenance": "auto",
+      "notes": "No rule met its threshold. Longest consecutive-hole run: 2/4. Center crossings: 1/2."
+    },
+    "quality": {
+      "frameCount": 741,
+      "trackedFrames": 637,
+      "partialFrames": 29,
+      "inHoleFrames": 0,
+      "lostFrames": 0,
+      "preTrialFrames": 75,
+      "postTrialFrames": 0,
+      "manuallyEditedFrames": 0,
+      "measuredPositionFrames": 666,
+      "measuredPositionFraction": 1,
+      "trackedFraction": 1,
+      "bodyAreaPx": 772,
+      "longestGapFrames": 0,
+      "longestGapStart": null,
+      "warnings": []
+    },
+    "pathLengthCoverage": 1,
+    "warnings": [
+      "No target entry was detected. Total latency is censored at 44.31 s and excluded from means."
+    ]
+  },
+  "warnings": [
+    "No target entry was detected. Total latency is censored at 44.31 s and excluded from means."
+  ]
+}

@@ -58,7 +58,11 @@ export interface ArenaFrame {
   readonly headingRad: number | null;
   /** Visible foreground area in world cm², or null when not measured (e.g., imported pose). */
   readonly areaCm2: number | null;
-  /** Detector or importer confidence, 0..1. */
+  /**
+   * 0..1. From video: how clearly the detector told the nose from the tail
+   * (`axisConfidence`), not whether the animal was found; that is `status`.
+   * Imported: the pose tool's likelihood for the points used.
+   */
   readonly confidence: number;
   /** Origin of this frame's position (`auto`, `imported`, or `manual`). */
   readonly provenance: MeasurementProvenance;

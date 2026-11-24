@@ -60,10 +60,12 @@ export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
   const smallArena = downsample(arenaMask.map((v) => v * 255), width, height, aw, ah).map((v) => (v >= 128 ? 1 : 0));
   let arenaPixels = 0;
   for (const v of smallArena) arenaPixels += v;
-  const hasExplicitScale = setup.sizeScale !== undefined || setup.animal !== undefined;
   const animal = setup.animal ?? MOUSE_PROFILE;
   const camScale = setup.sizeScale ?? 1;
   const animalLinear = animalSizeScale(animal);
+  // Passing the adult mouse profile is the same as passing nothing: only a
+  // calibrated scale or a differently sized animal changes the sizing.
+  const hasExplicitScale = setup.sizeScale !== undefined || animalLinear !== 1;
   const effectiveScale = camScale * animalLinear;
   const speedRatio = animal.maxSpeedCmPerS / MOUSE_PROFILE.maxSpeedCmPerS;
   // The original tracker sizes everything off the arena radius, which assumes
@@ -131,7 +133,7 @@ export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
       const heading = dist >= Math.max(1.5, 1.5 * v1Scale) ? { x: dx / dist, y: dy / dist } : null;
       nose = {
         estimate: estimateNoseFromHeading(candidate, aw, ah, heading),
-        method: 'silhouette-tail-asymmetry-v1',
+        method: 'movement-heading-v1',
         offset: { x: 0, y: 0 },
         scale: { x: sx, y: sy },
       };
