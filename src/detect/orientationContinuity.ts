@@ -17,7 +17,7 @@ export interface NoseTrackEntry {
   readonly body: Point | null;
   readonly bodyObserved?: boolean;
   readonly nose: { readonly point: Point; readonly status: 'observed' | 'ambiguous'; readonly confidence: number } | null;
-  readonly method?: 'silhouette-tail-asymmetry-v1' | 'adaptive-source-detail-tail-taper-v2';
+  readonly method?: 'silhouette-tail-asymmetry-v1' | 'adaptive-source-detail-tail-taper-v2' | 'movement-heading-v1';
   readonly reason?: string;
   /** Both silhouette endpoints, when the v2 taper produced them. */
   readonly endpoints: { readonly primary: Point; readonly alternative: Point } | null;

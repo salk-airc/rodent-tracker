@@ -103,14 +103,15 @@ compared on the same video.
 [docs/BENCHMARK.md](docs/BENCHMARK.md) compares them on the sample clips.
 
 Detectors look for an animal darker than the floor. For an albino mouse on a dark floor, pass
-`animalContrast: 'lighter'` to any arena paradigm (or `'either'`); the frames are transformed
-so the animal reads as darker (`src/image/contrast.ts`). Finders take `floor: 'dark'` for a
-dark floor in a lit room. The Barnes pipeline still assumes a dark animal.
+`animalContrast: 'lighter'` to any paradigm (including Barnes) or `'either'` for mixed/mottled
+contrast; the frames are transformed so the animal reads as darker (`src/image/contrast.ts`).
+Finders take `floor: 'dark'` for a dark floor in a lit room.
 
-Detector sizes were tuned on the sample clips at about 4.7 px/cm. For a camera that images
-the animal bigger or smaller, pass `sizeScale` (`sizeScaleFor(pxPerCm)` from
-`src/detect/scale.ts`). The Barnes pipeline leaves this off by default
-(`scaleSizesToCalibration`) so its regression outputs stay fixed.
+Detector sizes were tuned on adult mice in the sample clips at about 4.7 px/cm. Camera scale
+(`sizeScaleFor(pxPerCm)`) and rodent morphology (`AnimalProfile`: `MOUSE_PROFILE`, `RAT_PROFILE`,
+`JUVENILE_MOUSE_PROFILE`, `SHORT_TAILED_PROFILE` in `src/detect/scale.ts`) scale independently.
+The Barnes pipeline leaves camera scaling off by default (`scaleSizesToCalibration`) so its
+regression outputs stay fixed.
 
 ## Arenas and zones
 
@@ -137,7 +138,7 @@ alongside the same maze as an engine arena (platform boundary, a zone per hole).
 | `src/detect/` | Detectors, their default settings and size scaling |
 | `src/tracking/` | The pixel pass every paradigm shares, arena tracks, motion and freezing |
 | `src/arena/` | Shapes, calibration, zones, zone measures, arm-maze layouts and finders |
-| `src/io/` | CSV and XLSX writers |
+| `src/io/` | CSV, XLSX, and DeepLabCut/SLEAP pose CSV import/export |
 | `src/paradigm.ts` | The `Paradigm` interface apps program against, and the common report |
 | `src/paradigms/` | One folder per paradigm; nothing outside it imports from it |
 | `tools/` | Sample download, regression and benchmark scripts |

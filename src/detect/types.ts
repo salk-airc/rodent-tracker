@@ -7,6 +7,7 @@
 
 import type { Gray } from '../image/imageOps';
 import type { Point, TrackingParams } from '../types';
+import type { AnimalProfile } from './scale';
 
 /** What a detector is given once per video, before the first frame. */
 export interface DetectorSetup {
@@ -24,6 +25,11 @@ export interface DetectorSetup {
    * the sizes tuned on the sample clips, unchanged.
    */
   readonly sizeScale?: number;
+  /**
+   * Physical morphology of the rodent being tracked (defaults to adult mouse).
+   * Separate from `sizeScale` so a rat on a 4.7 px/cm rig is scaled properly.
+   */
+  readonly animal?: AnimalProfile;
 }
 
 /** One frame's answer: where the animal is and how sure the detector is. */

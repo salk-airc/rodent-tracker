@@ -10,6 +10,7 @@ import { nearestHole } from '../types';
 import type { Gray } from '../../../image/imageOps';
 import { buildPlatformMask } from '../geometry/mask';
 import type { DetectorFactory } from '../../../detect/types';
+import type { AnimalProfile } from '../../../detect/scale';
 import { detectFrames } from '../../../tracking/detectFrames';
 
 export interface TrackResult {
@@ -32,11 +33,13 @@ export async function trackVideo(
   onProgress?: (done: number, total: number) => void,
   detectorFactory?: DetectorFactory,
   sizeScale?: number,
+  animal?: AnimalProfile,
 ): Promise<TrackResult> {
   const arenaMask = buildPlatformMask(geometry, source.width, source.height);
   const detected = await detectFrames(source, background, arenaMask, params, {
     ...(detectorFactory ? { detector: detectorFactory } : {}),
     ...(sizeScale === undefined ? {} : { sizeScale }),
+    ...(animal === undefined ? {} : { animal }),
     ...(onProgress ? { onProgress } : {}),
   });
   const finished = detected.frames;

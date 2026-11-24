@@ -22,13 +22,14 @@ import type { Point } from '../types';
 import type { AnimalDetection, Detector, DetectorFactory, FrameDetection } from './types';
 import {
   detectForegroundCandidate,
+  estimateNoseFromHeading,
   estimateNoseFromSilhouette,
   estimateNoseFromTaperedSilhouette,
   type ForegroundCandidate,
   type NoseEstimate,
 } from './silhouette';
 import { resolveNoseOrientationContinuity, type NoseTrackEntry } from './orientationContinuity';
-import { REFERENCE_PX_PER_CM } from './scale';
+import { animalSizeScale, MOUSE_PROFILE, REFERENCE_PX_PER_CM } from './scale';
 
 const TRACKING_PIXEL_BUDGET = 76_800;
 const DIFFERENCE_THRESHOLD = 22;
@@ -59,19 +60,30 @@ export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
   const smallArena = downsample(arenaMask.map((v) => v * 255), width, height, aw, ah).map((v) => (v >= 128 ? 1 : 0));
   let arenaPixels = 0;
   for (const v of smallArena) arenaPixels += v;
+  const animal = setup.animal ?? MOUSE_PROFILE;
+  const camScale = setup.sizeScale ?? 1;
+  const animalLinear = animalSizeScale(animal);
+  // Passing the adult mouse profile is the same as passing nothing: only a
+  // calibrated scale or a differently sized animal changes the sizing.
+  const hasExplicitScale = setup.sizeScale !== undefined || animalLinear !== 1;
+  const effectiveScale = camScale * animalLinear;
+  const speedRatio = animal.maxSpeedCmPerS / MOUSE_PROFILE.maxSpeedCmPerS;
   // The original tracker sizes everything off the arena radius, which assumes
-  // a Barnes platform. Given a calibrated scale, use the radius a Barnes
-  // platform would have at this scale instead, so sizes follow the mouse and
-  // not the arena (a 40 cm open field holds the same mouse as a 92 cm platform).
-  const arenaRadius =
-    setup.sizeScale === undefined
-      ? Math.sqrt(arenaPixels / Math.PI)
-      : REFERENCE_ARENA_RADIUS_CM * REFERENCE_PX_PER_CM * setup.sizeScale * scale;
-  const maximumComponentAreaPx =
-    setup.sizeScale === undefined
-      ? MAXIMUM_COMPONENT_AREA_PX
-      : Math.ceil(MAXIMUM_COMPONENT_AREA_PX * ((setup.sizeScale * scale) / REFERENCE_DOWNSAMPLE) ** 2);
+  // a mouse on a Barnes platform. Given a calibrated scale or animal profile,
+  // size area limits and taper kernels off the animal (camScale × animalLinear)
+  // and the speed gate off `animal.maxSpeedCmPerS` at `camScale`.
+  const arenaRadius = hasExplicitScale
+    ? REFERENCE_ARENA_RADIUS_CM * REFERENCE_PX_PER_CM * effectiveScale * scale
+    : Math.sqrt(arenaPixels / Math.PI);
+  const speedArenaRadius = hasExplicitScale
+    ? REFERENCE_ARENA_RADIUS_CM * REFERENCE_PX_PER_CM * camScale * scale
+    : arenaRadius;
+  const maximumComponentAreaPx = hasExplicitScale
+    ? Math.ceil(MAXIMUM_COMPONENT_AREA_PX * ((effectiveScale * scale) / REFERENCE_DOWNSAMPLE) ** 2)
+    : MAXIMUM_COMPONENT_AREA_PX;
   const minimumBodyAreaPx = Math.max(10, Math.round(arenaRadius ** 2 * MINIMUM_BODY_AREA_ARENA_RADIUS_SQUARED_FRACTION));
+  const v1Scale = hasExplicitScale ? Math.max(1, (effectiveScale * scale) / REFERENCE_DOWNSAMPLE) : 1;
+  const v2Scale = hasExplicitScale ? effectiveScale : 1;
 
   let previous: Point | null = null;
   let previousTimeS: number | null = null;
@@ -86,9 +98,9 @@ export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
     const maximumDisplacementPx =
       previousTimeS === null
         ? Number.POSITIVE_INFINITY
-        : arenaRadius * 2 *
+        : speedArenaRadius * 2 *
           (POSITION_TOLERANCE_ARENA_DIAMETERS +
-            MAX_ARENA_DIAMETERS_PER_SECOND * Math.max(timeS - previousTimeS, MINIMUM_DISPLACEMENT_ELAPSED_S));
+            MAX_ARENA_DIAMETERS_PER_SECOND * speedRatio * Math.max(timeS - previousTimeS, MINIMUM_DISPLACEMENT_ELAPSED_S));
 
     const small = downsample(gray, width, height, aw, ah);
     const darkPixelsPx = countForeground(small, smallBackground, smallArena) * sx * sy;
@@ -113,15 +125,32 @@ export const silhouetteTaperDetector: DetectorFactory = (setup): Detector => {
           : 'single foreground component';
 
     const body = { x: candidate.x * sx, y: candidate.y * sy };
-    let nose: { estimate: NoseEstimate; method: NoseTrackEntry['method']; offset: Point; scale: Point } = {
-      estimate: estimateNoseFromSilhouette(candidate, aw, ah),
-      method: 'silhouette-tail-asymmetry-v1',
-      offset: { x: 0, y: 0 },
-      scale: { x: sx, y: sy },
-    };
-    if (bodyObserved && nose.estimate.status !== 'observed') {
-      const refined = refineNose(gray, background.data, arenaMask, width, height, body, arenaRadius * Math.max(sx, sy), sx * sy, maximumComponentAreaPx);
-      if (refined) nose = { ...refined, method: 'adaptive-source-detail-tail-taper-v2', scale: { x: 1, y: 1 } };
+    let nose: { estimate: NoseEstimate; method: NoseTrackEntry['method']; offset: Point; scale: Point };
+    if (!animal.hasTail) {
+      const dx = previous ? candidate.x - previous.x : 0;
+      const dy = previous ? candidate.y - previous.y : 0;
+      const dist = Math.hypot(dx, dy);
+      const heading = dist >= Math.max(1.5, 1.5 * v1Scale) ? { x: dx / dist, y: dy / dist } : null;
+      nose = {
+        estimate: estimateNoseFromHeading(candidate, aw, ah, heading),
+        method: 'movement-heading-v1',
+        offset: { x: 0, y: 0 },
+        scale: { x: sx, y: sy },
+      };
+    } else {
+      nose = {
+        estimate: estimateNoseFromSilhouette(candidate, aw, ah, v1Scale),
+        method: 'silhouette-tail-asymmetry-v1',
+        offset: { x: 0, y: 0 },
+        scale: { x: sx, y: sy },
+      };
+      if (bodyObserved && nose.estimate.status !== 'observed') {
+        const refined = refineNose(
+          gray, background.data, arenaMask, width, height, body,
+          arenaRadius * Math.max(sx, sy), sx * sy, maximumComponentAreaPx, v2Scale,
+        );
+        if (refined) nose = { ...refined, method: 'adaptive-source-detail-tail-taper-v2', scale: { x: 1, y: 1 } };
+      }
     }
     const at = (x: number | null, y: number | null): Point | null =>
       x === null || y === null ? null : { x: x * nose.scale.x + nose.offset.x, y: y * nose.scale.y + nose.offset.y };
@@ -195,6 +224,7 @@ function refineNose(
   arenaRadiusPx: number,
   areaScale: number,
   maximumComponentAreaPx: number,
+  taperScale: number,
 ): { estimate: NoseEstimate; offset: Point } | null {
   const cropRadius = Math.max(24, Math.ceil(arenaRadiusPx * NOSE_REFINEMENT_CROP_RADIUS_FRACTION));
   const left = Math.max(0, Math.floor(body.x - cropRadius));
@@ -220,7 +250,7 @@ function refineNose(
     Math.max(10, Math.floor(10 * areaScale)), Math.ceil(maximumComponentAreaPx * areaScale),
   );
   if (!candidate) return null;
-  return { estimate: estimateNoseFromTaperedSilhouette(candidate, cw, ch), offset: { x: left, y: top } };
+  return { estimate: estimateNoseFromTaperedSilhouette(candidate, cw, ch, taperScale), offset: { x: left, y: top } };
 }
 
 function toDetection(

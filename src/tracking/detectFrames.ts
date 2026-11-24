@@ -9,7 +9,7 @@ import { frameTime } from '../types';
 import type { Gray } from '../image/imageOps';
 import { darkBlobDetector } from '../detect/darkBlob';
 import type { DetectorFactory, FrameDetection } from '../detect/types';
-import { scaleTrackingParams } from '../detect/scale';
+import { scaleTrackingParams, type AnimalProfile } from '../detect/scale';
 
 export interface DetectFramesOptions {
   /** Which detector finds the animal. Defaults to `dark-blob-v1`. */
@@ -19,6 +19,8 @@ export interface DetectFramesOptions {
    * the pixel sizes as tuned on the sample clips.
    */
   readonly sizeScale?: number;
+  /** Physical rodent profile (defaults to adult mouse). */
+  readonly animal?: AnimalProfile;
   readonly onProgress?: (done: number, total: number) => void;
 }
 
@@ -42,14 +44,15 @@ export async function detectFrames(
   options: DetectFramesOptions = {},
 ): Promise<FrameDetections> {
   const { width, height } = source;
-  const { sizeScale } = options;
+  const { sizeScale, animal } = options;
   const detector = (options.detector ?? darkBlobDetector)({
     width,
     height,
     background,
     arenaMask,
-    params: sizeScale === undefined ? params : scaleTrackingParams(params, sizeScale),
+    params: sizeScale === undefined && animal === undefined ? params : scaleTrackingParams(params, sizeScale ?? 1, animal),
     ...(sizeScale === undefined ? {} : { sizeScale }),
+    ...(animal === undefined ? {} : { animal }),
   });
   const detections: FrameDetection[] = [];
   await source.scan(

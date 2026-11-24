@@ -10,7 +10,8 @@ import { scaleFromTwoPoints, toImage, toWorld } from '../src/arena/calibration';
 import { elevatedPlusMaze, yMaze } from '../src/arena/armMaze';
 import { contains, type Shape } from '../src/arena/shapes';
 import type { Gray } from '../src/image/imageOps';
-import { trackFromPositions, type PositionSample } from '../src/tracking/arenaTrack';
+import { importPosePositions } from '../src/io/pose';
+import { trackFromPositions, worldSamples, type PositionSample } from '../src/tracking/arenaTrack';
 import { reportRows } from '../src/paradigm';
 import { openField } from '../src/paradigms/open-field';
 import { elevatedPlus } from '../src/paradigms/elevated-plus';
@@ -97,10 +98,83 @@ describe('tracks from another tracker', () => {
     expect(track.trackedFraction).toBeCloseTo(0.9, 1);
     expect(track.frames[1]!.body!.x).toBeCloseTo(path[1]!.x, 9);
     expect(track.frames[0]!.zones).toEqual([]);
+    expect(track.frames[0]!.status).toBe('lost');
+    expect(track.frames[1]!.status).toBe('tracked');
+    expect(track.frames[1]!.provenance).toBe('imported');
     const result = openField.score(track, { arena });
     expect(result.summary.zones[0]!.entries).toBe(1);
   });
+
+  it('exposes world nose, tail, heading, area, confidence and noseZones on ArenaFrame', async () => {
+    const fromVideo = await openField.analyze(arenaRecording(arena, W, H, path), { arena });
+    const moving = fromVideo.frames[20]!; // walking along +x
+    expect(moving.status).toBe('tracked');
+    expect(moving.provenance).toBe('auto');
+    expect(moving.nose).not.toBeNull();
+    expect(moving.tail).not.toBeNull();
+    expect(moving.headingRad).not.toBeNull();
+    expect(Math.abs(moving.headingRad!)).toBeLessThan(0.35); // facing roughly +x
+    expect(moving.areaCm2).toBeGreaterThan(5);
+    expect(moving.confidence).toBeGreaterThan(0.5);
+    expect(worldSamples(fromVideo.frames, 'nose')[20]!.point).toEqual(moving.nose);
+    const inCenter = fromVideo.frames.find((f) => f.zones.includes('center'));
+    expect(inCenter?.noseZones).toContain('center');
+  });
+
+  it('imports DLC/SLEAP CSVs directly into any arena paradigm via src/io/pose', () => {
+    const bodyOnlyDlc = [
+      'scorer,s,s,s',
+      'bodyparts,thorax,thorax,thorax',
+      'coords,x,y,likelihood',
+      ...path.map((p, i) => {
+        const px = toImage(arena.calibration, p);
+        return `${i},${px.x.toFixed(2)},${px.y.toFixed(2)},0.95`;
+      }),
+    ].join('\n');
+    const imported = importPosePositions(bodyOnlyDlc, { timebase: timebaseOf(path.length) });
+    expect(imported.format).toBe('deeplabcut');
+    expect(imported.warnings.join(' ')).toMatch(/No nose column/);
+    const track = trackFromPositions(imported.samples, arena, { sourceId: imported.format });
+    const scored = openField.score(track, { arena });
+    expect(scored.summary.trackedFraction).toBe(1);
+    expect(scored.summary.zones[0]!.entries).toBe(1);
+    expect(track.frames[0]!.nose).toBeNull();
+    expect(track.frames[0]!.confidence).toBeCloseTo(0.95, 5);
+  });
 });
+
+describe('pose import timing', () => {
+  const csv = (frames: number) =>
+    ['scorer,s,s,s', 'bodyparts,thorax,thorax,thorax', 'coords,x,y,likelihood',
+      ...Array.from({ length: frames }, (_, i) => `${i},${10 + i},20,0.95`)].join('\n');
+
+  it("times each frame from the video's timestamps, not a frame rate", () => {
+    // Uneven frames: the third arrives late.
+    const timebase = { timescale: 1000, ptsTicks: [0, 33, 100, 133] };
+    const imported = importPosePositions(csv(4), { timebase });
+    expect(imported.samples.map((s) => s.timeS)).toEqual([0, 0.033, 0.1, 0.133]);
+    expect(imported.warnings.join(' ')).not.toMatch(/fps/);
+  });
+
+  it('refuses a pose frame beyond the end of the video', () => {
+    expect(() => importPosePositions(csv(5), { timebase: timebaseOf(4) })).toThrow(/beyond the video's 4 frames/);
+  });
+
+  it('never assumes a frame rate', () => {
+    expect(() => importPosePositions(csv(3))).toThrow(/timebase/);
+  });
+
+  it('uses an explicit fps only when asked, and says so', () => {
+    const imported = importPosePositions(csv(3), { fps: 25 });
+    expect(imported.samples[2]!.timeS).toBeCloseTo(0.08, 12);
+    expect(imported.warnings.join(' ')).toMatch(/constant 25 fps/);
+  });
+});
+
+/** A constant 30 fps timebase of `frames` frames. */
+function timebaseOf(frames: number) {
+  return { timescale: 30, ptsTicks: Array.from({ length: frames }, (_, i) => i) };
+}
 
 describe('common report', () => {
   it('reports one value per defined metric, in order, for every arena paradigm', async () => {
